@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
@@ -212,7 +211,7 @@ const Index: React.FC = () => {
               asChild 
               variant="outline" 
               size="lg" 
-              className="rounded-full border-white/30 text-white hover:bg-white/10 font-medium"
+              className="rounded-full border-white/30 text-ds-blue-600 hover:bg-white/10 font-medium"
             >
               <Link to="#">Contact Sales</Link>
             </Button>
