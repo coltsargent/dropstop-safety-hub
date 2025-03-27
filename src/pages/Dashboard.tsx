@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
@@ -17,6 +16,9 @@ import {
   HardHat,
   ArrowDown,
   ArrowUp,
+  Award,
+  BookOpen,
+  Calendar as CalendarIcon,
 } from 'lucide-react';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
@@ -46,7 +48,6 @@ import {
 } from '@/components/ui/table';
 
 const Dashboard: React.FC = () => {
-  // Mock data for the dashboard
   const stats = [
     { 
       title: 'Team Members', 
@@ -99,12 +100,122 @@ const Dashboard: React.FC = () => {
     { id: 3, name: 'Rescue Procedures', date: '2023-12-22', attendees: 15 },
   ];
 
+  const teamTrainingStatus = [
+    { 
+      id: 1, 
+      name: 'John Doe', 
+      role: 'Roofer', 
+      authorizedTraining: { 
+        completed: '2023-10-15', 
+        expires: '2024-10-15',
+        status: 'valid'
+      },
+      competentTraining: { 
+        completed: '2023-08-10', 
+        expires: '2024-08-10',
+        status: 'valid'
+      }
+    },
+    { 
+      id: 2, 
+      name: 'Jane Smith', 
+      role: 'Utilities Worker', 
+      authorizedTraining: { 
+        completed: '2023-04-22', 
+        expires: '2024-04-22',
+        status: 'expiring-soon'
+      },
+      competentTraining: { 
+        completed: '2023-11-05', 
+        expires: '2024-11-05',
+        status: 'valid'
+      }
+    },
+    { 
+      id: 3, 
+      name: 'Mike Johnson', 
+      role: 'Window Cleaner', 
+      authorizedTraining: { 
+        completed: '2023-05-12', 
+        expires: '2024-05-12',
+        status: 'expiring-soon'
+      },
+      competentTraining: null
+    },
+    { 
+      id: 4, 
+      name: 'Sarah Williams', 
+      role: 'Roofer', 
+      authorizedTraining: { 
+        completed: '2023-01-15', 
+        expires: '2024-01-15',
+        status: 'expired'
+      },
+      competentTraining: { 
+        completed: '2022-12-05', 
+        expires: '2023-12-05',
+        status: 'expired'
+      }
+    },
+    { 
+      id: 5, 
+      name: 'David Brown', 
+      role: 'Utilities Worker', 
+      authorizedTraining: { 
+        completed: '2023-11-20', 
+        expires: '2024-11-20',
+        status: 'valid'
+      },
+      competentTraining: null
+    },
+  ];
+
+  const trainingMetrics = {
+    authorized: {
+      valid: 3,
+      expiringSoon: 2,
+      expired: 1,
+      total: 6
+    },
+    competent: {
+      valid: 2,
+      expiringSoon: 0,
+      expired: 1,
+      total: 3
+    }
+  };
+
+  const getStatusColor = (status: string) => {
+    switch(status) {
+      case 'valid': return 'text-ds-success-600';
+      case 'expiring-soon': return 'text-ds-warning-500';
+      case 'expired': return 'text-ds-danger-500';
+      default: return 'text-ds-neutral-500';
+    }
+  };
+
+  const getStatusIcon = (status: string) => {
+    switch(status) {
+      case 'valid': return <CheckCircle className="h-4 w-4 text-ds-success-500" />;
+      case 'expiring-soon': return <Clock className="h-4 w-4 text-ds-warning-500" />;
+      case 'expired': return <AlertTriangle className="h-4 w-4 text-ds-danger-500" />;
+      default: return null;
+    }
+  };
+
+  const formatDate = (dateStr: string) => {
+    return new Date(dateStr).toLocaleDateString('en-US', { 
+      year: 'numeric', 
+      month: 'short', 
+      day: 'numeric' 
+    });
+  };
+
   return (
     <div className="min-h-screen flex flex-col bg-ds-neutral-50">
       <Header />
       
       <main className="flex-grow pt-16 px-4">
-        {/* Dashboard Header */}
         <div className="container mx-auto py-8">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-8">
             <motion.div
@@ -135,7 +246,6 @@ const Dashboard: React.FC = () => {
             </motion.div>
           </div>
           
-          {/* Stats Cards */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
             {stats.map((stat, index) => (
               <motion.div
@@ -168,9 +278,7 @@ const Dashboard: React.FC = () => {
             ))}
           </div>
           
-          {/* Main Content */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            {/* Left Column - Team Status */}
             <motion.div 
               className="lg:col-span-2"
               initial={{ opacity: 0, y: 20 }}
@@ -227,7 +335,6 @@ const Dashboard: React.FC = () => {
               </Card>
             </motion.div>
             
-            {/* Right Column - Quick Actions and Notifications */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -314,7 +421,6 @@ const Dashboard: React.FC = () => {
             </motion.div>
           </div>
           
-          {/* Tabs Section */}
           <motion.div
             className="mt-8"
             initial={{ opacity: 0, y: 20 }}
@@ -370,6 +476,184 @@ const Dashboard: React.FC = () => {
                   
                   <TabsContent value="training">
                     <div className="space-y-6">
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                        <Card className="border-ds-neutral-200">
+                          <CardHeader className="pb-2">
+                            <CardTitle className="text-lg">Authorized Person Training</CardTitle>
+                            <CardDescription>Level 1 Safety Certification</CardDescription>
+                          </CardHeader>
+                          <CardContent>
+                            <div className="flex justify-between items-center mb-4">
+                              <div className="flex items-center gap-2">
+                                <div className="h-10 w-10 rounded-full bg-ds-blue-50 flex items-center justify-center">
+                                  <Award className="h-5 w-5 text-ds-blue-600" />
+                                </div>
+                                <div>
+                                  <p className="text-sm text-ds-neutral-600">Total Team Members</p>
+                                  <p className="text-2xl font-bold">{trainingMetrics.authorized.total}</p>
+                                </div>
+                              </div>
+                            </div>
+                            <div className="space-y-3">
+                              <div className="flex justify-between items-center">
+                                <div className="flex items-center gap-2">
+                                  <CheckCircle className="h-4 w-4 text-ds-success-500" />
+                                  <span className="text-sm">Up to Date</span>
+                                </div>
+                                <div className="flex items-center gap-1">
+                                  <span className="font-medium">{trainingMetrics.authorized.valid}</span>
+                                  <span className="text-xs text-ds-neutral-500">({Math.round(trainingMetrics.authorized.valid / trainingMetrics.authorized.total * 100)}%)</span>
+                                </div>
+                              </div>
+                              <div className="flex justify-between items-center">
+                                <div className="flex items-center gap-2">
+                                  <Clock className="h-4 w-4 text-ds-warning-500" />
+                                  <span className="text-sm">Expiring Soon</span>
+                                </div>
+                                <div className="flex items-center gap-1">
+                                  <span className="font-medium">{trainingMetrics.authorized.expiringSoon}</span>
+                                  <span className="text-xs text-ds-neutral-500">({Math.round(trainingMetrics.authorized.expiringSoon / trainingMetrics.authorized.total * 100)}%)</span>
+                                </div>
+                              </div>
+                              <div className="flex justify-between items-center">
+                                <div className="flex items-center gap-2">
+                                  <AlertTriangle className="h-4 w-4 text-ds-danger-500" />
+                                  <span className="text-sm">Expired</span>
+                                </div>
+                                <div className="flex items-center gap-1">
+                                  <span className="font-medium">{trainingMetrics.authorized.expired}</span>
+                                  <span className="text-xs text-ds-neutral-500">({Math.round(trainingMetrics.authorized.expired / trainingMetrics.authorized.total * 100)}%)</span>
+                                </div>
+                              </div>
+                            </div>
+                          </CardContent>
+                        </Card>
+
+                        <Card className="border-ds-neutral-200">
+                          <CardHeader className="pb-2">
+                            <CardTitle className="text-lg">Competent Person Training</CardTitle>
+                            <CardDescription>Level 2 Safety Certification</CardDescription>
+                          </CardHeader>
+                          <CardContent>
+                            <div className="flex justify-between items-center mb-4">
+                              <div className="flex items-center gap-2">
+                                <div className="h-10 w-10 rounded-full bg-ds-blue-50 flex items-center justify-center">
+                                  <BookOpen className="h-5 w-5 text-ds-blue-600" />
+                                </div>
+                                <div>
+                                  <p className="text-sm text-ds-neutral-600">Total Team Members</p>
+                                  <p className="text-2xl font-bold">{trainingMetrics.competent.total}</p>
+                                </div>
+                              </div>
+                            </div>
+                            <div className="space-y-3">
+                              <div className="flex justify-between items-center">
+                                <div className="flex items-center gap-2">
+                                  <CheckCircle className="h-4 w-4 text-ds-success-500" />
+                                  <span className="text-sm">Up to Date</span>
+                                </div>
+                                <div className="flex items-center gap-1">
+                                  <span className="font-medium">{trainingMetrics.competent.valid}</span>
+                                  <span className="text-xs text-ds-neutral-500">({Math.round(trainingMetrics.competent.valid / trainingMetrics.competent.total * 100)}%)</span>
+                                </div>
+                              </div>
+                              <div className="flex justify-between items-center">
+                                <div className="flex items-center gap-2">
+                                  <Clock className="h-4 w-4 text-ds-warning-500" />
+                                  <span className="text-sm">Expiring Soon</span>
+                                </div>
+                                <div className="flex items-center gap-1">
+                                  <span className="font-medium">{trainingMetrics.competent.expiringSoon}</span>
+                                  <span className="text-xs text-ds-neutral-500">({Math.round(trainingMetrics.competent.expiringSoon / trainingMetrics.competent.total * 100)}%)</span>
+                                </div>
+                              </div>
+                              <div className="flex justify-between items-center">
+                                <div className="flex items-center gap-2">
+                                  <AlertTriangle className="h-4 w-4 text-ds-danger-500" />
+                                  <span className="text-sm">Expired</span>
+                                </div>
+                                <div className="flex items-center gap-1">
+                                  <span className="font-medium">{trainingMetrics.competent.expired}</span>
+                                  <span className="text-xs text-ds-neutral-500">({Math.round(trainingMetrics.competent.expired / trainingMetrics.competent.total * 100)}%)</span>
+                                </div>
+                              </div>
+                            </div>
+                          </CardContent>
+                        </Card>
+                      </div>
+
+                      <div>
+                        <h4 className="text-sm font-medium mb-4">Team Training Status</h4>
+                        <Table>
+                          <TableHeader>
+                            <TableRow>
+                              <TableHead>Name</TableHead>
+                              <TableHead>Role</TableHead>
+                              <TableHead>Authorized Person</TableHead>
+                              <TableHead>Competent Person</TableHead>
+                              <TableHead></TableHead>
+                            </TableRow>
+                          </TableHeader>
+                          <TableBody>
+                            {teamTrainingStatus.slice(0, 5).map((member) => (
+                              <TableRow key={member.id}>
+                                <TableCell className="font-medium">{member.name}</TableCell>
+                                <TableCell>{member.role}</TableCell>
+                                <TableCell>
+                                  {member.authorizedTraining ? (
+                                    <div className="space-y-1">
+                                      <div className="flex items-center gap-2">
+                                        {getStatusIcon(member.authorizedTraining.status)}
+                                        <span className={`text-sm ${getStatusColor(member.authorizedTraining.status)}`}>
+                                          {member.authorizedTraining.status === 'valid' ? 'Valid' : 
+                                           member.authorizedTraining.status === 'expiring-soon' ? 'Expiring Soon' : 'Expired'}
+                                        </span>
+                                      </div>
+                                      <div className="flex items-center gap-1 text-xs text-ds-neutral-500">
+                                        <CalendarIcon className="h-3 w-3" />
+                                        <span>Expires: {formatDate(member.authorizedTraining.expires)}</span>
+                                      </div>
+                                    </div>
+                                  ) : (
+                                    <span className="text-sm text-ds-neutral-500">Not Certified</span>
+                                  )}
+                                </TableCell>
+                                <TableCell>
+                                  {member.competentTraining ? (
+                                    <div className="space-y-1">
+                                      <div className="flex items-center gap-2">
+                                        {getStatusIcon(member.competentTraining.status)}
+                                        <span className={`text-sm ${getStatusColor(member.competentTraining.status)}`}>
+                                          {member.competentTraining.status === 'valid' ? 'Valid' : 
+                                           member.competentTraining.status === 'expiring-soon' ? 'Expiring Soon' : 'Expired'}
+                                        </span>
+                                      </div>
+                                      <div className="flex items-center gap-1 text-xs text-ds-neutral-500">
+                                        <CalendarIcon className="h-3 w-3" />
+                                        <span>Expires: {formatDate(member.competentTraining.expires)}</span>
+                                      </div>
+                                    </div>
+                                  ) : (
+                                    <span className="text-sm text-ds-neutral-500">Not Certified</span>
+                                  )}
+                                </TableCell>
+                                <TableCell>
+                                  <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+                                    <ChevronRight className="h-4 w-4" />
+                                  </Button>
+                                </TableCell>
+                              </TableRow>
+                            ))}
+                          </TableBody>
+                        </Table>
+                        <div className="mt-4 flex justify-end">
+                          <Button variant="outline" className="gap-1 border-ds-neutral-200">
+                            <span>View All Team Members</span>
+                            <ArrowUpRight className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      </div>
+
                       <div>
                         <h4 className="text-sm font-medium mb-3">Upcoming Training Sessions</h4>
                         <div className="space-y-3">
