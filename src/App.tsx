@@ -9,6 +9,7 @@ import { AuthProvider } from "@/contexts/AuthContext";
 import ProtectedRoute from "@/components/auth/ProtectedRoute";
 
 import Index from "./pages/Index";
+import IntakeForm from "./pages/IntakeForm";
 import Auth from "./pages/Auth";
 import Dashboard from "./pages/Dashboard";
 import Inspection from "./pages/Inspection";
@@ -30,6 +31,7 @@ const App = () => (
             <Routes>
               <Route path="/" element={<Index />} />
               <Route path="/auth" element={<Auth />} />
+              <Route path="/intake" element={<IntakeForm />} />
               
               {/* Protected Routes */}
               <Route path="/dashboard" element={

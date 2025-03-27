@@ -48,7 +48,7 @@ const Index: React.FC = () => {
                 </Button>
               )}
               <Button asChild size="lg" className="rounded-full font-medium">
-                <Link to="/auth">Get Started</Link>
+                <Link to="/intake">Get Started</Link>
               </Button>
               <Button 
                 asChild 
@@ -256,7 +256,7 @@ const Index: React.FC = () => {
               size="lg" 
               className="bg-white text-ds-blue-700 hover:bg-ds-blue-50 rounded-full font-medium"
             >
-              <Link to="/auth">Get Started Free</Link>
+              <Link to="/intake">Get Started Free</Link>
             </Button>
             <Button 
               asChild 
