@@ -116,7 +116,7 @@ const Training: React.FC = () => {
                 <Card className="bg-white border-none shadow-sm">
                   <CardHeader className="pb-2">
                     <CardTitle className="text-lg">Competent Person Training</CardTitle>
-                    <CardDescription>Required biennial certification</CardDescription>
+                    <CardDescription>Required annual certification</CardDescription>
                   </CardHeader>
                   <CardContent>
                     <div className="space-y-4">
