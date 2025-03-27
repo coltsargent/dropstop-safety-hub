@@ -1,6 +1,7 @@
 
 import React from 'react';
 import { cn } from '@/lib/utils';
+import { Check } from 'lucide-react';
 
 interface LogoProps {
   size?: 'sm' | 'md' | 'lg';
@@ -14,29 +15,42 @@ const Logo: React.FC<LogoProps> = ({ size = 'md', className }) => {
     lg: 'text-3xl',
   };
 
+  // Size mapping for check icon
+  const iconSizes = {
+    sm: 16,
+    md: 20,
+    lg: 24,
+  };
+
+  // Font weight for the "Stop" part
+  const stopFontWeight = 'font-bold';
+
   return (
-    <div className={cn('font-bold tracking-tight flex items-center gap-2', sizeClasses[size], className)}>
-      <div className="relative">
-        <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-ds-blue-500 to-ds-blue-700 flex items-center justify-center text-white">
-          <svg 
-            className="h-5 w-5" 
-            viewBox="0 0 24 24" 
-            fill="none" 
-            stroke="currentColor" 
-            strokeWidth="2.5" 
-            strokeLinecap="round" 
-            strokeLinejoin="round"
-          >
-            <path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z" />
-            <path d="M18 12h-6l2-5" />
-            <path d="M8 12h6l-2 5" />
-          </svg>
+    <div className={cn('font-bold tracking-tight flex items-center', sizeClasses[size], className)}>
+      <div className="flex items-baseline">
+        {/* "Drop" in red font */}
+        <span className="font-serif text-ds-danger-600 mr-1">
+          Drop
+        </span>
+        
+        {/* "St" part of "Stop" in blue */}
+        <span className="font-sans text-ds-blue-600">
+          St
+        </span>
+        
+        {/* "o" part of "Stop" in blue */}
+        <span className="font-sans text-ds-blue-600">
+          o
+        </span>
+        
+        {/* Replace the last "p" with a check mark icon */}
+        <div className="relative inline-flex items-center">
+          <Check 
+            size={iconSizes[size]} 
+            className="text-ds-blue-600 stroke-[2.5px]" 
+          />
         </div>
-        <div className="absolute -bottom-1 -right-1 h-3 w-3 rounded-full bg-ds-success-500 border-2 border-white" />
       </div>
-      <span className="bg-gradient-to-r from-ds-blue-700 to-ds-blue-500 bg-clip-text text-transparent">
-        Drop Stop
-      </span>
     </div>
   );
 };

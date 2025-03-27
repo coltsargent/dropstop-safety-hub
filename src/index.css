@@ -149,8 +149,9 @@
   @apply bg-ds-neutral-300 rounded-full transition-colors hover:bg-ds-neutral-400;
 }
 
-/* Import font */
+/* Import fonts */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&display=swap');
 
 /* Font setup */
 html {
