@@ -1,12 +1,15 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { CheckCircle, Shield, LineChart, ArrowRight } from 'lucide-react';
+import { CheckCircle, Shield, LineChart, ArrowRight, LogIn } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
+import { useAuth } from '@/contexts/AuthContext';
 
 const Index: React.FC = () => {
+  const { isAuthenticated } = useAuth();
+
   return (
     <div className="min-h-screen flex flex-col">
       <Header />
@@ -31,6 +34,18 @@ const Index: React.FC = () => {
               Enhance workplace safety, reduce liability, and lower insurance costs with our comprehensive safety compliance platform.
             </p>
             <div className="flex flex-col sm:flex-row justify-center gap-4">
+              {!isAuthenticated && (
+                <Button 
+                  asChild 
+                  size="lg" 
+                  className="rounded-full font-medium bg-ds-blue-600 text-white hover:bg-ds-blue-700 flex items-center gap-2"
+                >
+                  <Link to="/auth">
+                    <LogIn className="h-5 w-5" />
+                    <span>Existing Member Login</span>
+                  </Link>
+                </Button>
+              )}
               <Button asChild size="lg" className="rounded-full font-medium">
                 <Link to="/auth">Get Started</Link>
               </Button>

@@ -7,7 +7,8 @@ import {
   Search, 
   User, 
   X,
-  ChevronDown 
+  ChevronDown,
+  LogIn
 } from 'lucide-react';
 import Logo from '@/components/shared/Logo';
 import { Button } from '@/components/ui/button';
@@ -21,12 +22,15 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { cn } from '@/lib/utils';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { useAuth } from '@/contexts/AuthContext';
 
 const Header: React.FC = () => {
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const location = useLocation();
   const isMobile = useIsMobile();
+  const { isAuthenticated } = useAuth();
+  const isLandingPage = location.pathname === '/';
 
   // Handle scroll effect
   useEffect(() => {
@@ -70,19 +74,30 @@ const Header: React.FC = () => {
           </Link>
           
           <div className="flex items-center space-x-2">
-            <Button variant="ghost" size="icon" className="rounded-full">
-              <Bell className="h-5 w-5 text-ds-neutral-700" />
-            </Button>
-            <Button variant="ghost" size="icon" className="rounded-full">
-              <User className="h-5 w-5 text-ds-neutral-700" />
-            </Button>
+            {isAuthenticated ? (
+              <>
+                <Button variant="ghost" size="icon" className="rounded-full">
+                  <Bell className="h-5 w-5 text-ds-neutral-700" />
+                </Button>
+                <Button variant="ghost" size="icon" className="rounded-full">
+                  <User className="h-5 w-5 text-ds-neutral-700" />
+                </Button>
+              </>
+            ) : (
+              <Button asChild variant="primary" size="sm" className="rounded-full gap-1">
+                <Link to="/auth">
+                  <LogIn className="h-4 w-4" />
+                  <span>Login</span>
+                </Link>
+              </Button>
+            )}
           </div>
         </div>
       </header>
     );
   }
 
-  // Desktop header remains as is
+  // Desktop header
   return (
     <header
       className={cn(
@@ -96,70 +111,87 @@ const Header: React.FC = () => {
             <Logo size="md" />
           </Link>
           
-          {/* Desktop Navigation */}
-          <nav className="hidden md:flex space-x-1">
-            {navLinks.map((link) => (
-              <Link
-                key={link.path}
-                to={link.path}
-                className={cn(
-                  'px-3 py-2 rounded-md text-sm font-medium transition-colors',
-                  isActive(link.path)
-                    ? 'text-ds-blue-700 bg-ds-blue-50'
-                    : 'text-ds-neutral-700 hover:text-ds-blue-600 hover:bg-ds-blue-50/50'
-                )}
-              >
-                {link.name}
-              </Link>
-            ))}
-          </nav>
+          {/* Desktop Navigation - only show when authenticated or not on landing page */}
+          {(isAuthenticated && !isLandingPage) && (
+            <nav className="hidden md:flex space-x-1">
+              {navLinks.map((link) => (
+                <Link
+                  key={link.path}
+                  to={link.path}
+                  className={cn(
+                    'px-3 py-2 rounded-md text-sm font-medium transition-colors',
+                    isActive(link.path)
+                      ? 'text-ds-blue-700 bg-ds-blue-50'
+                      : 'text-ds-neutral-700 hover:text-ds-blue-600 hover:bg-ds-blue-50/50'
+                  )}
+                >
+                  {link.name}
+                </Link>
+              ))}
+            </nav>
+          )}
         </div>
 
         {/* Desktop Actions */}
         <div className="hidden md:flex items-center space-x-2">
-          <Button variant="ghost" size="icon" className="rounded-full">
-            <Search className="h-5 w-5 text-ds-neutral-700" />
-          </Button>
-          <Button variant="ghost" size="icon" className="rounded-full">
-            <Bell className="h-5 w-5 text-ds-neutral-700" />
-          </Button>
-          
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="outline" className="ml-2 gap-1 border-ds-neutral-200">
-                <div className="h-7 w-7 rounded-full bg-ds-blue-100 flex items-center justify-center">
-                  <User className="h-4 w-4 text-ds-blue-700" />
-                </div>
-                <span className="text-sm font-medium">Account</span>
-                <ChevronDown className="h-4 w-4 opacity-50" />
+          {isAuthenticated ? (
+            <>
+              <Button variant="ghost" size="icon" className="rounded-full">
+                <Search className="h-5 w-5 text-ds-neutral-700" />
               </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-56">
-              <DropdownMenuLabel>My Account</DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem>Profile</DropdownMenuItem>
-              <DropdownMenuItem>Settings</DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem>Log out</DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+              <Button variant="ghost" size="icon" className="rounded-full">
+                <Bell className="h-5 w-5 text-ds-neutral-700" />
+              </Button>
+              
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="outline" className="ml-2 gap-1 border-ds-neutral-200">
+                    <div className="h-7 w-7 rounded-full bg-ds-blue-100 flex items-center justify-center">
+                      <User className="h-4 w-4 text-ds-blue-700" />
+                    </div>
+                    <span className="text-sm font-medium">Account</span>
+                    <ChevronDown className="h-4 w-4 opacity-50" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-56">
+                  <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem>Profile</DropdownMenuItem>
+                  <DropdownMenuItem>Settings</DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem asChild>
+                    <Link to="/auth">Log out</Link>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </>
+          ) : (
+            <Button asChild variant="primary" size="lg" className="rounded-full gap-2">
+              <Link to="/auth">
+                <LogIn className="h-5 w-5" />
+                <span>Member Login</span>
+              </Link>
+            </Button>
+          )}
         </div>
 
-        {/* Mobile Menu Toggle */}
-        <div className="md:hidden">
-          <Button
-            variant="ghost"
-            size="icon"
-            className="rounded-full"
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          >
-            {mobileMenuOpen ? (
-              <X className="h-5 w-5 text-ds-neutral-700" />
-            ) : (
-              <Menu className="h-5 w-5 text-ds-neutral-700" />
-            )}
-          </Button>
-        </div>
+        {/* Mobile Menu Toggle - only show when authenticated */}
+        {isAuthenticated && (
+          <div className="md:hidden">
+            <Button
+              variant="ghost"
+              size="icon"
+              className="rounded-full"
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            >
+              {mobileMenuOpen ? (
+                <X className="h-5 w-5 text-ds-neutral-700" />
+              ) : (
+                <Menu className="h-5 w-5 text-ds-neutral-700" />
+              )}
+            </Button>
+          </div>
+        )}
       </div>
 
       {/* Mobile Menu */}
