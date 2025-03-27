@@ -90,7 +90,7 @@ const Index: React.FC = () => {
               Comprehensive Safety Management
             </h2>
             <p className="text-lg text-ds-neutral-700 max-w-2xl mx-auto">
-              Our platform provides all the tools you need to manage workplace safety and meet regulatory requirements.
+              Our platform provides all the tools you need to manage high-risk workplace safety and meet regulatory requirements.
             </p>
           </div>
           
