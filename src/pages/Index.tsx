@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
@@ -52,8 +53,8 @@ const Index: React.FC = () => {
             transition={{ duration: 0.8, delay: 0.3 }}
           >
             <img 
-              src="https://images.unsplash.com/photo-1449157291145-7efd050a4d0e?auto=format&fit=crop&q=80&w=2070&ixlib=rb-4.0.3" 
-              alt="Rooftop construction site" 
+              src="/lovable-uploads/97e464fc-ae77-4cd9-8487-436df7d422db.png" 
+              alt="Construction worker on rooftop at sunset" 
               className="w-full h-auto object-cover rounded-xl"
             />
           </motion.div>
