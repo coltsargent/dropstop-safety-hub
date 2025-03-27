@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { motion } from 'framer-motion';
 import { TooltipProvider } from '@/components/ui/tooltip';
@@ -7,7 +8,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { CircleDashed, AlertCircle, CheckCircle2, Clock, Users, UserCheck, FileWarning } from 'lucide-react';
 import { Progress } from '@/components/ui/progress';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import SafetyStatus from '@/components/ui-extensions/SafetyStatus';
+import { Badge } from '@/components/ui/badge';
 
 const employeeTrainingStatuses = [
   {
@@ -18,8 +19,7 @@ const employeeTrainingStatuses = [
     competent: false,
     lastTraining: '2023-06-12',
     nextDue: '2024-06-12',
-    compliance: 85,
-    status: 'compliant'
+    status: 'current' // 'current', 'expiring-soon', 'expired'
   },
   {
     id: 2,
@@ -29,8 +29,7 @@ const employeeTrainingStatuses = [
     competent: true,
     lastTraining: '2023-05-22',
     nextDue: '2024-05-22',
-    compliance: 100,
-    status: 'compliant'
+    status: 'current'
   },
   {
     id: 3,
@@ -39,9 +38,8 @@ const employeeTrainingStatuses = [
     authorized: true,
     competent: false,
     lastTraining: '2023-09-05',
-    nextDue: '2024-09-05',
-    compliance: 70,
-    status: 'at-risk'
+    nextDue: '2024-03-15', // Changed to be expiring soon
+    status: 'expiring-soon'
   },
   {
     id: 4,
@@ -51,8 +49,7 @@ const employeeTrainingStatuses = [
     competent: true,
     lastTraining: '2023-03-17',
     nextDue: '2024-03-17',
-    compliance: 95,
-    status: 'compliant'
+    status: 'expiring-soon'
   },
   {
     id: 5,
@@ -62,8 +59,7 @@ const employeeTrainingStatuses = [
     competent: false,
     lastTraining: '2022-11-30',
     nextDue: '2023-11-30',
-    compliance: 40,
-    status: 'non-compliant'
+    status: 'expired'
   }
 ];
 
@@ -117,6 +113,34 @@ const statusIcons = {
 };
 
 const Training: React.FC = () => {
+  // Function to get progress bar color based on status
+  const getStatusColorClasses = (status: string) => {
+    switch (status) {
+      case 'current':
+        return 'bg-ds-success-500';
+      case 'expiring-soon':
+        return 'bg-ds-warning-500';
+      case 'expired':
+        return 'bg-ds-danger-500';
+      default:
+        return 'bg-ds-neutral-400';
+    }
+  };
+
+  // Function to get descriptive text for status
+  const getStatusText = (status: string) => {
+    switch (status) {
+      case 'current':
+        return 'Current';
+      case 'expiring-soon':
+        return 'Expiring Soon';
+      case 'expired':
+        return 'Expired';
+      default:
+        return 'Unknown';
+    }
+  };
+
   return (
     <TooltipProvider>
       <div className="min-h-screen flex flex-col bg-gray-50">
@@ -222,7 +246,7 @@ const Training: React.FC = () => {
                         <TableHead>Status</TableHead>
                         <TableHead>Last Training</TableHead>
                         <TableHead>Next Due</TableHead>
-                        <TableHead>Compliance</TableHead>
+                        <TableHead>Training Status</TableHead>
                       </TableRow>
                     </TableHeader>
                     <TableBody>
@@ -245,12 +269,8 @@ const Training: React.FC = () => {
                           <TableCell>{new Date(employee.nextDue).toLocaleDateString()}</TableCell>
                           <TableCell>
                             <div className="flex items-center gap-2">
-                              <Progress value={employee.compliance} className="h-2 w-20" />
-                              <span className="text-sm">{employee.compliance}%</span>
-                              <SafetyStatus 
-                                status={employee.status === 'compliant' ? 'safe' : employee.status === 'at-risk' ? 'warning' : 'danger'} 
-                                size="sm"
-                              />
+                              <div className={`h-2 w-16 rounded-full ${getStatusColorClasses(employee.status)}`}></div>
+                              <span className="text-sm">{getStatusText(employee.status)}</span>
                             </div>
                           </TableCell>
                         </TableRow>
