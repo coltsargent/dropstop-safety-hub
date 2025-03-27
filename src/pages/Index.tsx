@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
@@ -52,20 +51,11 @@ const Index: React.FC = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.3 }}
           >
-            <div className="bg-gradient-to-r from-ds-blue-600 to-ds-blue-400 absolute top-0 left-0 right-0 h-12 flex items-center px-4">
-              <div className="flex space-x-2">
-                <div className="h-3 w-3 rounded-full bg-ds-neutral-200 opacity-70" />
-                <div className="h-3 w-3 rounded-full bg-ds-neutral-200 opacity-70" />
-                <div className="h-3 w-3 rounded-full bg-ds-neutral-200 opacity-70" />
-              </div>
-            </div>
-            <div className="pt-12 bg-white">
-              <img 
-                src="https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&q=80&w=2070&ixlib=rb-4.0.3" 
-                alt="Dashboard preview" 
-                className="w-full h-auto object-cover"
-              />
-            </div>
+            <img 
+              src="https://images.unsplash.com/photo-1449157291145-7efd050a4d0e?auto=format&fit=crop&q=80&w=2070&ixlib=rb-4.0.3" 
+              alt="Rooftop construction site" 
+              className="w-full h-auto object-cover rounded-xl"
+            />
           </motion.div>
         </div>
       </section>
