@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
@@ -93,17 +92,23 @@ const Index: React.FC = () => {
               {
                 icon: <CheckCircle className="h-8 w-8 text-ds-blue-500" />,
                 title: 'PPE & Equipment Inspections',
-                description: 'Digital pre-use checklists ensure compliance with digital records of all inspections.'
+                description: 'Digital pre-use checklists ensure compliance with digital records of all inspections.',
+                imagePath: '/lovable-uploads/97e464fc-ae77-4cd9-8487-436df7d422db.png',
+                imageAlt: 'Worker inspecting safety equipment'
               },
               {
                 icon: <Shield className="h-8 w-8 text-ds-blue-500" />,
                 title: 'Real-Time Fall Notifications',
-                description: 'Immediate alerts improve rescue response time and reduce claim severity.'
+                description: 'Immediate alerts improve rescue response time and reduce claim severity.',
+                imagePath: '/lovable-uploads/97e464fc-ae77-4cd9-8487-436df7d422db.png',
+                imageAlt: 'Alert notification on mobile device'
               },
               {
                 icon: <LineChart className="h-8 w-8 text-ds-blue-500" />,
                 title: 'Compliance Tracking',
-                description: 'Automate record-keeping for regulatory audits and insurance requirements.'
+                description: 'Automate record-keeping for regulatory audits and insurance requirements.',
+                imagePath: '/lovable-uploads/97e464fc-ae77-4cd9-8487-436df7d422db.png',
+                imageAlt: 'Compliance tracking dashboard'
               }
             ].map((feature, index) => (
               <motion.div
@@ -118,7 +123,28 @@ const Index: React.FC = () => {
                   {feature.icon}
                 </div>
                 <h3 className="text-xl font-semibold text-ds-neutral-900 mb-2">{feature.title}</h3>
-                <p className="text-ds-neutral-600">{feature.description}</p>
+                <p className="text-ds-neutral-600 mb-4">{feature.description}</p>
+                
+                <div className="w-full h-48 rounded-lg overflow-hidden mt-2 mb-4 bg-ds-blue-50">
+                  <img 
+                    src={feature.imagePath} 
+                    alt={feature.imageAlt}
+                    className="w-full h-full object-cover"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-ds-blue-900/30 to-transparent"></div>
+                </div>
+                
+                <Button 
+                  asChild 
+                  variant="outline" 
+                  size="sm" 
+                  className="mt-2 border-ds-blue-200"
+                >
+                  <Link to="/auth">
+                    <span>Learn More</span>
+                    <ArrowRight className="h-4 w-4 ml-1" />
+                  </Link>
+                </Button>
               </motion.div>
             ))}
           </div>
