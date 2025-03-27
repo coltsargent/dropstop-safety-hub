@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { 
@@ -131,7 +132,7 @@ const Header: React.FC = () => {
           )}
         </div>
 
-        {/* Desktop Actions */}
+        {/* Desktop Actions - ALWAYS show login button when not authenticated */}
         <div className="hidden md:flex items-center space-x-2">
           {isAuthenticated ? (
             <>
