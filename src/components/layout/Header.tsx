@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { 
@@ -84,7 +83,7 @@ const Header: React.FC = () => {
                 </Button>
               </>
             ) : (
-              <Button asChild variant="primary" size="sm" className="rounded-full gap-1">
+              <Button asChild variant="default" size="sm" className="rounded-full gap-1 bg-ds-blue-600 hover:bg-ds-blue-700 text-white">
                 <Link to="/auth">
                   <LogIn className="h-4 w-4" />
                   <span>Login</span>
@@ -166,7 +165,7 @@ const Header: React.FC = () => {
               </DropdownMenu>
             </>
           ) : (
-            <Button asChild variant="primary" size="lg" className="rounded-full gap-2">
+            <Button asChild variant="default" size="lg" className="rounded-full gap-2 bg-ds-blue-600 hover:bg-ds-blue-700 text-white">
               <Link to="/auth">
                 <LogIn className="h-5 w-5" />
                 <span>Member Login</span>
