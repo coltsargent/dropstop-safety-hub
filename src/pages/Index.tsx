@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { CheckCircle, Shield, LineChart, ArrowRight, LogIn } from 'lucide-react';
+import { CheckCircle, Shield, LineChart, ArrowRight, LogIn, FileText, HardHat, Award } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
@@ -87,7 +87,7 @@ const Index: React.FC = () => {
             </p>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
             {[
               {
                 icon: <CheckCircle className="h-8 w-8 text-ds-blue-500" />,
@@ -103,6 +103,41 @@ const Index: React.FC = () => {
                 icon: <LineChart className="h-8 w-8 text-ds-blue-500" />,
                 title: 'Compliance Tracking',
                 description: 'Automate record-keeping for regulatory audits and insurance requirements.'
+              }
+            ].map((feature, index) => (
+              <motion.div
+                key={index}
+                className="flex flex-col items-center text-center p-6 rounded-xl border border-ds-neutral-200 bg-white shadow-sm hover:shadow-md transition-shadow"
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
+                viewport={{ once: true }}
+              >
+                <div className="h-14 w-14 rounded-full bg-ds-blue-50 flex items-center justify-center mb-4">
+                  {feature.icon}
+                </div>
+                <h3 className="text-xl font-semibold text-ds-neutral-900 mb-2">{feature.title}</h3>
+                <p className="text-ds-neutral-600">{feature.description}</p>
+              </motion.div>
+            ))}
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {[
+              {
+                icon: <FileText className="h-8 w-8 text-ds-blue-500" />,
+                title: 'Incident & Near Miss Documentation',
+                description: 'Document and analyze incidents to identify root causes and prevent future occurrences.'
+              },
+              {
+                icon: <HardHat className="h-8 w-8 text-ds-blue-500" />,
+                title: 'PPE Library',
+                description: 'Centralized repository for equipment specifications, manuals, and maintenance history.'
+              },
+              {
+                icon: <Award className="h-8 w-8 text-ds-blue-500" />,
+                title: 'Safety Training & Certification',
+                description: 'Track employee training progress and certification expiration dates automatically.'
               }
             ].map((feature, index) => (
               <motion.div
