@@ -8,8 +8,14 @@ import Footer from '@/components/layout/Footer';
 import { useAuth } from '@/contexts/AuthContext';
 import HarnessIcon from '@/components/icons/HarnessIcon';
 
+const CALENDLY_URL = "https://calendly.com/drop-stop/demo";
+
 const Index: React.FC = () => {
   const { isAuthenticated } = useAuth();
+
+  const openCalendly = () => {
+    window.open(CALENDLY_URL, '_blank');
+  };
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -51,12 +57,12 @@ const Index: React.FC = () => {
                 <Link to="/intake">Get Started</Link>
               </Button>
               <Button 
-                asChild 
                 variant="outline" 
                 size="lg" 
                 className="rounded-full border-ds-blue-200 font-medium"
+                onClick={openCalendly}
               >
-                <Link to="#">Schedule Demo</Link>
+                Schedule Demo
               </Button>
             </div>
           </motion.div>
@@ -259,12 +265,12 @@ const Index: React.FC = () => {
               <Link to="/intake">Get Started Free</Link>
             </Button>
             <Button 
-              asChild 
               variant="outline" 
               size="lg" 
               className="rounded-full border-white/30 text-ds-blue-600 hover:bg-white/10 font-medium"
+              onClick={openCalendly}
             >
-              <Link to="#">Contact Sales</Link>
+              Contact Sales
             </Button>
           </div>
         </div>
