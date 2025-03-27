@@ -1,6 +1,5 @@
-
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Eye, EyeOff, ChevronLeft } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
@@ -8,6 +7,7 @@ import Logo from '@/components/shared/Logo';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { useAuth } from '@/contexts/AuthContext';
 import {
   Card,
   CardContent,
@@ -31,11 +31,20 @@ const Auth: React.FC = () => {
   const [password, setPassword] = useState('');
   const [role, setRole] = useState<UserRole>('worker');
   const { toast } = useToast();
+  const { login, isAuthenticated } = useAuth();
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      const from = location.state?.from?.pathname || '/dashboard';
+      navigate(from, { replace: true });
+    }
+  }, [isAuthenticated, navigate, location]);
 
   const handleSubmit = (e: React.FormEvent, isLogin: boolean) => {
     e.preventDefault();
     
-    // Validation
     if (!email || !password) {
       toast({
         title: 'Error',
@@ -45,17 +54,12 @@ const Auth: React.FC = () => {
       return;
     }
     
-    // Here you would normally handle authentication
-    // For demo purposes, we'll just show a success message
+    login(email, password);
+    
     toast({
       title: isLogin ? 'Welcome back!' : 'Account created!',
       description: `Signed in as ${email} with role: ${role}`,
     });
-    
-    // Navigate to dashboard based on role
-    setTimeout(() => {
-      window.location.href = '/dashboard';
-    }, 1000);
   };
 
   const togglePasswordVisibility = () => {
