@@ -1,7 +1,8 @@
+
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { CheckCircle, Shield, LineChart, ArrowRight, LogIn, FileText, HardHat, Award } from 'lucide-react';
+import { CheckCircle, Shield, LineChart, ArrowRight, LogIn, FileText, LifeBuoy, Award } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
@@ -130,7 +131,7 @@ const Index: React.FC = () => {
                 description: 'Document and analyze incidents to identify root causes and prevent future occurrences.'
               },
               {
-                icon: <HardHat className="h-8 w-8 text-ds-blue-500" />,
+                icon: <LifeBuoy className="h-8 w-8 text-ds-blue-500" />,
                 title: 'PPE Library',
                 description: 'Centralized repository for equipment specifications, manuals, and maintenance history.'
               },
