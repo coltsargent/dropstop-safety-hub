@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { CheckCircle, Shield, LineChart, ArrowRight, LogIn, HardHat, BookOpen, FileText, Award } from 'lucide-react';
+import { CheckCircle, Shield, LineChart, ArrowRight, LogIn } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
@@ -92,23 +92,17 @@ const Index: React.FC = () => {
               {
                 icon: <CheckCircle className="h-8 w-8 text-ds-blue-500" />,
                 title: 'PPE & Equipment Inspections',
-                description: 'Digital pre-use checklists ensure compliance with digital records of all inspections.',
-                imagePath: '/lovable-uploads/97e464fc-ae77-4cd9-8487-436df7d422db.png',
-                imageAlt: 'Worker inspecting safety equipment'
+                description: 'Digital pre-use checklists ensure compliance with digital records of all inspections.'
               },
               {
                 icon: <Shield className="h-8 w-8 text-ds-blue-500" />,
                 title: 'Real-Time Fall Notifications',
-                description: 'Immediate alerts improve rescue response time and reduce claim severity.',
-                imagePath: '/lovable-uploads/97e464fc-ae77-4cd9-8487-436df7d422db.png',
-                imageAlt: 'Alert notification on mobile device'
+                description: 'Immediate alerts improve rescue response time and reduce claim severity.'
               },
               {
                 icon: <LineChart className="h-8 w-8 text-ds-blue-500" />,
                 title: 'Compliance Tracking',
-                description: 'Automate record-keeping for regulatory audits and insurance requirements.',
-                imagePath: '/lovable-uploads/97e464fc-ae77-4cd9-8487-436df7d422db.png',
-                imageAlt: 'Compliance tracking dashboard'
+                description: 'Automate record-keeping for regulatory audits and insurance requirements.'
               }
             ].map((feature, index) => (
               <motion.div
@@ -123,130 +117,7 @@ const Index: React.FC = () => {
                   {feature.icon}
                 </div>
                 <h3 className="text-xl font-semibold text-ds-neutral-900 mb-2">{feature.title}</h3>
-                <p className="text-ds-neutral-600 mb-4">{feature.description}</p>
-                
-                <div className="w-full h-48 rounded-lg overflow-hidden mt-2 mb-4 bg-ds-blue-50">
-                  <img 
-                    src={feature.imagePath} 
-                    alt={feature.imageAlt}
-                    className="w-full h-full object-cover"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-ds-blue-900/30 to-transparent"></div>
-                </div>
-                
-                <Button 
-                  asChild 
-                  variant="outline" 
-                  size="sm" 
-                  className="mt-2 border-ds-blue-200"
-                >
-                  <Link to="/auth">
-                    <span>Learn More</span>
-                    <ArrowRight className="h-4 w-4 ml-1" />
-                  </Link>
-                </Button>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Safety Infographic Section - NEW */}
-      <section className="py-16 md:py-24 px-4 bg-ds-blue-50">
-        <div className="container mx-auto max-w-6xl">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-ds-neutral-900 mb-4">
-              Enhanced Safety Features
-            </h2>
-            <p className="text-lg text-ds-neutral-700 max-w-2xl mx-auto">
-              Streamline your safety documentation, equipment management, and certification tracking with our comprehensive tools.
-            </p>
-          </div>
-          
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            {[
-              {
-                icon: <FileText className="h-10 w-10 text-white" />,
-                title: 'Incident & Near Miss Documentation',
-                description: 'Easily document incidents and near misses to identify patterns and prevent future occurrences.',
-                features: [
-                  'Structured reporting templates',
-                  'Photo & video documentation',
-                  'Automated notification workflow',
-                  'Corrective action tracking'
-                ],
-                color: 'bg-gradient-to-br from-ds-blue-600 to-ds-blue-700'
-              },
-              {
-                icon: <HardHat className="h-10 w-10 text-white" />,
-                title: 'PPE Library',
-                description: 'Comprehensive inventory system for all your Personal Protective Equipment needs.',
-                features: [
-                  'Equipment lifecycle tracking',
-                  'Inspection schedule automation',
-                  'Usage history & analytics',
-                  'Replacement forecasting'
-                ],
-                color: 'bg-gradient-to-br from-ds-red-500 to-ds-red-600'
-              },
-              {
-                icon: <Award className="h-10 w-10 text-white" />,
-                title: 'Safety Training & Certification',
-                description: 'Track all employee training and certifications to ensure compliance with safety regulations.',
-                features: [
-                  'Certification expiration alerts',
-                  'Training material distribution',
-                  'Competency verification',
-                  'Regulatory compliance tracking'
-                ],
-                color: 'bg-gradient-to-br from-ds-green-500 to-ds-green-600'
-              }
-            ].map((feature, index) => (
-              <motion.div
-                key={index}
-                className="flex flex-col rounded-xl overflow-hidden bg-white shadow-lg h-full"
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: index * 0.2 }}
-                viewport={{ once: true }}
-              >
-                <div className={`p-6 ${feature.color}`}>
-                  <div className="flex items-center gap-4">
-                    <div className="h-16 w-16 rounded-full bg-white/20 flex items-center justify-center flex-shrink-0">
-                      {feature.icon}
-                    </div>
-                    <h3 className="text-xl font-bold text-white">{feature.title}</h3>
-                  </div>
-                </div>
-                
-                <div className="p-6 flex-grow">
-                  <p className="text-ds-neutral-700 mb-6">
-                    {feature.description}
-                  </p>
-                  
-                  <h4 className="font-semibold text-ds-neutral-900 mb-4">Key Features:</h4>
-                  <ul className="space-y-3">
-                    {feature.features.map((item, idx) => (
-                      <li key={idx} className="flex items-start gap-2">
-                        <CheckCircle className="h-5 w-5 text-ds-blue-500 flex-shrink-0 mt-0.5" />
-                        <span className="text-ds-neutral-700">{item}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-                
-                <div className="p-6 pt-0">
-                  <Button 
-                    asChild 
-                    variant="outline" 
-                    className="w-full justify-between border-ds-neutral-200"
-                  >
-                    <Link to="/auth">
-                      <span>Learn More</span>
-                      <ArrowRight className="h-4 w-4" />
-                    </Link>
-                  </Button>
-                </div>
+                <p className="text-ds-neutral-600">{feature.description}</p>
               </motion.div>
             ))}
           </div>
