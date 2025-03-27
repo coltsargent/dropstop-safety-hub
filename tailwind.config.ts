@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -61,7 +62,73 @@ export default {
 					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
-				}
+				},
+				// Custom Drop Stop colors
+				"ds-blue": {
+					50: "#f0f7ff",
+					100: "#e0eefe",
+					200: "#bae0fd",
+					300: "#7cc8fb",
+					400: "#36aaf5",
+					500: "#0c8edf",
+					600: "#026dbf",
+					700: "#06589b",
+					800: "#0b4a7f",
+					900: "#0f3f6a",
+					950: "#0a2744",
+				},
+				"ds-neutral": {
+					50: "#f8f9fa",
+					100: "#f1f3f5",
+					200: "#e9ecef",
+					300: "#dee2e6",
+					400: "#ced4da",
+					500: "#adb5bd",
+					600: "#868e96",
+					700: "#495057",
+					800: "#343a40",
+					900: "#212529",
+					950: "#121416",
+				},
+				"ds-danger": {
+					50: "#fff1f2",
+					100: "#ffe4e6",
+					200: "#fecdd3",
+					300: "#fda4af",
+					400: "#fb7185",
+					500: "#f43f5e",
+					600: "#e11d48",
+					700: "#be123c",
+					800: "#9f1239",
+					900: "#881337",
+					950: "#4c0519",
+				},
+				"ds-success": {
+					50: "#f0fdf4",
+					100: "#dcfce7",
+					200: "#bbf7d0",
+					300: "#86efac",
+					400: "#4ade80",
+					500: "#22c55e",
+					600: "#16a34a",
+					700: "#15803d",
+					800: "#166534",
+					900: "#14532d",
+					950: "#052e16",
+				},
+				"ds-warning": {
+					50: "#fffbeb",
+					100: "#fef3c7",
+					200: "#fde68a",
+					300: "#fcd34d",
+					400: "#fbbf24",
+					500: "#f59e0b",
+					600: "#d97706",
+					700: "#b45309",
+					800: "#92400e",
+					900: "#78350f",
+					950: "#451a03",
+				},
 			},
 			borderRadius: {
 				lg: 'var(--radius)',
@@ -84,11 +151,74 @@ export default {
 					to: {
 						height: '0'
 					}
+				},
+				'fade-in': {
+					from: {
+						opacity: '0'
+					},
+					to: {
+						opacity: '1'
+					}
+				},
+				'fade-out': {
+					from: {
+						opacity: '1'
+					},
+					to: {
+						opacity: '0'
+					}
+				},
+				'slide-in-right': {
+					from: {
+						transform: 'translateX(100%)'
+					},
+					to: {
+						transform: 'translateX(0)'
+					}
+				},
+				'slide-out-right': {
+					from: {
+						transform: 'translateX(0)'
+					},
+					to: {
+						transform: 'translateX(100%)'
+					}
+				},
+				'slide-in-bottom': {
+					from: {
+						transform: 'translateY(100%)'
+					},
+					to: {
+						transform: 'translateY(0)'
+					}
+				},
+				'slide-out-bottom': {
+					from: {
+						transform: 'translateY(0)'
+					},
+					to: {
+						transform: 'translateY(100%)'
+					}
+				},
+				'pulse-slow': {
+					'0%, 100%': {
+						opacity: '1'
+					},
+					'50%': {
+						opacity: '0.8'
+					}
 				}
 			},
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
-				'accordion-up': 'accordion-up 0.2s ease-out'
+				'accordion-up': 'accordion-up 0.2s ease-out',
+				'fade-in': 'fade-in 0.3s ease-out',
+				'fade-out': 'fade-out 0.3s ease-out',
+				'slide-in-right': 'slide-in-right 0.3s ease-out',
+				'slide-out-right': 'slide-out-right 0.3s ease-out',
+				'slide-in-bottom': 'slide-in-bottom 0.3s ease-out',
+				'slide-out-bottom': 'slide-out-bottom 0.3s ease-out',
+				'pulse-slow': 'pulse-slow 2s infinite',
 			}
 		}
 	},

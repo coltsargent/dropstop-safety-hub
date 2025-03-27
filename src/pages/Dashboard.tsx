@@ -1,0 +1,487 @@
+
+import React from 'react';
+import { Link } from 'react-router-dom';
+import { motion } from 'framer-motion';
+import {
+  Calendar,
+  ClipboardCheck,
+  Users,
+  AlertTriangle,
+  Clock,
+  ChevronRight,
+  Shield,
+  Bell,
+  ArrowUpRight,
+  BarChart4,
+  CheckCircle,
+  HardHat,
+  ArrowDown,
+  ArrowUp,
+} from 'lucide-react';
+import Header from '@/components/layout/Header';
+import Footer from '@/components/layout/Footer';
+import SafetyStatus from '@/components/ui-extensions/SafetyStatus';
+import { Button } from '@/components/ui/button';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from '@/components/ui/tabs';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table';
+
+const Dashboard: React.FC = () => {
+  // Mock data for the dashboard
+  const stats = [
+    { 
+      title: 'Team Members', 
+      value: '24', 
+      icon: <Users className="h-5 w-5 text-ds-blue-600" />,
+      change: '+2 this month',
+      trend: 'up'
+    },
+    { 
+      title: 'Inspections Today', 
+      value: '18/24', 
+      icon: <ClipboardCheck className="h-5 w-5 text-ds-blue-600" />,
+      change: '75% compliance',
+      trend: 'neutral'
+    },
+    { 
+      title: 'Equipment Items', 
+      value: '86', 
+      icon: <HardHat className="h-5 w-5 text-ds-blue-600" />,
+      change: '12 need inspection',
+      trend: 'neutral'
+    },
+    { 
+      title: 'Safety Incidents', 
+      value: '0', 
+      icon: <AlertTriangle className="h-5 w-5 text-ds-success-500" />,
+      change: '-2 from last month',
+      trend: 'down'
+    },
+  ];
+
+  const teamMembers = [
+    { id: 1, name: 'John Doe', role: 'Roofer', status: 'safe', lastInspection: '2 hours ago' },
+    { id: 2, name: 'Jane Smith', role: 'Utilities Worker', status: 'safe', lastInspection: '1 hour ago' },
+    { id: 3, name: 'Mike Johnson', role: 'Window Cleaner', status: 'warning', lastInspection: '3 days ago' },
+    { id: 4, name: 'Sarah Williams', role: 'Roofer', status: 'danger', lastInspection: 'Not completed' },
+    { id: 5, name: 'David Brown', role: 'Utilities Worker', status: 'safe', lastInspection: '30 minutes ago' },
+  ];
+
+  const equipmentItems = [
+    { id: 'HAR-001', name: 'Full Body Harness', type: 'Harness', lastInspection: '2023-10-01', nextInspection: '2024-01-01', status: 'safe' },
+    { id: 'LAN-003', name: 'Self-Retracting Lanyard', type: 'Lanyard', lastInspection: '2023-11-15', nextInspection: '2023-12-15', status: 'warning' },
+    { id: 'ANC-007', name: 'Roof Anchor Point', type: 'Anchor', lastInspection: '2023-09-10', nextInspection: '2024-03-10', status: 'safe' },
+    { id: 'HAR-015', name: 'Construction Harness', type: 'Harness', lastInspection: '2023-08-22', nextInspection: '2023-11-22', status: 'danger' },
+  ];
+
+  const upcomingTraining = [
+    { id: 1, name: 'Fall Protection Awareness', date: '2023-12-10', attendees: 8 },
+    { id: 2, name: 'Equipment Inspection', date: '2023-12-15', attendees: 12 },
+    { id: 3, name: 'Rescue Procedures', date: '2023-12-22', attendees: 15 },
+  ];
+
+  return (
+    <div className="min-h-screen flex flex-col bg-ds-neutral-50">
+      <Header />
+      
+      <main className="flex-grow pt-16 px-4">
+        {/* Dashboard Header */}
+        <div className="container mx-auto py-8">
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-8">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+            >
+              <h1 className="text-3xl font-bold text-ds-neutral-900">Safety Dashboard</h1>
+              <p className="text-ds-neutral-600">
+                <span className="font-medium">Good morning, Safety Manager</span> • {new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
+              </p>
+            </motion.div>
+            
+            <motion.div
+              className="flex items-center gap-2 mt-4 md:mt-0"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+            >
+              <Button variant="outline" className="gap-1 border-ds-neutral-200">
+                <Calendar className="h-4 w-4 text-ds-neutral-500" />
+                <span>Schedule</span>
+              </Button>
+              <Button className="gap-1">
+                <Bell className="h-4 w-4" />
+                <span>Alerts</span>
+              </Button>
+            </motion.div>
+          </div>
+          
+          {/* Stats Cards */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+            {stats.map((stat, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
+              >
+                <Card className="border-ds-neutral-200">
+                  <CardContent className="p-6">
+                    <div className="flex justify-between items-start">
+                      <div>
+                        <p className="text-sm font-medium text-ds-neutral-500">{stat.title}</p>
+                        <h3 className="text-2xl font-bold mt-1 text-ds-neutral-900">{stat.value}</h3>
+                        <div className="flex items-center mt-1">
+                          {stat.trend === 'up' && <ArrowUp className="h-3 w-3 text-ds-blue-600 mr-1" />}
+                          {stat.trend === 'down' && <ArrowDown className="h-3 w-3 text-ds-success-600 mr-1" />}
+                          <span className={`text-xs ${stat.trend === 'up' ? 'text-ds-blue-600' : stat.trend === 'down' ? 'text-ds-success-600' : 'text-ds-neutral-500'}`}>
+                            {stat.change}
+                          </span>
+                        </div>
+                      </div>
+                      <div className="h-10 w-10 rounded-full bg-ds-blue-50 flex items-center justify-center">
+                        {stat.icon}
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </motion.div>
+            ))}
+          </div>
+          
+          {/* Main Content */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            {/* Left Column - Team Status */}
+            <motion.div 
+              className="lg:col-span-2"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.3 }}
+            >
+              <Card className="border-ds-neutral-200">
+                <CardHeader className="pb-2">
+                  <div className="flex items-center justify-between">
+                    <CardTitle>Team Inspection Status</CardTitle>
+                    <Button variant="ghost" size="sm" className="gap-1 text-ds-blue-600">
+                      <span>View All</span>
+                      <ChevronRight className="h-4 w-4" />
+                    </Button>
+                  </div>
+                  <CardDescription>Daily PPE inspection compliance</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>Name</TableHead>
+                        <TableHead>Role</TableHead>
+                        <TableHead>Status</TableHead>
+                        <TableHead>Last Inspection</TableHead>
+                        <TableHead></TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {teamMembers.map((member) => (
+                        <TableRow key={member.id}>
+                          <TableCell className="font-medium">{member.name}</TableCell>
+                          <TableCell>{member.role}</TableCell>
+                          <TableCell>
+                            <div className="flex items-center gap-2">
+                              <SafetyStatus status={member.status as any} />
+                              <span className="text-sm capitalize">
+                                {member.status === 'safe' ? 'Compliant' : 
+                                 member.status === 'warning' ? 'Due Soon' : 'Overdue'}
+                              </span>
+                            </div>
+                          </TableCell>
+                          <TableCell className="text-ds-neutral-600">{member.lastInspection}</TableCell>
+                          <TableCell>
+                            <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+                              <ChevronRight className="h-4 w-4" />
+                            </Button>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </CardContent>
+              </Card>
+            </motion.div>
+            
+            {/* Right Column - Quick Actions and Notifications */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.4 }}
+            >
+              <Card className="border-ds-neutral-200 mb-6">
+                <CardHeader>
+                  <CardTitle>Quick Actions</CardTitle>
+                </CardHeader>
+                <CardContent className="pb-2">
+                  <div className="space-y-2">
+                    {[
+                      { icon: <ClipboardCheck className="h-4 w-4" />, label: 'New Inspection', path: '/inspection' },
+                      { icon: <Shield className="h-4 w-4" />, label: 'Safety Meeting', path: '#' },
+                      { icon: <Users className="h-4 w-4" />, label: 'Add Team Member', path: '#' },
+                      { icon: <AlertTriangle className="h-4 w-4" />, label: 'Report Incident', path: '#' },
+                    ].map((action, index) => (
+                      <Button 
+                        key={index} 
+                        variant="outline" 
+                        className="w-full justify-start gap-3 border-ds-neutral-200"
+                        asChild
+                      >
+                        <Link to={action.path}>
+                          <div className="h-8 w-8 rounded-full bg-ds-blue-50 flex items-center justify-center flex-shrink-0">
+                            {action.icon}
+                          </div>
+                          <span>{action.label}</span>
+                        </Link>
+                      </Button>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+              
+              <Card className="border-ds-neutral-200">
+                <CardHeader>
+                  <div className="flex items-center justify-between">
+                    <CardTitle>Notifications</CardTitle>
+                    <Button variant="ghost" size="sm" className="gap-1 text-ds-blue-600">
+                      <span>View All</span>
+                      <ChevronRight className="h-4 w-4" />
+                    </Button>
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    {[
+                      { 
+                        icon: <Clock className="h-4 w-4 text-ds-warning-500" />, 
+                        title: 'Inspection Due', 
+                        description: 'Mike Johnson - 3 days since last inspection',
+                        time: '2 hours ago'
+                      },
+                      { 
+                        icon: <Calendar className="h-4 w-4 text-ds-blue-500" />, 
+                        title: 'Upcoming Training', 
+                        description: 'Fall Protection Awareness on Dec 10',
+                        time: '5 hours ago'
+                      },
+                      { 
+                        icon: <CheckCircle className="h-4 w-4 text-ds-success-500" />, 
+                        title: 'Equipment Inspected', 
+                        description: 'David Brown completed 3 equipment inspections',
+                        time: 'Yesterday'
+                      },
+                    ].map((notification, index) => (
+                      <div key={index} className="flex gap-3">
+                        <div className="h-8 w-8 rounded-full bg-ds-neutral-100 flex items-center justify-center flex-shrink-0">
+                          {notification.icon}
+                        </div>
+                        <div className="flex-1">
+                          <div className="flex items-center justify-between">
+                            <h4 className="text-sm font-medium">{notification.title}</h4>
+                            <span className="text-xs text-ds-neutral-500">{notification.time}</span>
+                          </div>
+                          <p className="text-xs text-ds-neutral-600 mt-1">{notification.description}</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+            </motion.div>
+          </div>
+          
+          {/* Tabs Section */}
+          <motion.div
+            className="mt-8"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.5 }}
+          >
+            <Card className="border-ds-neutral-200">
+              <CardHeader className="pb-0">
+                <CardTitle>Management Tools</CardTitle>
+              </CardHeader>
+              <CardContent className="pt-4">
+                <Tabs defaultValue="equipment" className="space-y-4">
+                  <TabsList className="grid grid-cols-3">
+                    <TabsTrigger value="equipment">Equipment</TabsTrigger>
+                    <TabsTrigger value="training">Training</TabsTrigger>
+                    <TabsTrigger value="reports">Reports</TabsTrigger>
+                  </TabsList>
+                  
+                  <TabsContent value="equipment">
+                    <Table>
+                      <TableHeader>
+                        <TableRow>
+                          <TableHead>ID</TableHead>
+                          <TableHead>Item</TableHead>
+                          <TableHead>Type</TableHead>
+                          <TableHead>Last Inspection</TableHead>
+                          <TableHead>Next Inspection</TableHead>
+                          <TableHead>Status</TableHead>
+                        </TableRow>
+                      </TableHeader>
+                      <TableBody>
+                        {equipmentItems.map((item) => (
+                          <TableRow key={item.id}>
+                            <TableCell className="font-medium">{item.id}</TableCell>
+                            <TableCell>{item.name}</TableCell>
+                            <TableCell>{item.type}</TableCell>
+                            <TableCell>{item.lastInspection}</TableCell>
+                            <TableCell>{item.nextInspection}</TableCell>
+                            <TableCell>
+                              <SafetyStatus status={item.status as any} showLabel />
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                    <div className="mt-4 flex justify-end">
+                      <Button variant="outline" className="gap-1 border-ds-neutral-200">
+                        <span>View All Equipment</span>
+                        <ArrowUpRight className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  </TabsContent>
+                  
+                  <TabsContent value="training">
+                    <div className="space-y-6">
+                      <div>
+                        <h4 className="text-sm font-medium mb-3">Upcoming Training Sessions</h4>
+                        <div className="space-y-3">
+                          {upcomingTraining.map((training) => (
+                            <div 
+                              key={training.id} 
+                              className="flex items-center justify-between bg-white border border-ds-neutral-200 rounded-lg p-4"
+                            >
+                              <div className="flex items-center gap-3">
+                                <div className="h-10 w-10 rounded-lg bg-ds-blue-100 flex items-center justify-center">
+                                  <Shield className="h-5 w-5 text-ds-blue-600" />
+                                </div>
+                                <div>
+                                  <h5 className="font-medium">{training.name}</h5>
+                                  <p className="text-sm text-ds-neutral-600">
+                                    {new Date(training.date).toLocaleDateString('en-US', { month: 'long', day: 'numeric' })} 
+                                    • {training.attendees} attendees
+                                  </p>
+                                </div>
+                              </div>
+                              <Button variant="outline" size="sm" className="border-ds-neutral-200">Manage</Button>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                      
+                      <div>
+                        <h4 className="text-sm font-medium mb-3">Team Certification Status</h4>
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                          {[
+                            { label: 'Up to Date', value: '18', percentage: '75%', color: 'bg-ds-success-500' },
+                            { label: 'Expiring Soon', value: '4', percentage: '17%', color: 'bg-ds-warning-500' },
+                            { label: 'Expired', value: '2', percentage: '8%', color: 'bg-ds-danger-500' },
+                          ].map((stat, index) => (
+                            <div 
+                              key={index}
+                              className="bg-white border border-ds-neutral-200 rounded-lg p-4"
+                            >
+                              <div className="flex items-center justify-between mb-2">
+                                <h5 className="text-sm font-medium">{stat.label}</h5>
+                                <span className="text-2xl font-bold">{stat.value}</span>
+                              </div>
+                              <div className="h-2 rounded-full bg-ds-neutral-100 overflow-hidden">
+                                <div className={`h-full ${stat.color}`} style={{ width: stat.percentage }}></div>
+                              </div>
+                              <p className="text-xs text-ds-neutral-500 mt-1">{stat.percentage} of team</p>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  </TabsContent>
+                  
+                  <TabsContent value="reports">
+                    <div className="space-y-6">
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        {[
+                          { 
+                            title: 'Compliance Report', 
+                            description: 'Track team compliance with safety regulations',
+                            icon: <BarChart4 className="h-5 w-5 text-ds-blue-600" />,
+                            updatedAt: 'Last updated 2 hours ago'
+                          },
+                          { 
+                            title: 'Incident Analysis', 
+                            description: 'Review and analyze safety incidents',
+                            icon: <AlertTriangle className="h-5 w-5 text-ds-warning-500" />,
+                            updatedAt: 'Last updated yesterday'
+                          },
+                          { 
+                            title: 'Equipment Inventory', 
+                            description: 'Complete inventory of safety equipment',
+                            icon: <HardHat className="h-5 w-5 text-ds-blue-600" />,
+                            updatedAt: 'Last updated 3 days ago'
+                          },
+                          { 
+                            title: 'Training Report', 
+                            description: 'Track team training and certification',
+                            icon: <Shield className="h-5 w-5 text-ds-success-500" />,
+                            updatedAt: 'Last updated 1 week ago'
+                          },
+                        ].map((report, index) => (
+                          <div 
+                            key={index}
+                            className="bg-white border border-ds-neutral-200 rounded-lg p-4 flex gap-4"
+                          >
+                            <div className="h-12 w-12 rounded-lg bg-ds-neutral-100 flex items-center justify-center flex-shrink-0">
+                              {report.icon}
+                            </div>
+                            <div className="flex-1">
+                              <h5 className="font-medium">{report.title}</h5>
+                              <p className="text-sm text-ds-neutral-600 mb-2">{report.description}</p>
+                              <div className="flex items-center justify-between">
+                                <span className="text-xs text-ds-neutral-500">{report.updatedAt}</span>
+                                <Button variant="ghost" size="sm" className="h-7 text-ds-blue-600 p-0">View Report</Button>
+                              </div>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </TabsContent>
+                </Tabs>
+              </CardContent>
+            </Card>
+          </motion.div>
+        </div>
+      </main>
+      
+      <Footer />
+    </div>
+  );
+};
+
+export default Dashboard;
