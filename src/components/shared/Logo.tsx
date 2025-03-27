@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { cn } from '@/lib/utils';
-import { Check } from 'lucide-react';
+import { ShieldCheck } from 'lucide-react';
 
 interface LogoProps {
   size?: 'sm' | 'md' | 'lg';
@@ -15,7 +15,7 @@ const Logo: React.FC<LogoProps> = ({ size = 'md', className }) => {
     lg: 'text-3xl',
   };
 
-  // Size mapping for check icon
+  // Size mapping for shield icon
   const iconSizes = {
     sm: 16,
     md: 20,
@@ -35,9 +35,9 @@ const Logo: React.FC<LogoProps> = ({ size = 'md', className }) => {
           St
         </span>
         
-        {/* Replace "o" with check mark */}
+        {/* Replace "o" with shield icon */}
         <div className="relative inline-flex items-center">
-          <Check 
+          <ShieldCheck 
             size={iconSizes[size]} 
             className="text-ds-blue-600 stroke-[2.5px]" 
           />
