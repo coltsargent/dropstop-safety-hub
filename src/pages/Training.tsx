@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { motion } from 'framer-motion';
 import { TooltipProvider } from '@/components/ui/tooltip';
@@ -232,18 +231,15 @@ const Training: React.FC = () => {
                           <TableCell className="font-medium">{employee.name}</TableCell>
                           <TableCell>{employee.role}</TableCell>
                           <TableCell>
-                            <div className="flex gap-2">
-                              {employee.authorized && 
-                                <div className="px-2 py-0.5 bg-blue-100 text-blue-700 text-xs font-medium rounded">
-                                  Authorized
-                                </div>
-                              }
-                              {employee.competent && 
-                                <div className="px-2 py-0.5 bg-purple-100 text-purple-700 text-xs font-medium rounded">
-                                  Competent
-                                </div>
-                              }
-                            </div>
+                            {employee.authorized || employee.competent ? (
+                              <div className="px-2 py-0.5 bg-blue-100 text-blue-700 text-xs font-medium rounded">
+                                {employee.competent ? "Competent" : "Authorized"}
+                              </div>
+                            ) : (
+                              <div className="px-2 py-0.5 bg-gray-100 text-gray-700 text-xs font-medium rounded">
+                                Untrained
+                              </div>
+                            )}
                           </TableCell>
                           <TableCell>{new Date(employee.lastTraining).toLocaleDateString()}</TableCell>
                           <TableCell>{new Date(employee.nextDue).toLocaleDateString()}</TableCell>
@@ -264,7 +260,7 @@ const Training: React.FC = () => {
                 </CardContent>
               </Card>
 
-              {/* Available Training Modules */}
+              {/* Training Resources */}
               <Card className="bg-white border-none shadow-sm mb-8">
                 <CardHeader>
                   <div className="flex justify-between items-center">
