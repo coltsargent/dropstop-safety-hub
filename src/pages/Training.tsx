@@ -1,11 +1,87 @@
+
 import React from 'react';
 import { motion } from 'framer-motion';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { CircleDashed, AlertCircle, CheckCircle2, Clock } from 'lucide-react';
+import { CircleDashed, AlertCircle, CheckCircle2, Clock, Users, UserCheck, FileWarning } from 'lucide-react';
 import { Progress } from '@/components/ui/progress';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import SafetyStatus from '@/components/ui-extensions/SafetyStatus';
+
+const employeeTrainingStatuses = [
+  {
+    id: 1,
+    name: 'Alex Johnson',
+    role: 'Construction Worker',
+    authorized: true,
+    competent: false,
+    lastTraining: '2023-06-12',
+    nextDue: '2024-06-12',
+    compliance: 85,
+    status: 'compliant'
+  },
+  {
+    id: 2,
+    name: 'Maria Garcia',
+    role: 'Site Supervisor',
+    authorized: true,
+    competent: true,
+    lastTraining: '2023-05-22',
+    nextDue: '2024-05-22',
+    compliance: 100,
+    status: 'compliant'
+  },
+  {
+    id: 3,
+    name: 'Derek Chen',
+    role: 'Roofer',
+    authorized: true,
+    competent: false,
+    lastTraining: '2023-09-05',
+    nextDue: '2024-09-05',
+    compliance: 70,
+    status: 'at-risk'
+  },
+  {
+    id: 4,
+    name: 'Sarah Miller',
+    role: 'Safety Officer',
+    authorized: true,
+    competent: true,
+    lastTraining: '2023-03-17',
+    nextDue: '2024-03-17',
+    compliance: 95,
+    status: 'compliant'
+  },
+  {
+    id: 5,
+    name: 'Jamal Wilson',
+    role: 'Equipment Operator',
+    authorized: false,
+    competent: false,
+    lastTraining: '2022-11-30',
+    nextDue: '2023-11-30',
+    compliance: 40,
+    status: 'non-compliant'
+  }
+];
+
+const certificationStats = {
+  authorized: {
+    total: 22,
+    current: 18,
+    expiring: 2,
+    expired: 2
+  },
+  competent: {
+    total: 12,
+    current: 9,
+    expiring: 1,
+    expired: 2
+  }
+};
 
 const trainingModules = [
   {
@@ -31,23 +107,7 @@ const trainingModules = [
     description: 'Advanced techniques for selecting and evaluating anchor points.',
     duration: '60 min',
     status: 'not-started',
-  },
-  {
-    id: 4,
-    title: 'Rescue Planning',
-    category: 'Competent Person',
-    description: 'Creating and implementing effective rescue plans for fallen workers.',
-    duration: '90 min',
-    status: 'not-started',
-  },
-  {
-    id: 5,
-    title: 'Fall Protection Regulations',
-    category: 'Authorized Person',
-    description: 'Overview of OSHA and other regulatory requirements for fall protection.',
-    duration: '60 min',
-    status: 'completed',
-  },
+  }
 ];
 
 const statusIcons = {
@@ -72,21 +132,30 @@ const Training: React.FC = () => {
             >
               <div className="flex flex-col md:flex-row md:items-center justify-between mb-8">
                 <div>
-                  <h1 className="text-3xl font-bold text-gray-900">Training Center</h1>
-                  <p className="text-gray-600 mt-1">Manage your certifications and access training modules</p>
+                  <h1 className="text-3xl font-bold text-gray-900">Training Management</h1>
+                  <p className="text-gray-600 mt-1">Oversee employee certifications and training compliance</p>
                 </div>
-                <div className="mt-4 md:mt-0">
+                
+                <div className="mt-4 md:mt-0 flex flex-wrap gap-3">
                   <Card className="bg-white border-none shadow-sm">
-                    <CardContent className="p-4">
-                      <div className="flex items-center gap-4">
-                        <div className="text-center">
-                          <div className="text-2xl font-bold text-ds-blue-600">2/3</div>
-                          <div className="text-xs text-gray-500">Certificates<br />Current</div>
+                    <CardContent className="py-3 px-4">
+                      <div className="flex items-center gap-3">
+                        <UserCheck className="text-ds-blue-600 h-10 w-10" />
+                        <div>
+                          <div className="text-2xl font-bold text-ds-blue-600">{certificationStats.authorized.current}/{certificationStats.authorized.total}</div>
+                          <div className="text-xs text-gray-500">Authorized<br />Certified</div>
                         </div>
-                        <div className="h-10 w-px bg-gray-200"></div>
-                        <div className="text-center">
-                          <div className="text-2xl font-bold text-amber-500">1</div>
-                          <div className="text-xs text-gray-500">Renewal<br />Needed</div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                  
+                  <Card className="bg-white border-none shadow-sm">
+                    <CardContent className="py-3 px-4">
+                      <div className="flex items-center gap-3">
+                        <FileWarning className="text-amber-500 h-10 w-10" />
+                        <div>
+                          <div className="text-2xl font-bold text-amber-500">{certificationStats.authorized.expiring + certificationStats.competent.expiring}</div>
+                          <div className="text-xs text-gray-500">Certs<br />Expiring Soon</div>
                         </div>
                       </div>
                     </CardContent>
@@ -94,21 +163,25 @@ const Training: React.FC = () => {
                 </div>
               </div>
 
-              {/* Training Progress */}
+              {/* Certification Overview */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
                 <Card className="bg-white border-none shadow-sm">
                   <CardHeader className="pb-2">
-                    <CardTitle className="text-lg">Authorized Person Training</CardTitle>
+                    <CardTitle className="text-lg">Authorized Person Certifications</CardTitle>
                     <CardDescription>Required annual certification</CardDescription>
                   </CardHeader>
                   <CardContent>
                     <div className="space-y-4">
                       <div className="flex justify-between items-center">
-                        <span className="text-sm font-medium">Progress</span>
-                        <span className="text-sm text-gray-500">70%</span>
+                        <span className="text-sm font-medium">Organization Compliance</span>
+                        <span className="text-sm text-gray-500">{Math.round((certificationStats.authorized.current / certificationStats.authorized.total) * 100)}%</span>
                       </div>
-                      <Progress value={70} className="h-2" />
-                      <div className="text-xs text-gray-500">Last updated: Jun 12, 2023</div>
+                      <Progress value={(certificationStats.authorized.current / certificationStats.authorized.total) * 100} className="h-2" />
+                      <div className="flex justify-between text-xs text-gray-500">
+                        <span>Current: {certificationStats.authorized.current}</span>
+                        <span>Expiring Soon: {certificationStats.authorized.expiring}</span>
+                        <span>Expired: {certificationStats.authorized.expired}</span>
+                      </div>
                     </div>
                   </CardContent>
                 </Card>
@@ -121,42 +194,118 @@ const Training: React.FC = () => {
                   <CardContent>
                     <div className="space-y-4">
                       <div className="flex justify-between items-center">
-                        <span className="text-sm font-medium">Progress</span>
-                        <span className="text-sm text-gray-500">25%</span>
+                        <span className="text-sm font-medium">Organization Compliance</span>
+                        <span className="text-sm text-gray-500">{Math.round((certificationStats.competent.current / certificationStats.competent.total) * 100)}%</span>
                       </div>
-                      <Progress value={25} className="h-2" />
-                      <div className="text-xs text-gray-500">Expires: Aug 30, 2023</div>
+                      <Progress value={(certificationStats.competent.current / certificationStats.competent.total) * 100} className="h-2" />
+                      <div className="flex justify-between text-xs text-gray-500">
+                        <span>Current: {certificationStats.competent.current}</span>
+                        <span>Expiring Soon: {certificationStats.competent.expiring}</span>
+                        <span>Expired: {certificationStats.competent.expired}</span>
+                      </div>
                     </div>
                   </CardContent>
                 </Card>
               </div>
 
-              {/* Training Modules */}
+              {/* Employee Training Status Table */}
               <Card className="bg-white border-none shadow-sm mb-8">
                 <CardHeader>
-                  <CardTitle>Available Training Modules</CardTitle>
-                  <CardDescription>Complete these modules to maintain your certifications</CardDescription>
+                  <CardTitle>Employee Training Status</CardTitle>
+                  <CardDescription>Monitor employee certification compliance</CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <div className="space-y-4">
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>Employee</TableHead>
+                        <TableHead>Role</TableHead>
+                        <TableHead>Status</TableHead>
+                        <TableHead>Last Training</TableHead>
+                        <TableHead>Next Due</TableHead>
+                        <TableHead>Compliance</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {employeeTrainingStatuses.map(employee => (
+                        <TableRow key={employee.id} className="cursor-pointer hover:bg-gray-50">
+                          <TableCell className="font-medium">{employee.name}</TableCell>
+                          <TableCell>{employee.role}</TableCell>
+                          <TableCell>
+                            <div className="flex gap-2">
+                              {employee.authorized && 
+                                <div className="px-2 py-0.5 bg-blue-100 text-blue-700 text-xs font-medium rounded">
+                                  Authorized
+                                </div>
+                              }
+                              {employee.competent && 
+                                <div className="px-2 py-0.5 bg-purple-100 text-purple-700 text-xs font-medium rounded">
+                                  Competent
+                                </div>
+                              }
+                            </div>
+                          </TableCell>
+                          <TableCell>{new Date(employee.lastTraining).toLocaleDateString()}</TableCell>
+                          <TableCell>{new Date(employee.nextDue).toLocaleDateString()}</TableCell>
+                          <TableCell>
+                            <div className="flex items-center gap-2">
+                              <Progress value={employee.compliance} className="h-2 w-20" />
+                              <span className="text-sm">{employee.compliance}%</span>
+                              <SafetyStatus 
+                                status={employee.status === 'compliant' ? 'safe' : employee.status === 'at-risk' ? 'warning' : 'danger'} 
+                                size="sm"
+                              />
+                            </div>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </CardContent>
+              </Card>
+
+              {/* Available Training Modules */}
+              <Card className="bg-white border-none shadow-sm mb-8">
+                <CardHeader>
+                  <div className="flex justify-between items-center">
+                    <div>
+                      <CardTitle>Training Resources</CardTitle>
+                      <CardDescription>Modules available for employee certification</CardDescription>
+                    </div>
+                    <div className="flex items-center gap-2 text-sm">
+                      <span className="flex items-center gap-1">
+                        <div className="w-3 h-3 rounded-full bg-green-500"></div>
+                        Completed
+                      </span>
+                      <span className="flex items-center gap-1">
+                        <div className="w-3 h-3 rounded-full bg-blue-500"></div>
+                        In Progress
+                      </span>
+                      <span className="flex items-center gap-1">
+                        <div className="w-3 h-3 rounded-full bg-gray-300"></div>
+                        Available
+                      </span>
+                    </div>
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                     {trainingModules.map(module => (
                       <div 
                         key={module.id} 
-                        className="p-4 rounded-lg border border-gray-200 hover:border-ds-blue-300 hover:bg-ds-blue-50/30 transition-colors cursor-pointer"
+                        className="p-4 rounded-lg border border-gray-200 hover:border-ds-blue-300 hover:bg-ds-blue-50/30 transition-colors cursor-pointer h-full flex flex-col"
                       >
-                        <div className="flex justify-between items-start">
-                          <div>
-                            <h3 className="font-medium text-gray-900">{module.title}</h3>
-                            <div className="inline-block px-2 py-1 bg-gray-100 rounded text-xs font-medium text-gray-700 mt-1 mb-2">
-                              {module.category}
-                            </div>
-                            <p className="text-sm text-gray-600">{module.description}</p>
+                        <div className="flex justify-between items-start mb-2">
+                          <div className="inline-block px-2 py-1 bg-gray-100 rounded text-xs font-medium text-gray-700">
+                            {module.category}
                           </div>
                           <div className="flex items-center">
                             {statusIcons[module.status as keyof typeof statusIcons]}
                           </div>
                         </div>
-                        <div className="flex items-center justify-between mt-2 text-xs text-gray-500">
+                        <h3 className="font-medium text-gray-900 mb-2">{module.title}</h3>
+                        <p className="text-sm text-gray-600 flex-grow">{module.description}</p>
+                        <div className="flex items-center justify-between mt-3 text-xs text-gray-500">
                           <div>Duration: {module.duration}</div>
                           <div className="capitalize">{module.status.replace('-', ' ')}</div>
                         </div>
@@ -166,26 +315,42 @@ const Training: React.FC = () => {
                 </CardContent>
               </Card>
 
-              {/* Upcoming Deadlines */}
+              {/* Critical Certification Alerts */}
               <Card className="bg-white border-none shadow-sm">
                 <CardHeader>
-                  <CardTitle>Certification Deadlines</CardTitle>
+                  <CardTitle>Critical Certification Alerts</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-4">
                     <div className="flex items-center gap-3 p-3 rounded-lg border border-amber-200 bg-amber-50">
                       <AlertCircle className="h-5 w-5 text-amber-500" />
-                      <div>
-                        <p className="text-sm font-medium">Competent Person Certification Renewal</p>
-                        <p className="text-xs text-gray-600">Due in 28 days</p>
+                      <div className="flex-grow">
+                        <p className="text-sm font-medium">5 employees have certifications expiring within 30 days</p>
+                        <p className="text-xs text-gray-600">Send reminders to ensure timely renewal</p>
                       </div>
+                      <button className="text-xs bg-white border border-gray-300 px-3 py-1 rounded hover:bg-gray-50">
+                        View List
+                      </button>
+                    </div>
+                    <div className="flex items-center gap-3 p-3 rounded-lg border border-red-200 bg-red-50">
+                      <AlertCircle className="h-5 w-5 text-red-500" />
+                      <div className="flex-grow">
+                        <p className="text-sm font-medium">3 employees have expired certifications</p>
+                        <p className="text-xs text-gray-600">These employees should not perform restricted work</p>
+                      </div>
+                      <button className="text-xs bg-white border border-gray-300 px-3 py-1 rounded hover:bg-gray-50">
+                        View List
+                      </button>
                     </div>
                     <div className="flex items-center gap-3 p-3 rounded-lg border border-green-200 bg-green-50">
                       <CheckCircle2 className="h-5 w-5 text-green-500" />
-                      <div>
-                        <p className="text-sm font-medium">Authorized Person Certification</p>
-                        <p className="text-xs text-gray-600">Current until May 15, 2024</p>
+                      <div className="flex-grow">
+                        <p className="text-sm font-medium">Quarterly compliance report ready</p>
+                        <p className="text-xs text-gray-600">Organization training compliance is at 78%</p>
                       </div>
+                      <button className="text-xs bg-white border border-gray-300 px-3 py-1 rounded hover:bg-gray-50">
+                        Download
+                      </button>
                     </div>
                   </div>
                 </CardContent>
