@@ -23,6 +23,7 @@ import {
 import { cn } from '@/lib/utils';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { useAuth } from '@/contexts/AuthContext';
+import LogoutButton from '@/components/auth/LogoutButton';
 
 const Header: React.FC = () => {
   const [scrolled, setScrolled] = useState(false);
@@ -160,7 +161,9 @@ const Header: React.FC = () => {
                   <DropdownMenuItem>Settings</DropdownMenuItem>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem asChild>
-                    <Link to="/auth">Log out</Link>
+                    <div className="w-full cursor-pointer">
+                      <LogoutButton />
+                    </div>
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
