@@ -22,34 +22,31 @@ const Logo: React.FC<LogoProps> = ({ size = 'md', className }) => {
     lg: 24,
   };
 
-  // Font weight for the "Stop" part
-  const stopFontWeight = 'font-bold';
-
   return (
     <div className={cn('font-bold tracking-tight flex items-center', sizeClasses[size], className)}>
       <div className="flex items-baseline">
         {/* "Drop" in red font */}
-        <span className="font-serif text-ds-danger-600 mr-1">
+        <span className="font-poppins text-ds-danger-600 mr-1">
           Drop
         </span>
         
         {/* "St" part of "Stop" in blue */}
-        <span className="font-sans text-ds-blue-600">
+        <span className="font-montserrat text-ds-blue-600">
           St
         </span>
         
-        {/* "o" part of "Stop" in blue */}
-        <span className="font-sans text-ds-blue-600">
-          o
-        </span>
-        
-        {/* Replace the last "p" with a check mark icon */}
+        {/* Replace "o" with check mark */}
         <div className="relative inline-flex items-center">
           <Check 
             size={iconSizes[size]} 
             className="text-ds-blue-600 stroke-[2.5px]" 
           />
         </div>
+        
+        {/* "p" part of "Stop" in blue */}
+        <span className="font-montserrat text-ds-blue-600">
+          p
+        </span>
       </div>
     </div>
   );
