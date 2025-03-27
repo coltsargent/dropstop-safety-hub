@@ -4,7 +4,6 @@ import { cn } from '@/lib/utils';
 import { 
   Tooltip,
   TooltipContent,
-  TooltipProvider,
   TooltipTrigger 
 } from '@/components/ui/tooltip';
 
@@ -74,16 +73,14 @@ const SafetyStatus: React.FC<SafetyStatusProps> = ({
   }
 
   return (
-    <TooltipProvider>
-      <Tooltip>
-        <TooltipTrigger asChild>
-          {indicator}
-        </TooltipTrigger>
-        <TooltipContent>
-          <p>{statusLabels[status]}</p>
-        </TooltipContent>
-      </Tooltip>
-    </TooltipProvider>
+    <Tooltip>
+      <TooltipTrigger asChild>
+        {indicator}
+      </TooltipTrigger>
+      <TooltipContent>
+        <p>{statusLabels[status]}</p>
+      </TooltipContent>
+    </Tooltip>
   );
 };
 
