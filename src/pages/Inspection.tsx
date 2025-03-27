@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { 
@@ -11,13 +10,16 @@ import {
   Clock,
   MapPin,
   ArrowLeft,
-  Send
+  Send,
+  QrCode,
+  Tag
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
+import { Input } from '@/components/ui/input';
 import {
   Card,
   CardContent,
@@ -40,6 +42,14 @@ interface ChecklistItem {
   status: 'pending' | 'pass' | 'fail' | 'na';
   notes: string;
   images: string[];
+}
+
+interface InspectionData {
+  productName: string;
+  productCode: string;
+  images: string[];
+  generalNotes: string;
+  checklistItems: Record<string, ChecklistItem[]>;
 }
 
 const inspectionCategories = [
@@ -169,6 +179,9 @@ const Inspection: React.FC = () => {
   const [items, setItems] = useState<Record<string, ChecklistItem[]>>(checklistItems);
   const [generalNotes, setGeneralNotes] = useState('');
   const [inspectionComplete, setInspectionComplete] = useState(false);
+  const [productName, setProductName] = useState('');
+  const [productCode, setProductCode] = useState('');
+  const [productImages, setProductImages] = useState<string[]>([]);
   const { toast } = useToast();
   
   const updateItemStatus = (categoryId: string, itemId: string, status: 'pass' | 'fail' | 'na') => {
@@ -208,8 +221,6 @@ const Inspection: React.FC = () => {
   };
   
   const handleAddImage = (categoryId: string, itemId: string) => {
-    // In a real app, this would trigger the device camera
-    // For now, we'll just add a placeholder image URL
     setItems(prev => {
       const newItems = { ...prev };
       const categoryItems = [...newItems[categoryId]];
@@ -235,8 +246,28 @@ const Inspection: React.FC = () => {
     });
   };
   
+  const handleAddProductImage = () => {
+    setProductImages(prev => [
+      ...prev,
+      'https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?auto=format&fit=crop&q=80&w=2070&ixlib=rb-4.0.3'
+    ]);
+    
+    toast({
+      title: 'Product image captured',
+      description: 'Image has been added to the product record',
+    });
+  };
+  
   const handleSubmitInspection = () => {
-    // Check if any items are still pending
+    if (!productName.trim()) {
+      toast({
+        title: 'Product name required',
+        description: 'Please enter a product name before submitting',
+        variant: 'destructive',
+      });
+      return;
+    }
+    
     let allCompleted = true;
     let anyFailed = false;
     
@@ -260,6 +291,16 @@ const Inspection: React.FC = () => {
       return;
     }
     
+    const inspectionData: InspectionData = {
+      productName,
+      productCode,
+      images: productImages,
+      generalNotes,
+      checklistItems: items
+    };
+    
+    console.log('Inspection data submitted:', inspectionData);
+    
     setInspectionComplete(true);
     
     toast({
@@ -269,8 +310,6 @@ const Inspection: React.FC = () => {
         : 'Inspection completed successfully',
       variant: anyFailed ? 'destructive' : 'default',
     });
-    
-    // In a real app, you would submit the inspection data to your backend
   };
   
   const renderStatusButtons = (categoryId: string, item: ChecklistItem) => {
@@ -316,7 +355,6 @@ const Inspection: React.FC = () => {
       
       <main className="flex-grow pt-16 px-4">
         <div className="container mx-auto py-8">
-          {/* Inspection Header */}
           <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -390,6 +428,37 @@ const Inspection: React.FC = () => {
                 <CardContent>
                   <div className="space-y-4">
                     <div>
+                      <h3 className="font-medium text-ds-neutral-900 mb-1">Product Information</h3>
+                      <div className="bg-white p-4 rounded-lg border border-ds-neutral-200">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                          <div>
+                            <p className="text-sm text-ds-neutral-500">Product Name</p>
+                            <p className="font-medium">{productName}</p>
+                          </div>
+                          {productCode && (
+                            <div>
+                              <p className="text-sm text-ds-neutral-500">Product Code</p>
+                              <p className="font-medium">{productCode}</p>
+                            </div>
+                          )}
+                        </div>
+                        
+                        {productImages.length > 0 && (
+                          <div>
+                            <p className="text-sm text-ds-neutral-500 mb-2">Product Images</p>
+                            <div className="flex flex-wrap gap-2">
+                              {productImages.map((image, idx) => (
+                                <div key={idx} className="relative h-16 w-16 rounded-md overflow-hidden">
+                                  <img src={image} alt="Product" className="h-full w-full object-cover" />
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                    
+                    <div>
                       <h3 className="font-medium text-ds-neutral-900 mb-1">Summary</h3>
                       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                         {inspectionCategories.map(category => {
@@ -443,7 +512,85 @@ const Inspection: React.FC = () => {
             </motion.div>
           ) : (
             <>
-              {/* Equipment Selection */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5 }}
+              >
+                <Card className="border-ds-neutral-200 mb-6">
+                  <CardHeader>
+                    <CardTitle>Product Information</CardTitle>
+                    <CardDescription>Enter details about the equipment being inspected</CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-4">
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div className="space-y-2">
+                          <label htmlFor="productName" className="text-sm font-medium">
+                            Product Name <span className="text-ds-danger-500">*</span>
+                          </label>
+                          <div className="flex items-center gap-2">
+                            <Tag className="h-4 w-4 text-ds-neutral-500" />
+                            <Input
+                              id="productName"
+                              placeholder="Enter product name"
+                              value={productName}
+                              onChange={(e) => setProductName(e.target.value)}
+                              className="flex-1"
+                            />
+                          </div>
+                        </div>
+                        <div className="space-y-2">
+                          <label htmlFor="productCode" className="text-sm font-medium">
+                            Product Code
+                          </label>
+                          <div className="flex items-center gap-2">
+                            <QrCode className="h-4 w-4 text-ds-neutral-500" />
+                            <Input
+                              id="productCode"
+                              placeholder="Enter product code"
+                              value={productCode}
+                              onChange={(e) => setProductCode(e.target.value)}
+                              className="flex-1"
+                            />
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <div className="space-y-2">
+                        <label className="text-sm font-medium">Product Images</label>
+                        <div className="flex flex-wrap gap-2">
+                          {productImages.map((image, idx) => (
+                            <div key={idx} className="relative h-24 w-24 rounded-md overflow-hidden">
+                              <img src={image} alt="Product" className="h-full w-full object-cover" />
+                              <Button
+                                type="button"
+                                variant="destructive"
+                                size="sm"
+                                className="absolute top-1 right-1 h-6 w-6 p-0"
+                                onClick={() => setProductImages(prev => prev.filter((_, i) => i !== idx))}
+                              >
+                                <XCircle className="h-4 w-4" />
+                              </Button>
+                            </div>
+                          ))}
+                          
+                          <Button
+                            type="button"
+                            variant="outline"
+                            className="h-24 w-24 flex flex-col items-center justify-center gap-1 border-dashed border-ds-neutral-300"
+                            onClick={handleAddProductImage}
+                          >
+                            <Camera className="h-6 w-6 text-ds-neutral-500" />
+                            <span className="text-xs text-ds-neutral-500">Add Photo</span>
+                          </Button>
+                        </div>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </motion.div>
+              
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -472,7 +619,6 @@ const Inspection: React.FC = () => {
                 </Card>
               </motion.div>
               
-              {/* Inspection Checklist */}
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -538,7 +684,6 @@ const Inspection: React.FC = () => {
                 </Card>
               </motion.div>
               
-              {/* General Notes */}
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
