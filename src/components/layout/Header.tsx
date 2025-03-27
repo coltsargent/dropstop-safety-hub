@@ -20,11 +20,13 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { cn } from '@/lib/utils';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 const Header: React.FC = () => {
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const location = useLocation();
+  const isMobile = useIsMobile();
 
   // Handle scroll effect
   useEffect(() => {
@@ -53,6 +55,34 @@ const Header: React.FC = () => {
     { name: 'Equipment', path: '/equipment' },
   ];
 
+  // For mobile, use a simplified header
+  if (isMobile) {
+    return (
+      <header
+        className={cn(
+          'fixed top-0 left-0 right-0 z-50 transition-all duration-200',
+          scrolled ? 'bg-white/90 backdrop-blur-md shadow-sm' : 'bg-transparent'
+        )}
+      >
+        <div className="flex items-center justify-between h-14 px-4">
+          <Link to="/" className="flex items-center">
+            <Logo size="sm" />
+          </Link>
+          
+          <div className="flex items-center space-x-2">
+            <Button variant="ghost" size="icon" className="rounded-full">
+              <Bell className="h-5 w-5 text-ds-neutral-700" />
+            </Button>
+            <Button variant="ghost" size="icon" className="rounded-full">
+              <User className="h-5 w-5 text-ds-neutral-700" />
+            </Button>
+          </div>
+        </div>
+      </header>
+    );
+  }
+
+  // Desktop header remains as is
   return (
     <header
       className={cn(

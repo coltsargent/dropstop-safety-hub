@@ -12,27 +12,31 @@ import Inspection from "./pages/Inspection";
 import Training from "./pages/Training";
 import Equipment from "./pages/Equipment";
 import NotFound from "./pages/NotFound";
+import MobileNavigation from "./components/layout/MobileNavigation";
 
 const queryClient = new QueryClient();
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
-    <Toaster />
-    <Sonner />
-    <BrowserRouter>
-      <AnimatePresence mode="wait">
-        <Routes>
-          <Route path="/" element={<Index />} />
-          <Route path="/auth" element={<Auth />} />
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/inspection" element={<Inspection />} />
-          <Route path="/training" element={<Training />} />
-          <Route path="/equipment" element={<Equipment />} />
-          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </AnimatePresence>
-    </BrowserRouter>
+    <TooltipProvider>
+      <Toaster />
+      <Sonner />
+      <BrowserRouter>
+        <AnimatePresence mode="wait">
+          <Routes>
+            <Route path="/" element={<Index />} />
+            <Route path="/auth" element={<Auth />} />
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/inspection" element={<Inspection />} />
+            <Route path="/training" element={<Training />} />
+            <Route path="/equipment" element={<Equipment />} />
+            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </AnimatePresence>
+        <MobileNavigation />
+      </BrowserRouter>
+    </TooltipProvider>
   </QueryClientProvider>
 );
 
