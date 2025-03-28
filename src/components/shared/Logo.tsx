@@ -3,7 +3,7 @@ import React from 'react';
 import { cn } from '@/lib/utils';
 
 interface LogoProps {
-  size?: 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl';
+  size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl';
   className?: string;
   showTagline?: boolean;
   variant?: 'default' | 'header';
@@ -20,23 +20,25 @@ const Logo: React.FC<LogoProps> = ({
     if (variant === 'header') {
       // Half-sized for header
       const headerSizeClasses = {
-        sm: 'h-15', // Half from h-30
-        md: 'h-24', // Half from h-48
-        lg: 'h-36', // Half from h-72
-        xl: 'h-48', // Half from h-96
-        '2xl': 'h-64', // Half from h-[32rem]
-        '3xl': 'h-80', // Half from h-[40rem]
+        xs: 'h-3', // Tiny size
+        sm: 'h-6', // One-tenth of original h-60
+        md: 'h-10', // One-tenth of original h-96
+        lg: 'h-16', // One-tenth of h-160
+        xl: 'h-20', // One-tenth of h-200
+        '2xl': 'h-24', // One-tenth of h-240
+        '3xl': 'h-32', // One-tenth of h-320
       };
       return headerSizeClasses[size];
     } else {
-      // Original sizes for default variant
+      // Original sizes for default variant, now with an added 'xs' option
       const defaultSizeClasses = {
-        sm: 'h-30', // Tripled from h-10
-        md: 'h-48', // Tripled from h-16
-        lg: 'h-72', // Tripled from h-24
-        xl: 'h-96', // Tripled from h-32
-        '2xl': 'h-[32rem]', // Even larger option
-        '3xl': 'h-[40rem]', // Maximum size option
+        xs: 'h-6', // Tiny size
+        sm: 'h-30', // Original
+        md: 'h-48', // Original
+        lg: 'h-72', // Original
+        xl: 'h-96', // Original
+        '2xl': 'h-[32rem]', // Original
+        '3xl': 'h-[40rem]', // Original
       };
       return defaultSizeClasses[size];
     }

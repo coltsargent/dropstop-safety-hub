@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { 
@@ -146,7 +147,7 @@ const InspectorDashboard: React.FC = () => {
         <div className="flex flex-col space-y-2">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <Logo variant="header" size="sm" />
+              <Logo variant="header" size="xs" />
               <h1 className="text-3xl font-bold">Inspector Dashboard</h1>
             </div>
             
