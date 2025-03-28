@@ -1,7 +1,6 @@
-
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Calendar, Clipboard, History, Upload, CheckCircle, XCircle, Plus, Search } from 'lucide-react';
+import { Calendar, Clipboard, History, Upload, CheckCircle, XCircle, Plus, Search, ArrowLeft } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
@@ -12,6 +11,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
+import { Link, useNavigate } from 'react-router-dom';
 
 type InspectionItem = {
   id: string;
@@ -48,6 +48,7 @@ const mockInspectionHistory: InspectionBatch[] = [
 const InspectorDashboard: React.FC = () => {
   const { user } = useAuth();
   const { toast } = useToast();
+  const navigate = useNavigate();
   const [activeInspection, setActiveInspection] = useState<boolean>(false);
   const [equipment, setEquipment] = useState<InspectionItem[]>(mockEquipment);
   const [search, setSearch] = useState<string>('');
@@ -76,7 +77,6 @@ const InspectorDashboard: React.FC = () => {
       description: "Inspection batch has been sent to the Safety Supervisor for approval.",
     });
     setActiveInspection(false);
-    // Reset equipment status
     setEquipment(mockEquipment);
     setSelectedEquipment([]);
   };
@@ -105,7 +105,18 @@ const InspectorDashboard: React.FC = () => {
     >
       <div className="flex flex-col space-y-6">
         <div className="flex flex-col space-y-2">
-          <h1 className="text-3xl font-bold">Inspector Dashboard</h1>
+          <div className="flex items-center justify-between">
+            <h1 className="text-3xl font-bold">Inspector Dashboard</h1>
+            <Button 
+              variant="outline" 
+              size="sm"
+              onClick={() => navigate('/inspector')}
+              className="gap-2"
+            >
+              <ArrowLeft className="h-4 w-4" />
+              Back to Dashboard
+            </Button>
+          </div>
           <p className="text-muted-foreground">
             Welcome, {user?.email}. Manage and document equipment inspections for organizations.
           </p>
