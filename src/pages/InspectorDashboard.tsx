@@ -13,7 +13,8 @@ import {
   Phone,
   Mail,
   Building,
-  FileText
+  FileText,
+  LogOut
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
@@ -26,11 +27,21 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Link, useNavigate } from 'react-router-dom';
+import Logo from '@/components/shared/Logo';
+import LogoutButton from '@/components/auth/LogoutButton';
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 type InspectionItem = {
   id: string;
@@ -65,7 +76,7 @@ const mockInspectionHistory: InspectionBatch[] = [
 ];
 
 const InspectorDashboard: React.FC = () => {
-  const { user } = useAuth();
+  const { user, logout } = useAuth();
   const { toast } = useToast();
   const navigate = useNavigate();
   const [activeInspection, setActiveInspection] = useState<boolean>(false);
@@ -116,6 +127,15 @@ const InspectorDashboard: React.FC = () => {
     });
   };
 
+  const handleLogout = () => {
+    logout();
+    toast({
+      title: 'Logged out',
+      description: 'You have been successfully logged out.',
+    });
+    navigate('/');
+  };
+
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -125,60 +145,83 @@ const InspectorDashboard: React.FC = () => {
       <div className="flex flex-col space-y-6">
         <div className="flex flex-col space-y-2">
           <div className="flex items-center justify-between">
-            <h1 className="text-3xl font-bold">Inspector Dashboard</h1>
+            <div className="flex items-center gap-3">
+              <Logo variant="header" size="sm" />
+              <h1 className="text-3xl font-bold">Inspector Dashboard</h1>
+            </div>
             
-            <Popover>
-              <PopoverTrigger asChild>
-                <Button variant="outline" className="gap-2 border-ds-neutral-200">
-                  <div className="h-7 w-7 rounded-full bg-ds-blue-100 flex items-center justify-center">
-                    <User className="h-4 w-4 text-ds-blue-700" />
-                  </div>
-                  <span className="hidden sm:inline text-sm font-medium">Profile</span>
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent className="w-80" align="end">
-                <div className="flex flex-col space-y-4">
-                  <div className="flex items-center gap-3">
-                    <div className="h-12 w-12 rounded-full bg-ds-blue-100 flex items-center justify-center">
-                      <User className="h-6 w-6 text-ds-blue-700" />
+            <div className="flex items-center gap-3">
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button variant="outline" className="gap-2 border-ds-neutral-200">
+                    <div className="h-7 w-7 rounded-full bg-ds-blue-100 flex items-center justify-center">
+                      <User className="h-4 w-4 text-ds-blue-700" />
                     </div>
-                    <div>
-                      <h4 className="font-semibold">{user?.name || 'Inspector'}</h4>
-                      <p className="text-xs text-muted-foreground">Inspector</p>
-                    </div>
-                  </div>
-                  
-                  <div className="space-y-3">
-                    <div className="flex items-center gap-2 text-sm">
-                      <Mail className="h-4 w-4 text-muted-foreground" />
-                      <span>{user?.email}</span>
+                    <span className="hidden sm:inline text-sm font-medium">Profile</span>
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-80" align="end">
+                  <div className="flex flex-col space-y-4">
+                    <div className="flex items-center gap-3">
+                      <div className="h-12 w-12 rounded-full bg-ds-blue-100 flex items-center justify-center">
+                        <User className="h-6 w-6 text-ds-blue-700" />
+                      </div>
+                      <div>
+                        <h4 className="font-semibold">{user?.name || 'Inspector'}</h4>
+                        <p className="text-xs text-muted-foreground">Inspector</p>
+                      </div>
                     </div>
                     
-                    <div className="flex items-center gap-2 text-sm">
-                      <Phone className="h-4 w-4 text-muted-foreground" />
-                      <span>{user?.phone || '(555) 123-4567'}</span>
+                    <div className="space-y-3">
+                      <div className="flex items-center gap-2 text-sm">
+                        <Mail className="h-4 w-4 text-muted-foreground" />
+                        <span>{user?.email}</span>
+                      </div>
+                      
+                      <div className="flex items-center gap-2 text-sm">
+                        <Phone className="h-4 w-4 text-muted-foreground" />
+                        <span>{user?.phone || '(555) 123-4567'}</span>
+                      </div>
+                      
+                      <div className="flex items-center gap-2 text-sm">
+                        <Building className="h-4 w-4 text-muted-foreground" />
+                        <span>{user?.organization || 'Safety First Inspections'}</span>
+                      </div>
                     </div>
                     
-                    <div className="flex items-center gap-2 text-sm">
-                      <Building className="h-4 w-4 text-muted-foreground" />
-                      <span>{user?.organization || 'Safety First Inspections'}</span>
+                    <div className="border-t border-border pt-3">
+                      <Button variant="outline" size="sm" className="w-full" onClick={() => {
+                        toast({
+                          title: "Profile",
+                          description: "Profile settings will be available in a future update."
+                        });
+                      }}>
+                        <FileText className="h-4 w-4 mr-2" />
+                        Edit Profile
+                      </Button>
                     </div>
+                    
+                    <LogoutButton />
                   </div>
-                  
-                  <div className="border-t border-border pt-3">
-                    <Button variant="outline" size="sm" className="w-full" onClick={() => {
-                      toast({
-                        title: "Profile",
-                        description: "Profile settings will be available in a future update."
-                      });
-                    }}>
-                      <FileText className="h-4 w-4 mr-2" />
-                      Edit Profile
-                    </Button>
-                  </div>
-                </div>
-              </PopoverContent>
-            </Popover>
+                </PopoverContent>
+              </Popover>
+              
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" size="icon">
+                    <LogOut className="h-5 w-5" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem onClick={handleLogout}>
+                    <LogOut className="h-4 w-4 mr-2" />
+                    Logout
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
           </div>
           <p className="text-muted-foreground">
             Welcome, {user?.name || user?.email}. Manage and document equipment inspections for organizations.
