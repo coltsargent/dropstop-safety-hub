@@ -21,7 +21,7 @@ const Logo: React.FC<LogoProps> = ({ size = 'md', className, showTagline = false
   return (
     <div className={cn('flex flex-col items-center', className)}>
       <img 
-        src="/lovable-uploads/52da1ae2-d2d1-4dd3-802e-31ea07f9ce94.png" 
+        src="/lovable-uploads/8c0ff656-bfe1-4b5f-a14b-4a8708f1f527.png" 
         alt="Drop Stop Safety" 
         className={cn(sizeClasses[size], 'w-auto object-contain')}
       />
