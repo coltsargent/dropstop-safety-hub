@@ -160,3 +160,12 @@ html {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+
+/* Logo colors */
+.logo-blue {
+  color: #1e88e5; /* Match the blue shield in the logo */
+}
+
+.logo-black {
+  color: #000000; /* Match the black text in the logo */
+}
