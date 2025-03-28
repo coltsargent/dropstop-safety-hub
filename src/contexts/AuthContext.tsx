@@ -3,11 +3,19 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 
 export type UserRole = 'user' | 'worker' | 'safety-professional' | 'inspector';
 
+export type UserProfile = {
+  name?: string;
+  phone?: string;
+  email: string;
+  organization?: string;
+};
+
 type AuthContextType = {
   isAuthenticated: boolean;
-  login: (email: string, password: string, role?: UserRole) => void;
+  login: (email: string, password: string, role?: UserRole, profile?: Partial<UserProfile>) => void;
   logout: () => void;
-  user: { email: string; role: UserRole } | null;
+  user: (UserProfile & { role: UserRole }) | null;
+  updateProfile: (profile: Partial<UserProfile>) => void;
 };
 
 const AuthContext = createContext<AuthContextType>({
@@ -15,13 +23,14 @@ const AuthContext = createContext<AuthContextType>({
   login: () => {},
   logout: () => {},
   user: null,
+  updateProfile: () => {},
 });
 
 export const useAuth = () => useContext(AuthContext);
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
-  const [user, setUser] = useState<{ email: string; role: UserRole } | null>(null);
+  const [user, setUser] = useState<(UserProfile & { role: UserRole }) | null>(null);
   
   // Check if user was previously logged in (using localStorage)
   useEffect(() => {
@@ -33,12 +42,31 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   }, []);
 
-  const login = (email: string, password: string, role: UserRole = 'user') => {
+  const login = (
+    email: string, 
+    password: string, 
+    role: UserRole = 'user',
+    profile: Partial<UserProfile> = {}
+  ) => {
     // This is a simplified auth. In a real app, you'd validate credentials against a backend
-    const userData = { email, role };
+    const userData = { 
+      email, 
+      role,
+      name: profile.name || 'Inspector',
+      phone: profile.phone || '(555) 123-4567',
+      organization: profile.organization || 'Safety First Inspections'
+    };
     localStorage.setItem('user', JSON.stringify(userData));
     setUser(userData);
     setIsAuthenticated(true);
+  };
+
+  const updateProfile = (profile: Partial<UserProfile>) => {
+    if (user) {
+      const updatedUser = { ...user, ...profile };
+      localStorage.setItem('user', JSON.stringify(updatedUser));
+      setUser(updatedUser);
+    }
   };
 
   const logout = () => {
@@ -48,7 +76,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, login, logout, user }}>
+    <AuthContext.Provider value={{ isAuthenticated, login, logout, user, updateProfile }}>
       {children}
     </AuthContext.Provider>
   );
