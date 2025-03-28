@@ -107,15 +107,6 @@ const InspectorDashboard: React.FC = () => {
         <div className="flex flex-col space-y-2">
           <div className="flex items-center justify-between">
             <h1 className="text-3xl font-bold">Inspector Dashboard</h1>
-            <Button 
-              variant="outline" 
-              size="sm"
-              onClick={() => navigate('/inspector')}
-              className="gap-2"
-            >
-              <ArrowLeft className="h-4 w-4" />
-              Back to Dashboard
-            </Button>
           </div>
           <p className="text-muted-foreground">
             Welcome, {user?.email}. Manage and document equipment inspections for organizations.
@@ -129,7 +120,6 @@ const InspectorDashboard: React.FC = () => {
             <TabsTrigger value="history">Inspection History</TabsTrigger>
           </TabsList>
           
-          {/* PPE Inspection Tab */}
           <TabsContent value="inspection" className="space-y-4">
             {!activeInspection ? (
               <Card>
@@ -294,7 +284,6 @@ const InspectorDashboard: React.FC = () => {
             )}
           </TabsContent>
           
-          {/* Safety Systems Tab */}
           <TabsContent value="safety-systems">
             <Card>
               <CardHeader>
@@ -371,7 +360,6 @@ const InspectorDashboard: React.FC = () => {
             </Card>
           </TabsContent>
           
-          {/* Inspection History Tab */}
           <TabsContent value="history">
             <Card>
               <CardHeader>
