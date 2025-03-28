@@ -3,22 +3,23 @@ import React from 'react';
 import { cn } from '@/lib/utils';
 
 interface LogoProps {
-  size?: 'sm' | 'md' | 'lg';
+  size?: 'sm' | 'md' | 'lg' | 'xl';
   className?: string;
   showTagline?: boolean;
 }
 
 const Logo: React.FC<LogoProps> = ({ size = 'md', className, showTagline = false }) => {
   const sizeClasses = {
-    sm: 'h-8',
-    md: 'h-10',
-    lg: 'h-12',
+    sm: 'h-10',
+    md: 'h-16',
+    lg: 'h-24',
+    xl: 'h-32',
   };
 
   return (
     <div className={cn('flex flex-col items-center', className)}>
       <img 
-        src="/lovable-uploads/98568aff-e090-4363-9946-7a6132f653d8.png" 
+        src="/lovable-uploads/52da1ae2-d2d1-4dd3-802e-31ea07f9ce94.png" 
         alt="Drop Stop Safety" 
         className={cn(sizeClasses[size], 'w-auto object-contain')}
       />
