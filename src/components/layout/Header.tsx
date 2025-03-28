@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { 
@@ -71,7 +70,7 @@ const Header: React.FC = () => {
       >
         <div className="flex items-center justify-between h-14 px-4">
           <Link to="/" className="flex items-center">
-            <Logo size="sm" />
+            <Logo size="sm" variant="header" />
           </Link>
           
           <div className="flex items-center space-x-2">
@@ -109,7 +108,7 @@ const Header: React.FC = () => {
       <div className="container mx-auto px-4 h-16 flex items-center justify-between">
         <div className="flex items-center">
           <Link to="/" className="mr-8">
-            <Logo size="md" />
+            <Logo size="md" variant="header" />
           </Link>
           
           {/* Desktop Navigation - only show when authenticated or not on landing page */}
