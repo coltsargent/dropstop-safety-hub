@@ -7,7 +7,7 @@ import Logo from '@/components/shared/Logo';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { useAuth } from '@/contexts/AuthContext';
+import { useAuth, UserRole } from '@/contexts/AuthContext';
 import {
   Card,
   CardContent,
@@ -22,8 +22,6 @@ import {
   TabsList,
   TabsTrigger,
 } from '@/components/ui/tabs';
-
-type UserRole = 'worker' | 'safety-professional' | 'inspector';
 
 const Auth: React.FC = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -54,7 +52,7 @@ const Auth: React.FC = () => {
       return;
     }
     
-    login(email, password);
+    login(email, password, role);
     
     toast({
       title: isLogin ? 'Welcome back!' : 'Account created!',
