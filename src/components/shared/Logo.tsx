@@ -3,17 +3,19 @@ import React from 'react';
 import { cn } from '@/lib/utils';
 
 interface LogoProps {
-  size?: 'sm' | 'md' | 'lg' | 'xl';
+  size?: 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl';
   className?: string;
   showTagline?: boolean;
 }
 
 const Logo: React.FC<LogoProps> = ({ size = 'md', className, showTagline = false }) => {
   const sizeClasses = {
-    sm: 'h-10',
-    md: 'h-16',
-    lg: 'h-24',
-    xl: 'h-32',
+    sm: 'h-30', // Tripled from h-10
+    md: 'h-48', // Tripled from h-16
+    lg: 'h-72', // Tripled from h-24
+    xl: 'h-96', // Tripled from h-32
+    '2xl': 'h-[32rem]', // Even larger option
+    '3xl': 'h-[40rem]', // Maximum size option
   };
 
   return (
@@ -24,7 +26,7 @@ const Logo: React.FC<LogoProps> = ({ size = 'md', className, showTagline = false
         className={cn(sizeClasses[size], 'w-auto object-contain')}
       />
       {showTagline && (
-        <span className="text-xs text-ds-neutral-600 mt-1 font-medium tracking-wide">
+        <span className="text-base md:text-lg text-ds-neutral-600 mt-2 font-medium tracking-wide">
           Fall Protection & Safety Solutions
         </span>
       )}
