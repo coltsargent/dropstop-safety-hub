@@ -14,16 +14,16 @@
     --popover: 0 0% 100%;
     --popover-foreground: 222 47% 11%;
 
-    --primary: 210 100% 45%;
+    --primary: 220 85% 53%;
     --primary-foreground: 210 40% 98%;
 
-    --secondary: 210 40% 96%;
+    --secondary: 220 20% 96%;
     --secondary-foreground: 222 47% 11%;
 
-    --muted: 210 40% 96%;
+    --muted: 220 20% 96%;
     --muted-foreground: 215 16% 47%;
 
-    --accent: 210 40% 96%;
+    --accent: 220 20% 96%;
     --accent-foreground: 222 47% 11%;
 
     --destructive: 0 84% 60%;
@@ -31,7 +31,7 @@
 
     --border: 214 32% 91%;
     --input: 214 32% 91%;
-    --ring: 222 84% 48%;
+    --ring: 220 85% 53%;
 
     --radius: 0.5rem;
   }
@@ -46,7 +46,7 @@
     --popover: 222 47% 7%;
     --popover-foreground: 210 40% 98%;
 
-    --primary: 210 100% 52%;
+    --primary: 220 85% 53%;
     --primary-foreground: 222 47% 5%;
 
     --secondary: 217 33% 18%;
@@ -163,7 +163,7 @@ html {
 
 /* Logo colors */
 .logo-blue {
-  color: #0078D7; /* Match the blue shield in the new logo */
+  color: #2768e5; /* Match the new blue from the updated logo */
 }
 
 .logo-black {

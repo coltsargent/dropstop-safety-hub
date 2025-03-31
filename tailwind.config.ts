@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -70,15 +71,15 @@ export default {
 				"ds-blue": {
 					50: "#f0f7ff",
 					100: "#e0eefe",
-					200: "#bae0fd",
-					300: "#7cc8fb",
-					400: "#36aaf5",
-					500: "#0c8edf",
-					600: "#026dbf",
-					700: "#06589b",
-					800: "#0b4a7f",
-					900: "#0f3f6a",
-					950: "#0a2744",
+					200: "#c2ddfd",
+					300: "#95c5fb",
+					400: "#61a6f6",
+					500: "#3e87f1",
+					600: "#2768e5",
+					700: "#1f52d2",
+					800: "#1f44ab",
+					900: "#203c86",
+					950: "#172552",
 				},
 				"ds-neutral": {
 					50: "#f8f9fa",
