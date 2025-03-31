@@ -21,6 +21,16 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
       !location.pathname.startsWith('/inspector/')) {
     return <Navigate to="/inspector" replace />;
   }
+  
+  // Route workers directly to their dashboard if they try to access other protected routes
+  if (user?.role === 'worker' && 
+      location.pathname !== '/worker' && 
+      !location.pathname.startsWith('/worker/') &&
+      location.pathname !== '/inspection' && 
+      location.pathname !== '/training' &&
+      location.pathname !== '/equipment') {
+    return <Navigate to="/worker" replace />;
+  }
 
   return <>{children}</>;
 };

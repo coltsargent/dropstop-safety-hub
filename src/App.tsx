@@ -13,6 +13,7 @@ import Index from "./pages/Index";
 import IntakeForm from "./pages/IntakeForm";
 import Auth from "./pages/Auth";
 import Dashboard from "./pages/Dashboard";
+import FieldWorkerDashboard from "./pages/FieldWorkerDashboard";
 import InspectorDashboard from "./pages/InspectorDashboard";
 import Inspection from "./pages/Inspection";
 import Training from "./pages/Training";
@@ -28,6 +29,10 @@ const RoleBasedRoute = () => {
   
   if (user?.role === 'inspector') {
     return <Navigate to="/inspector" replace />;
+  }
+  
+  if (user?.role === 'worker') {
+    return <Navigate to="/worker" replace />;
   }
   
   return <Dashboard />;
@@ -51,6 +56,12 @@ const App = () => (
                 <Route path="/dashboard" element={
                   <ProtectedRoute>
                     <RoleBasedRoute />
+                  </ProtectedRoute>
+                } />
+                
+                <Route path="/worker" element={
+                  <ProtectedRoute>
+                    <FieldWorkerDashboard />
                   </ProtectedRoute>
                 } />
                 

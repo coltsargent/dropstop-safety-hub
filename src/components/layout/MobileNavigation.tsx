@@ -6,20 +6,47 @@ import { cn } from '@/lib/utils';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { Button } from '@/components/ui/button';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { useAuth } from '@/contexts/AuthContext';
 
 const MobileNavigation = () => {
   const location = useLocation();
   const isMobile = useIsMobile();
+  const { user } = useAuth();
   
   if (!isMobile) return null;
 
-  const navItems = [
-    { icon: Home, label: 'Dashboard', path: '/dashboard' },
-    { icon: ClipboardCheck, label: 'Inspections', path: '/inspection' },
-    { icon: GraduationCap, label: 'Training', path: '/training' },
-    { icon: HardHat, label: 'Equipment', path: '/equipment' },
-  ];
-
+  // Define different nav items based on user role
+  const getNavItems = () => {
+    // Default items for safety professionals
+    const defaultItems = [
+      { icon: Home, label: 'Dashboard', path: '/dashboard' },
+      { icon: ClipboardCheck, label: 'Inspections', path: '/inspection' },
+      { icon: GraduationCap, label: 'Training', path: '/training' },
+      { icon: HardHat, label: 'Equipment', path: '/equipment' },
+    ];
+    
+    // Worker-specific items
+    const workerItems = [
+      { icon: Home, label: 'Home', path: '/worker' },
+      { icon: ClipboardCheck, label: 'Inspections', path: '/inspection' },
+      { icon: GraduationCap, label: 'Training', path: '/training' },
+      { icon: HardHat, label: 'Equipment', path: '/equipment' },
+    ];
+    
+    // Inspector-specific items
+    const inspectorItems = [
+      { icon: Home, label: 'Dashboard', path: '/inspector' },
+      { icon: ClipboardCheck, label: 'Inspections', path: '/inspection' },
+      { icon: GraduationCap, label: 'Training', path: '/training' },
+      { icon: HardHat, label: 'Equipment', path: '/equipment' },
+    ];
+    
+    if (user?.role === 'worker') return workerItems;
+    if (user?.role === 'inspector') return inspectorItems;
+    return defaultItems;
+  };
+  
+  const navItems = getNavItems();
   const isActive = (path: string) => location.pathname === path;
 
   return (
