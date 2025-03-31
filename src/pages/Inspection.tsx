@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { 
   CheckCircle, 
@@ -12,7 +13,9 @@ import {
   ArrowLeft,
   Send,
   QrCode,
-  Tag
+  Tag,
+  Globe2,
+  Bell
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import Header from '@/components/layout/Header';
@@ -20,6 +23,11 @@ import Footer from '@/components/layout/Footer';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Input } from '@/components/ui/input';
+import { useLanguage } from '@/contexts/LanguageContext';
+import FallAlertButton from '@/components/safety/FallAlertButton';
+import LanguageSelector from '@/components/i18n/LanguageSelector';
+import GeolocationDisplay from '@/components/safety/GeolocationDisplay';
+import { formatDistance } from 'date-fns';
 import {
   Card,
   CardContent,
@@ -50,6 +58,19 @@ interface InspectionData {
   images: string[];
   generalNotes: string;
   checklistItems: Record<string, ChecklistItem[]>;
+  location?: {
+    latitude: number;
+    longitude: number;
+    accuracy: number;
+  };
+  timestamp: string;
+}
+
+interface TrainingInfo {
+  type: string;
+  completedDate: string;
+  expiryDate: string;
+  daysRemaining: number;
 }
 
 const inspectionCategories = [
@@ -182,7 +203,46 @@ const Inspection: React.FC = () => {
   const [productName, setProductName] = useState('');
   const [productCode, setProductCode] = useState('');
   const [productImages, setProductImages] = useState<string[]>([]);
+  const [location, setLocation] = useState<GeolocationPosition | null>(null);
+  const [locationError, setLocationError] = useState<string | null>(null);
   const { toast } = useToast();
+  const { t } = useLanguage();
+  
+  // Simulated training data - would come from API in production
+  const trainingInfo: TrainingInfo = {
+    type: 'Competent Person',
+    completedDate: '2023-10-15',
+    expiryDate: '2024-10-15',
+    daysRemaining: 180,
+  };
+  
+  useEffect(() => {
+    // Get geolocation when component mounts
+    if ('geolocation' in navigator) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          setLocation(position);
+        },
+        (error) => {
+          console.error('Error getting location:', error);
+          setLocationError(error.message);
+          toast({
+            title: t('locationError'),
+            description: t('pleaseEnableLocation'),
+            variant: 'destructive',
+          });
+        },
+        { enableHighAccuracy: true }
+      );
+    } else {
+      setLocationError('Geolocation not supported by this browser');
+      toast({
+        title: t('notSupported'),
+        description: t('locationNotSupported'),
+        variant: 'destructive',
+      });
+    }
+  }, [toast, t]);
   
   const updateItemStatus = (categoryId: string, itemId: string, status: 'pass' | 'fail' | 'na') => {
     setItems(prev => {
@@ -261,8 +321,8 @@ const Inspection: React.FC = () => {
   const handleSubmitInspection = () => {
     if (!productName.trim()) {
       toast({
-        title: 'Product name required',
-        description: 'Please enter a product name before submitting',
+        title: t('productNameRequired'),
+        description: t('pleaseEnterProductName'),
         variant: 'destructive',
       });
       return;
@@ -284,8 +344,8 @@ const Inspection: React.FC = () => {
     
     if (!allCompleted) {
       toast({
-        title: 'Incomplete Inspection',
-        description: 'Please complete all checklist items before submitting',
+        title: t('incompleteInspection'),
+        description: t('pleaseCompleteAllItems'),
         variant: 'destructive',
       });
       return;
@@ -296,7 +356,13 @@ const Inspection: React.FC = () => {
       productCode,
       images: productImages,
       generalNotes,
-      checklistItems: items
+      checklistItems: items,
+      timestamp: new Date().toISOString(),
+      location: location ? {
+        latitude: location.coords.latitude,
+        longitude: location.coords.longitude,
+        accuracy: location.coords.accuracy,
+      } : undefined
     };
     
     console.log('Inspection data submitted:', inspectionData);
@@ -304,12 +370,14 @@ const Inspection: React.FC = () => {
     setInspectionComplete(true);
     
     toast({
-      title: 'Inspection Submitted',
+      title: t('inspectionSubmitted'),
       description: anyFailed 
-        ? 'Inspection completed with issues that need attention' 
-        : 'Inspection completed successfully',
+        ? t('inspectionCompletedWithIssues') 
+        : t('inspectionCompletedSuccessfully'),
       variant: anyFailed ? 'destructive' : 'default',
     });
+    
+    // Here we would send data to the supervisor in a real implementation
   };
   
   const renderStatusButtons = (categoryId: string, item: ChecklistItem) => {
@@ -353,8 +421,14 @@ const Inspection: React.FC = () => {
     <div className="min-h-screen flex flex-col bg-ds-neutral-50">
       <Header />
       
-      <main className="flex-grow pt-16 px-4">
+      <main className="flex-grow pt-16 px-4 pb-20">
         <div className="container mx-auto py-8">
+          {/* Top bar with language selector and fall alert */}
+          <div className="flex justify-between items-center mb-6">
+            <LanguageSelector className="bg-white shadow-sm" />
+            <FallAlertButton />
+          </div>
+        
           <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -368,34 +442,31 @@ const Inspection: React.FC = () => {
                 onClick={() => window.history.back()}
               >
                 <ArrowLeft className="h-4 w-4 mr-1" />
-                Back
+                {t('back')}
               </Button>
-              <h1 className="text-3xl font-bold text-ds-neutral-900">Equipment Inspection</h1>
-              <p className="text-ds-neutral-600 flex flex-wrap items-center gap-x-4 mt-1">
-                <span className="flex items-center gap-1">
-                  <Calendar className="h-4 w-4 text-ds-neutral-500" />
-                  {new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
-                </span>
-                <span className="flex items-center gap-1">
-                  <Clock className="h-4 w-4 text-ds-neutral-500" />
-                  {new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}
-                </span>
-                <span className="flex items-center gap-1">
-                  <MapPin className="h-4 w-4 text-ds-neutral-500" />
-                  Current Location
-                </span>
-              </p>
+              <h1 className="text-3xl font-bold text-ds-neutral-900">{t('equipmentInspection')}</h1>
+              
+              {/* Location and time display */}
+              <GeolocationDisplay location={location} error={locationError} />
             </motion.div>
             
             <motion.div
-              className="mt-4 md:mt-0"
+              className="mt-4 md:mt-0 flex items-center gap-3"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.2 }}
             >
+              {/* Training reminder card */}
+              {trainingInfo.daysRemaining <= 30 && (
+                <div className="text-sm bg-ds-warning-50 text-ds-warning-700 p-2 rounded-md flex items-center mr-3">
+                  <Bell className="h-4 w-4 mr-1" />
+                  <span>{t('trainingExpiringSoon', { days: trainingInfo.daysRemaining })}</span>
+                </div>
+              )}
+            
               {inspectionComplete ? (
                 <Button variant="outline" className="gap-1 border-ds-neutral-200" onClick={() => setInspectionComplete(false)}>
-                  <span>New Inspection</span>
+                  <span>{t('newInspection')}</span>
                 </Button>
               ) : (
                 <Button 
@@ -403,11 +474,47 @@ const Inspection: React.FC = () => {
                   onClick={handleSubmitInspection}
                 >
                   <Send className="h-4 w-4" />
-                  <span>Submit Inspection</span>
+                  <span>{t('submitInspection')}</span>
                 </Button>
               )}
             </motion.div>
           </div>
+          
+          {/* Training status card */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            className="mb-6"
+          >
+            <Card className="border-ds-neutral-200">
+              <CardHeader className="pb-2">
+                <CardTitle className="text-lg">{t('trainingStatus')}</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <p className="text-sm text-ds-neutral-500">{t('trainingType')}</p>
+                    <p className="font-medium">{trainingInfo.type}</p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-ds-neutral-500">{t('completedDate')}</p>
+                    <p className="font-medium">{new Date(trainingInfo.completedDate).toLocaleDateString()}</p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-ds-neutral-500">{t('expiryDate')}</p>
+                    <p className="font-medium">{new Date(trainingInfo.expiryDate).toLocaleDateString()}</p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-ds-neutral-500">{t('timeRemaining')}</p>
+                    <p className={`font-medium ${trainingInfo.daysRemaining <= 30 ? 'text-ds-warning-600' : ''}`}>
+                      {trainingInfo.daysRemaining} {t('days')}
+                    </p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </motion.div>
           
           {inspectionComplete ? (
             <motion.div
@@ -519,21 +626,21 @@ const Inspection: React.FC = () => {
               >
                 <Card className="border-ds-neutral-200 mb-6">
                   <CardHeader>
-                    <CardTitle>Product Information</CardTitle>
-                    <CardDescription>Enter details about the equipment being inspected</CardDescription>
+                    <CardTitle>{t('productInformation')}</CardTitle>
+                    <CardDescription>{t('enterEquipmentDetails')}</CardDescription>
                   </CardHeader>
                   <CardContent>
                     <div className="space-y-4">
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div className="space-y-2">
                           <label htmlFor="productName" className="text-sm font-medium">
-                            Product Name <span className="text-ds-danger-500">*</span>
+                            {t('productName')} <span className="text-ds-danger-500">*</span>
                           </label>
                           <div className="flex items-center gap-2">
                             <Tag className="h-4 w-4 text-ds-neutral-500" />
                             <Input
                               id="productName"
-                              placeholder="Enter product name"
+                              placeholder={t('enterProductName')}
                               value={productName}
                               onChange={(e) => setProductName(e.target.value)}
                               className="flex-1"
@@ -542,13 +649,13 @@ const Inspection: React.FC = () => {
                         </div>
                         <div className="space-y-2">
                           <label htmlFor="productCode" className="text-sm font-medium">
-                            Product Code
+                            {t('productCode')}
                           </label>
                           <div className="flex items-center gap-2">
                             <QrCode className="h-4 w-4 text-ds-neutral-500" />
                             <Input
                               id="productCode"
-                              placeholder="Enter product code"
+                              placeholder={t('enterProductCode')}
                               value={productCode}
                               onChange={(e) => setProductCode(e.target.value)}
                               className="flex-1"
@@ -558,7 +665,7 @@ const Inspection: React.FC = () => {
                       </div>
                       
                       <div className="space-y-2">
-                        <label className="text-sm font-medium">Product Images</label>
+                        <label className="text-sm font-medium">{t('productImages')}</label>
                         <div className="flex flex-wrap gap-2">
                           {productImages.map((image, idx) => (
                             <div key={idx} className="relative h-24 w-24 rounded-md overflow-hidden">
@@ -582,7 +689,7 @@ const Inspection: React.FC = () => {
                             onClick={handleAddProductImage}
                           >
                             <Camera className="h-6 w-6 text-ds-neutral-500" />
-                            <span className="text-xs text-ds-neutral-500">Add Photo</span>
+                            <span className="text-xs text-ds-neutral-500">{t('addPhoto')}</span>
                           </Button>
                         </div>
                       </div>
@@ -598,8 +705,8 @@ const Inspection: React.FC = () => {
               >
                 <Card className="border-ds-neutral-200 mb-6">
                   <CardHeader>
-                    <CardTitle>Select Equipment Type</CardTitle>
-                    <CardDescription>Choose the type of equipment you are inspecting</CardDescription>
+                    <CardTitle>{t('selectEquipmentType')}</CardTitle>
+                    <CardDescription>{t('chooseEquipmentType')}</CardDescription>
                   </CardHeader>
                   <CardContent>
                     <Tabs 
@@ -610,7 +717,7 @@ const Inspection: React.FC = () => {
                       <TabsList className="grid grid-cols-2 md:grid-cols-4 w-full">
                         {inspectionCategories.map(category => (
                           <TabsTrigger key={category.id} value={category.id}>
-                            {category.name}
+                            {t(category.id)}
                           </TabsTrigger>
                         ))}
                       </TabsList>

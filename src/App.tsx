@@ -6,6 +6,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AnimatePresence } from "framer-motion";
 import { AuthProvider, useAuth } from "@/contexts/AuthContext";
+import { LanguageProvider } from "@/contexts/LanguageContext";
 import ProtectedRoute from "@/components/auth/ProtectedRoute";
 
 import Index from "./pages/Index";
@@ -38,48 +39,50 @@ const App = () => (
       <Toaster />
       <Sonner />
       <AuthProvider>
-        <BrowserRouter>
-          <AnimatePresence mode="wait">
-            <Routes>
-              <Route path="/" element={<Index />} />
-              <Route path="/auth" element={<Auth />} />
-              <Route path="/intake" element={<IntakeForm />} />
-              
-              {/* Protected Routes */}
-              <Route path="/dashboard" element={
-                <ProtectedRoute>
-                  <RoleBasedRoute />
-                </ProtectedRoute>
-              } />
-              
-              <Route path="/inspector" element={
-                <ProtectedRoute>
-                  <InspectorDashboard />
-                </ProtectedRoute>
-              } />
-              
-              <Route path="/inspection" element={
-                <ProtectedRoute>
-                  <Inspection />
-                </ProtectedRoute>
-              } />
-              <Route path="/training" element={
-                <ProtectedRoute>
-                  <Training />
-                </ProtectedRoute>
-              } />
-              <Route path="/equipment" element={
-                <ProtectedRoute>
-                  <Equipment />
-                </ProtectedRoute>
-              } />
-              
-              {/* Catch-all route */}
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </AnimatePresence>
-          <MobileNavigation />
-        </BrowserRouter>
+        <LanguageProvider>
+          <BrowserRouter>
+            <AnimatePresence mode="wait">
+              <Routes>
+                <Route path="/" element={<Index />} />
+                <Route path="/auth" element={<Auth />} />
+                <Route path="/intake" element={<IntakeForm />} />
+                
+                {/* Protected Routes */}
+                <Route path="/dashboard" element={
+                  <ProtectedRoute>
+                    <RoleBasedRoute />
+                  </ProtectedRoute>
+                } />
+                
+                <Route path="/inspector" element={
+                  <ProtectedRoute>
+                    <InspectorDashboard />
+                  </ProtectedRoute>
+                } />
+                
+                <Route path="/inspection" element={
+                  <ProtectedRoute>
+                    <Inspection />
+                  </ProtectedRoute>
+                } />
+                <Route path="/training" element={
+                  <ProtectedRoute>
+                    <Training />
+                  </ProtectedRoute>
+                } />
+                <Route path="/equipment" element={
+                  <ProtectedRoute>
+                    <Equipment />
+                  </ProtectedRoute>
+                } />
+                
+                {/* Catch-all route */}
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+            </AnimatePresence>
+            <MobileNavigation />
+          </BrowserRouter>
+        </LanguageProvider>
       </AuthProvider>
     </TooltipProvider>
   </QueryClientProvider>
