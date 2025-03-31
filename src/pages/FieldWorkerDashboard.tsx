@@ -17,7 +17,8 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useAuth } from '@/contexts/AuthContext';
 import Logo from '@/components/shared/Logo';
-import { useLocation } from '@/components/safety/GeolocationDisplay';
+import { useLocation } from '@/hooks/useLocation';
+import GeolocationDisplay from '@/components/safety/GeolocationDisplay';
 import FallAlertButton from '@/components/safety/FallAlertButton';
 import { useNavigate } from 'react-router-dom';
 import { format } from 'date-fns';
@@ -144,6 +145,11 @@ const FieldWorkerDashboard: React.FC = () => {
                         )}
                       </div>
                     </div>
+                    
+                    <GeolocationDisplay 
+                      location={coordinates ? { coords: coordinates } as GeolocationPosition : null}
+                      error={locationError}
+                    />
                   </div>
                   
                   <FallAlertButton />
