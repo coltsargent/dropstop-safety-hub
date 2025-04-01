@@ -18,6 +18,7 @@ import InspectorDashboard from "./pages/InspectorDashboard";
 import Inspection from "./pages/Inspection";
 import Training from "./pages/Training";
 import Equipment from "./pages/Equipment";
+import AISafetyMonitor from "./pages/AISafetyMonitor";
 import NotFound from "./pages/NotFound";
 import MobileNavigation from "./components/layout/MobileNavigation";
 
@@ -84,6 +85,11 @@ const App = () => (
                 <Route path="/equipment" element={
                   <ProtectedRoute>
                     <Equipment />
+                  </ProtectedRoute>
+                } />
+                <Route path="/ai-monitor" element={
+                  <ProtectedRoute>
+                    <AISafetyMonitor />
                   </ProtectedRoute>
                 } />
                 

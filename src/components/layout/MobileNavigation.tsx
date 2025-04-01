@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { useLocation, Link } from 'react-router-dom';
-import { Home, ClipboardCheck, GraduationCap, HardHat, Menu } from 'lucide-react';
+import { Home, ClipboardCheck, GraduationCap, HardHat, Shield } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { Button } from '@/components/ui/button';
@@ -23,6 +23,7 @@ const MobileNavigation = () => {
       { icon: ClipboardCheck, label: 'Inspections', path: '/inspection' },
       { icon: GraduationCap, label: 'Training', path: '/training' },
       { icon: HardHat, label: 'Equipment', path: '/equipment' },
+      { icon: Shield, label: 'AI Monitor', path: '/ai-monitor' },
     ];
     
     // Worker-specific items
@@ -31,6 +32,7 @@ const MobileNavigation = () => {
       { icon: ClipboardCheck, label: 'Inspections', path: '/inspection' },
       { icon: GraduationCap, label: 'Training', path: '/training' },
       { icon: HardHat, label: 'Equipment', path: '/equipment' },
+      { icon: Shield, label: 'AI Monitor', path: '/ai-monitor' },
     ];
     
     // Inspector-specific items
@@ -39,6 +41,7 @@ const MobileNavigation = () => {
       { icon: ClipboardCheck, label: 'Inspections', path: '/inspection' },
       { icon: GraduationCap, label: 'Training', path: '/training' },
       { icon: HardHat, label: 'Equipment', path: '/equipment' },
+      { icon: Shield, label: 'AI Monitor', path: '/ai-monitor' },
     ];
     
     if (user?.role === 'worker') return workerItems;

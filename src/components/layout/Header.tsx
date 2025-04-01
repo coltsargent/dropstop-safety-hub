@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { 
@@ -7,7 +8,8 @@ import {
   User, 
   X,
   ChevronDown,
-  LogIn
+  LogIn,
+  Shield
 } from 'lucide-react';
 import Logo from '@/components/shared/Logo';
 import { Button } from '@/components/ui/button';
@@ -57,6 +59,7 @@ const Header: React.FC = () => {
     { name: 'Inspections', path: '/inspection' },
     { name: 'Training', path: '/training' },
     { name: 'Equipment', path: '/equipment' },
+    { name: 'AI Monitor', path: '/ai-monitor' },
   ];
 
   // For mobile, use a simplified header
