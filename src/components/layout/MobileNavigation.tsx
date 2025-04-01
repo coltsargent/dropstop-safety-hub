@@ -20,7 +20,7 @@ const MobileNavigation = () => {
     // Default items for non-authenticated users
     const publicItems = [
       { icon: Home, label: 'Home', path: '/' },
-      { icon: Shield, label: 'AI Monitor', path: '/ai-monitor' },
+      { icon: Shield, label: 'AI Safety Monitor', path: '/ai-monitor' },
     ];
     
     if (!isAuthenticated) return publicItems;
@@ -31,7 +31,7 @@ const MobileNavigation = () => {
       { icon: ClipboardCheck, label: 'Inspections', path: '/inspection' },
       { icon: GraduationCap, label: 'Training', path: '/training' },
       { icon: HardHat, label: 'Equipment', path: '/equipment' },
-      { icon: Shield, label: 'AI Monitor', path: '/ai-monitor' },
+      { icon: Shield, label: 'AI Safety Monitor', path: '/ai-monitor' },
     ];
     
     // Worker-specific items
@@ -40,7 +40,7 @@ const MobileNavigation = () => {
       { icon: ClipboardCheck, label: 'Inspections', path: '/inspection' },
       { icon: GraduationCap, label: 'Training', path: '/training' },
       { icon: HardHat, label: 'Equipment', path: '/equipment' },
-      { icon: Shield, label: 'AI Monitor', path: '/ai-monitor' },
+      { icon: Shield, label: 'AI Safety Monitor', path: '/ai-monitor' },
     ];
     
     // Inspector-specific items
@@ -49,7 +49,7 @@ const MobileNavigation = () => {
       { icon: ClipboardCheck, label: 'Inspections', path: '/inspection' },
       { icon: GraduationCap, label: 'Training', path: '/training' },
       { icon: HardHat, label: 'Equipment', path: '/equipment' },
-      { icon: Shield, label: 'AI Monitor', path: '/ai-monitor' },
+      { icon: Shield, label: 'AI Safety Monitor', path: '/ai-monitor' },
     ];
     
     if (user?.role === 'worker') return workerItems;

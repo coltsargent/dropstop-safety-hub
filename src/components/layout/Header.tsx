@@ -59,7 +59,7 @@ const Header: React.FC = () => {
     { name: 'Inspections', path: '/inspection', protected: true },
     { name: 'Training', path: '/training', protected: true },
     { name: 'Equipment', path: '/equipment', protected: true },
-    { name: 'AI Monitor', path: '/ai-monitor', protected: false },
+    { name: 'AI Safety Monitor', path: '/ai-monitor', protected: false },
   ];
 
   // Filter links based on authentication status
