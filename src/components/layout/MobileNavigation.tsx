@@ -11,12 +11,20 @@ import { useAuth } from '@/contexts/AuthContext';
 const MobileNavigation = () => {
   const location = useLocation();
   const isMobile = useIsMobile();
-  const { user } = useAuth();
+  const { user, isAuthenticated } = useAuth();
   
   if (!isMobile) return null;
 
-  // Define different nav items based on user role
+  // Define different nav items based on user role and authentication status
   const getNavItems = () => {
+    // Default items for non-authenticated users
+    const publicItems = [
+      { icon: Home, label: 'Home', path: '/' },
+      { icon: Shield, label: 'AI Monitor', path: '/ai-monitor' },
+    ];
+    
+    if (!isAuthenticated) return publicItems;
+    
     // Default items for safety professionals
     const defaultItems = [
       { icon: Home, label: 'Dashboard', path: '/dashboard' },

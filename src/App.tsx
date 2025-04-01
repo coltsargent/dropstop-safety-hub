@@ -52,6 +52,7 @@ const App = () => (
                 <Route path="/" element={<Index />} />
                 <Route path="/auth" element={<Auth />} />
                 <Route path="/intake" element={<IntakeForm />} />
+                <Route path="/ai-monitor" element={<AISafetyMonitor />} />
                 
                 {/* Protected Routes */}
                 <Route path="/dashboard" element={
@@ -85,11 +86,6 @@ const App = () => (
                 <Route path="/equipment" element={
                   <ProtectedRoute>
                     <Equipment />
-                  </ProtectedRoute>
-                } />
-                <Route path="/ai-monitor" element={
-                  <ProtectedRoute>
-                    <AISafetyMonitor />
                   </ProtectedRoute>
                 } />
                 

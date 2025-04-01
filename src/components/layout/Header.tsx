@@ -55,12 +55,15 @@ const Header: React.FC = () => {
   const isActive = (path: string) => location.pathname === path;
 
   const navLinks = [
-    { name: 'Dashboard', path: '/dashboard' },
-    { name: 'Inspections', path: '/inspection' },
-    { name: 'Training', path: '/training' },
-    { name: 'Equipment', path: '/equipment' },
-    { name: 'AI Monitor', path: '/ai-monitor' },
+    { name: 'Dashboard', path: '/dashboard', protected: true },
+    { name: 'Inspections', path: '/inspection', protected: true },
+    { name: 'Training', path: '/training', protected: true },
+    { name: 'Equipment', path: '/equipment', protected: true },
+    { name: 'AI Monitor', path: '/ai-monitor', protected: false },
   ];
+
+  // Filter links based on authentication status
+  const filteredNavLinks = navLinks.filter(link => !link.protected || isAuthenticated);
 
   // For mobile, use a simplified header
   if (isMobile) {
@@ -87,12 +90,19 @@ const Header: React.FC = () => {
                 </Button>
               </>
             ) : (
-              <Button asChild variant="default" size="sm" className="rounded-full gap-1 bg-ds-blue-600 hover:bg-ds-blue-700 text-white">
-                <Link to="/auth">
-                  <LogIn className="h-4 w-4" />
-                  <span>Login</span>
-                </Link>
-              </Button>
+              <>
+                <Button asChild variant="ghost" size="sm" className="rounded-full">
+                  <Link to="/ai-monitor">
+                    <Shield className="h-4 w-4 text-ds-neutral-700" />
+                  </Link>
+                </Button>
+                <Button asChild variant="default" size="sm" className="rounded-full gap-1 bg-ds-blue-600 hover:bg-ds-blue-700 text-white">
+                  <Link to="/auth">
+                    <LogIn className="h-4 w-4" />
+                    <span>Login</span>
+                  </Link>
+                </Button>
+              </>
             )}
           </div>
         </div>
@@ -114,28 +124,26 @@ const Header: React.FC = () => {
             <Logo size="md" variant="header" />
           </Link>
           
-          {/* Desktop Navigation - only show when authenticated or not on landing page */}
-          {(isAuthenticated && !isLandingPage) && (
-            <nav className="hidden md:flex space-x-1">
-              {navLinks.map((link) => (
-                <Link
-                  key={link.path}
-                  to={link.path}
-                  className={cn(
-                    'px-3 py-2 rounded-md text-sm font-medium transition-colors',
-                    isActive(link.path)
-                      ? 'text-ds-blue-700 bg-ds-blue-50'
-                      : 'text-ds-neutral-700 hover:text-ds-blue-600 hover:bg-ds-blue-50/50'
-                  )}
-                >
-                  {link.name}
-                </Link>
-              ))}
-            </nav>
-          )}
+          {/* Navigation - show AI Monitor regardless of auth status */}
+          <nav className="hidden md:flex space-x-1">
+            {filteredNavLinks.map((link) => (
+              <Link
+                key={link.path}
+                to={link.path}
+                className={cn(
+                  'px-3 py-2 rounded-md text-sm font-medium transition-colors',
+                  isActive(link.path)
+                    ? 'text-ds-blue-700 bg-ds-blue-50'
+                    : 'text-ds-neutral-700 hover:text-ds-blue-600 hover:bg-ds-blue-50/50'
+                )}
+              >
+                {link.name}
+              </Link>
+            ))}
+          </nav>
         </div>
 
-        {/* Desktop Actions - ALWAYS show login button when not authenticated */}
+        {/* Desktop Actions */}
         <div className="hidden md:flex items-center space-x-2">
           {isAuthenticated ? (
             <>
@@ -171,32 +179,39 @@ const Header: React.FC = () => {
               </DropdownMenu>
             </>
           ) : (
-            <Button asChild variant="default" size="lg" className="rounded-full gap-2 bg-ds-blue-600 hover:bg-ds-blue-700 text-white">
-              <Link to="/auth">
-                <LogIn className="h-5 w-5" />
-                <span>Member Login</span>
-              </Link>
-            </Button>
+            <>
+              {!isLandingPage && (
+                <Button asChild variant="ghost" className="rounded-full mr-2">
+                  <Link to="/">
+                    Back to Home
+                  </Link>
+                </Button>
+              )}
+              <Button asChild variant="default" size="lg" className="rounded-full gap-2 bg-ds-blue-600 hover:bg-ds-blue-700 text-white">
+                <Link to="/auth">
+                  <LogIn className="h-5 w-5" />
+                  <span>Member Login</span>
+                </Link>
+              </Button>
+            </>
           )}
         </div>
 
-        {/* Mobile Menu Toggle - only show when authenticated */}
-        {isAuthenticated && (
-          <div className="md:hidden">
-            <Button
-              variant="ghost"
-              size="icon"
-              className="rounded-full"
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            >
-              {mobileMenuOpen ? (
-                <X className="h-5 w-5 text-ds-neutral-700" />
-              ) : (
-                <Menu className="h-5 w-5 text-ds-neutral-700" />
-              )}
-            </Button>
-          </div>
-        )}
+        {/* Mobile Menu Toggle */}
+        <div className="md:hidden">
+          <Button
+            variant="ghost"
+            size="icon"
+            className="rounded-full"
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+          >
+            {mobileMenuOpen ? (
+              <X className="h-5 w-5 text-ds-neutral-700" />
+            ) : (
+              <Menu className="h-5 w-5 text-ds-neutral-700" />
+            )}
+          </Button>
+        </div>
       </div>
 
       {/* Mobile Menu */}
@@ -207,7 +222,7 @@ const Header: React.FC = () => {
         )}
       >
         <nav className="flex flex-col p-4 space-y-2">
-          {navLinks.map((link) => (
+          {filteredNavLinks.map((link) => (
             <Link
               key={link.path}
               to={link.path}
@@ -222,18 +237,29 @@ const Header: React.FC = () => {
             </Link>
           ))}
           <div className="border-t border-ds-neutral-200 my-2 pt-2 flex items-center justify-between">
-            <Button variant="ghost" size="icon" className="rounded-full">
-              <Search className="h-5 w-5 text-ds-neutral-700" />
-            </Button>
-            <Button variant="ghost" size="icon" className="rounded-full">
-              <Bell className="h-5 w-5 text-ds-neutral-700" />
-            </Button>
-            <Button variant="outline" className="gap-1 border-ds-neutral-200">
-              <div className="h-6 w-6 rounded-full bg-ds-blue-100 flex items-center justify-center">
-                <User className="h-3 w-3 text-ds-blue-700" />
-              </div>
-              <span className="text-sm font-medium">Account</span>
-            </Button>
+            {isAuthenticated ? (
+              <>
+                <Button variant="ghost" size="icon" className="rounded-full">
+                  <Search className="h-5 w-5 text-ds-neutral-700" />
+                </Button>
+                <Button variant="ghost" size="icon" className="rounded-full">
+                  <Bell className="h-5 w-5 text-ds-neutral-700" />
+                </Button>
+                <Button variant="outline" className="gap-1 border-ds-neutral-200">
+                  <div className="h-6 w-6 rounded-full bg-ds-blue-100 flex items-center justify-center">
+                    <User className="h-3 w-3 text-ds-blue-700" />
+                  </div>
+                  <span className="text-sm font-medium">Account</span>
+                </Button>
+              </>
+            ) : (
+              <Button asChild variant="default" className="w-full rounded-full gap-2 bg-ds-blue-600 hover:bg-ds-blue-700 text-white">
+                <Link to="/auth">
+                  <LogIn className="h-5 w-5" />
+                  <span>Login</span>
+                </Link>
+              </Button>
+            )}
           </div>
         </nav>
       </div>

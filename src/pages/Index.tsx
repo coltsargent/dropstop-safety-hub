@@ -142,9 +142,10 @@ const Index: React.FC = () => {
                 description: 'Centralized repository for equipment specifications, manuals, and maintenance history.'
               },
               {
-                icon: <Award className="h-8 w-8 text-ds-blue-500" />,
-                title: 'Safety Training & Certification',
-                description: 'Track employee training progress and certification expiration dates automatically.'
+                icon: <Shield className="h-8 w-8 text-ds-blue-500" />,
+                title: 'AI Safety Monitor',
+                description: 'Revolutionary AI system that can serve as a functional equivalent to a human Safety Monitor.',
+                link: '/ai-monitor'
               }
             ].map((feature, index) => (
               <motion.div
@@ -160,6 +161,18 @@ const Index: React.FC = () => {
                 </div>
                 <h3 className="text-xl font-semibold text-ds-neutral-900 mb-2">{feature.title}</h3>
                 <p className="text-ds-neutral-600">{feature.description}</p>
+                {feature.link && (
+                  <Button 
+                    asChild 
+                    variant="outline" 
+                    className="mt-4 border-ds-blue-200 hover:bg-ds-blue-50"
+                  >
+                    <Link to={feature.link}>
+                      <span>Learn More</span>
+                      <ArrowRight className="h-4 w-4 ml-2" />
+                    </Link>
+                  </Button>
+                )}
               </motion.div>
             ))}
           </div>
