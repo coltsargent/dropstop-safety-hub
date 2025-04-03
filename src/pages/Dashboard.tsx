@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import {
@@ -21,6 +21,7 @@ import {
   Calendar as CalendarIcon,
   CheckCircle2,
   XCircle,
+  Filter,
 } from 'lucide-react';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
@@ -51,6 +52,8 @@ import {
 import { format } from 'date-fns';
 
 const Dashboard: React.FC = () => {
+  const [showOnlyIncomplete, setShowOnlyIncomplete] = useState(false);
+  
   const stats = [
     { 
       title: 'Team Members', 
@@ -119,6 +122,10 @@ const Dashboard: React.FC = () => {
       lastInspection: new Date('2023-06-15T12:20:00') 
     },
   ];
+
+  const filteredTeamMembers = showOnlyIncomplete 
+    ? teamMembers.filter(member => member.status === 'incomplete')
+    : teamMembers;
 
   const equipmentItems = [
     { id: 'HAR-001', name: 'Full Body Harness', type: 'Harness', lastInspection: '2023-10-01', nextInspection: '2024-01-01', status: 'safe' },
@@ -322,10 +329,21 @@ const Dashboard: React.FC = () => {
                 <CardHeader className="pb-2">
                   <div className="flex items-center justify-between">
                     <CardTitle>Team Inspection Status</CardTitle>
-                    <Button variant="ghost" size="sm" className="gap-1 text-ds-blue-600">
-                      <span>View All</span>
-                      <ChevronRight className="h-4 w-4" />
-                    </Button>
+                    <div className="flex items-center gap-2">
+                      <Button 
+                        variant="ghost" 
+                        size="sm" 
+                        className={`gap-1 ${showOnlyIncomplete ? 'bg-ds-neutral-100 text-ds-blue-600' : 'text-ds-blue-600'}`}
+                        onClick={() => setShowOnlyIncomplete(!showOnlyIncomplete)}
+                      >
+                        <Filter className="h-4 w-4" />
+                        <span>{showOnlyIncomplete ? 'Show All' : 'Show Incomplete'}</span>
+                      </Button>
+                      <Button variant="ghost" size="sm" className="gap-1 text-ds-blue-600">
+                        <span>View All</span>
+                        <ChevronRight className="h-4 w-4" />
+                      </Button>
+                    </div>
                   </div>
                   <CardDescription>Daily PPE inspection compliance</CardDescription>
                 </CardHeader>
@@ -341,7 +359,7 @@ const Dashboard: React.FC = () => {
                       </TableRow>
                     </TableHeader>
                     <TableBody>
-                      {teamMembers.map((member) => (
+                      {filteredTeamMembers.map((member) => (
                         <TableRow key={member.id}>
                           <TableCell className="font-medium">{member.name}</TableCell>
                           <TableCell>{member.role}</TableCell>
