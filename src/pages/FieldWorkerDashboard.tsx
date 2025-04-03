@@ -9,7 +9,14 @@ import {
   MapPin,
   Upload,
   Shield,
-  Bell
+  Bell,
+  User,
+  Phone,
+  Mail,
+  Building,
+  FileText,
+  LogOut,
+  Settings
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
@@ -22,6 +29,20 @@ import GeolocationDisplay from '@/components/safety/GeolocationDisplay';
 import FallAlertButton from '@/components/safety/FallAlertButton';
 import { useNavigate } from 'react-router-dom';
 import { format } from 'date-fns';
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import LogoutButton from '@/components/auth/LogoutButton';
 
 type InspectionItem = {
   id: string;
@@ -38,7 +59,7 @@ const mockEquipment: InspectionItem[] = [
 ];
 
 const FieldWorkerDashboard: React.FC = () => {
-  const { user } = useAuth();
+  const { user, logout } = useAuth();
   const { toast } = useToast();
   const navigate = useNavigate();
   const { coordinates, loading: locationLoading, error: locationError } = useLocation();
@@ -50,6 +71,15 @@ const FieldWorkerDashboard: React.FC = () => {
       title: "Inspection Started",
       description: "You've started a new equipment inspection.",
     });
+  };
+
+  const handleLogout = () => {
+    logout();
+    toast({
+      title: 'Logged out',
+      description: 'You have been successfully logged out.',
+    });
+    navigate('/');
   };
 
   // Calculate training expiration (mock data)
@@ -74,6 +104,97 @@ const FieldWorkerDashboard: React.FC = () => {
             <div className="flex items-center gap-3">
               <Logo variant="header" size="xs" />
               <h1 className="text-2xl font-bold">Field Worker Dashboard</h1>
+            </div>
+            
+            {/* Header Actions: Profile and Logout */}
+            <div className="flex items-center gap-3">
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button variant="outline" className="gap-2 border-ds-neutral-200">
+                    <div className="h-7 w-7 rounded-full bg-ds-blue-100 flex items-center justify-center">
+                      <User className="h-4 w-4 text-ds-blue-700" />
+                    </div>
+                    <span className="hidden sm:inline text-sm font-medium">Profile</span>
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-80" align="end">
+                  <div className="flex flex-col space-y-4">
+                    <div className="flex items-center gap-3">
+                      <div className="h-12 w-12 rounded-full bg-ds-blue-100 flex items-center justify-center">
+                        <User className="h-6 w-6 text-ds-blue-700" />
+                      </div>
+                      <div>
+                        <h4 className="font-semibold">{user?.name || 'Field Worker'}</h4>
+                        <p className="text-xs text-muted-foreground">Field Worker</p>
+                      </div>
+                    </div>
+                    
+                    <div className="space-y-3">
+                      <div className="flex items-center gap-2 text-sm">
+                        <Mail className="h-4 w-4 text-muted-foreground" />
+                        <span>{user?.email}</span>
+                      </div>
+                      
+                      <div className="flex items-center gap-2 text-sm">
+                        <Phone className="h-4 w-4 text-muted-foreground" />
+                        <span>{user?.phone || '(555) 123-4567'}</span>
+                      </div>
+                      
+                      <div className="flex items-center gap-2 text-sm">
+                        <Building className="h-4 w-4 text-muted-foreground" />
+                        <span>{user?.organization || 'Safety First Construction'}</span>
+                      </div>
+                    </div>
+                    
+                    <div className="border-t border-border pt-3">
+                      <Button variant="outline" size="sm" className="w-full" onClick={() => {
+                        toast({
+                          title: "Profile",
+                          description: "Profile settings will be available in a future update."
+                        });
+                      }}>
+                        <FileText className="h-4 w-4 mr-2" />
+                        Edit Profile
+                      </Button>
+                    </div>
+                    
+                    <LogoutButton />
+                  </div>
+                </PopoverContent>
+              </Popover>
+              
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" size="icon" className="rounded-full">
+                    <Settings className="h-5 w-5 text-ds-neutral-700" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <DropdownMenuLabel>Settings</DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem onClick={() => {
+                    toast({
+                      title: "Settings",
+                      description: "Settings page will be available in a future update."
+                    });
+                  }}>
+                    Account Settings
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => {
+                    toast({
+                      title: "Notifications",
+                      description: "Notification settings will be available in a future update."
+                    });
+                  }}>
+                    Notification Preferences
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem onClick={handleLogout}>
+                    <LogOut className="h-4 w-4 mr-2" />
+                    Logout
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
             </div>
           </div>
           <p className="text-muted-foreground">
