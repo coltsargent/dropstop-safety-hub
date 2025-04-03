@@ -129,7 +129,7 @@ const Index: React.FC = () => {
             ))}
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {[
               {
                 icon: <FileText className="h-8 w-8 text-ds-blue-500" />,
@@ -140,12 +140,6 @@ const Index: React.FC = () => {
                 icon: <HarnessIcon className="h-8 w-8 text-ds-blue-500" size={32} />,
                 title: 'PPE Library',
                 description: 'Centralized repository for equipment specifications, manuals, and maintenance history.'
-              },
-              {
-                icon: <Shield className="h-8 w-8 text-ds-blue-500" />,
-                title: 'AI Safety Monitor',
-                description: 'Revolutionary AI system that can serve as a functional equivalent to a human Safety Monitor.',
-                link: '/ai-monitor'
               }
             ].map((feature, index) => (
               <motion.div
