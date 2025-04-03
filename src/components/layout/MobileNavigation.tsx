@@ -31,7 +31,6 @@ const MobileNavigation = () => {
       { icon: ClipboardCheck, label: 'Inspections', path: '/inspection' },
       { icon: GraduationCap, label: 'Training', path: '/training' },
       { icon: HardHat, label: 'Equipment', path: '/equipment' },
-      { icon: Shield, label: 'AI Safety Monitor', path: '/ai-monitor' },
     ];
     
     // Worker-specific items
@@ -40,7 +39,6 @@ const MobileNavigation = () => {
       { icon: ClipboardCheck, label: 'Inspections', path: '/inspection' },
       { icon: GraduationCap, label: 'Training', path: '/training' },
       { icon: HardHat, label: 'Equipment', path: '/equipment' },
-      { icon: Shield, label: 'AI Safety Monitor', path: '/ai-monitor' },
     ];
     
     // Inspector-specific items
@@ -49,7 +47,6 @@ const MobileNavigation = () => {
       { icon: ClipboardCheck, label: 'Inspections', path: '/inspection' },
       { icon: GraduationCap, label: 'Training', path: '/training' },
       { icon: HardHat, label: 'Equipment', path: '/equipment' },
-      { icon: Shield, label: 'AI Safety Monitor', path: '/ai-monitor' },
     ];
     
     if (user?.role === 'worker') return workerItems;
