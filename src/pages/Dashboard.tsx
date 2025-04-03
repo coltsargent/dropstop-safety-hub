@@ -538,7 +538,6 @@ const Dashboard: React.FC = () => {
                         <Card className="border-ds-neutral-200">
                           <CardHeader className="pb-2">
                             <CardTitle className="text-lg">Authorized Person Training</CardTitle>
-                            <CardDescription>Level 1 Safety Certification</CardDescription>
                           </CardHeader>
                           <CardContent>
                             <div className="flex justify-between items-center mb-4">
@@ -590,7 +589,6 @@ const Dashboard: React.FC = () => {
                         <Card className="border-ds-neutral-200">
                           <CardHeader className="pb-2">
                             <CardTitle className="text-lg">Competent Person Training</CardTitle>
-                            <CardDescription>Level 2 Safety Certification</CardDescription>
                           </CardHeader>
                           <CardContent>
                             <div className="flex justify-between items-center mb-4">
