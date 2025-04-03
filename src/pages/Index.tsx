@@ -81,7 +81,7 @@ const Index: React.FC = () => {
           </motion.div>
         </div>
       </section>
-
+      
       {/* Features Section */}
       <section className="py-16 md:py-24 px-4 bg-white">
         <div className="container mx-auto max-w-6xl">
@@ -129,7 +129,7 @@ const Index: React.FC = () => {
             ))}
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {[
               {
                 icon: <FileText className="h-8 w-8 text-ds-blue-500" />,
@@ -140,6 +140,11 @@ const Index: React.FC = () => {
                 icon: <HarnessIcon className="h-8 w-8 text-ds-blue-500" size={32} />,
                 title: 'PPE Library',
                 description: 'Centralized repository for equipment specifications, manuals, and maintenance history.'
+              },
+              {
+                icon: <Award className="h-8 w-8 text-ds-blue-500" />,
+                title: 'Training & Certification Management',
+                description: 'Tracks employee safety credentials, certifications, and training requirements to ensure compliance.'
               }
             ].map((feature, index) => (
               <motion.div
@@ -155,18 +160,6 @@ const Index: React.FC = () => {
                 </div>
                 <h3 className="text-xl font-semibold text-ds-neutral-900 mb-2">{feature.title}</h3>
                 <p className="text-ds-neutral-600">{feature.description}</p>
-                {feature.link && (
-                  <Button 
-                    asChild 
-                    variant="outline" 
-                    className="mt-4 border-ds-blue-200 hover:bg-ds-blue-50"
-                  >
-                    <Link to={feature.link}>
-                      <span>Learn More</span>
-                      <ArrowRight className="h-4 w-4 ml-2" />
-                    </Link>
-                  </Button>
-                )}
               </motion.div>
             ))}
           </div>
