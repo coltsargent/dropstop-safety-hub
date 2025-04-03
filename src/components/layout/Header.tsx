@@ -54,16 +54,21 @@ const Header: React.FC = () => {
 
   const isActive = (path: string) => location.pathname === path;
 
-  const navLinks = [
+  // Removed AI Safety Monitor from protected navLinks
+  const authNavLinks = [
     { name: 'Dashboard', path: '/dashboard', protected: true },
     { name: 'Inspections', path: '/inspection', protected: true },
     { name: 'Training', path: '/training', protected: true },
     { name: 'Equipment', path: '/equipment', protected: true },
-    { name: 'AI Safety Monitor', path: '/ai-monitor', protected: false },
   ];
 
-  // Filter links based on authentication status
-  const filteredNavLinks = navLinks.filter(link => !link.protected || isAuthenticated);
+  // Public links including AI Safety Monitor
+  const publicNavLinks = [
+    { name: 'AI Safety Monitor', path: '/ai-monitor', protected: false },
+  ];
+  
+  // Choose which links to display based on authentication
+  const navLinks = isAuthenticated ? authNavLinks : [...authNavLinks, ...publicNavLinks];
 
   // For mobile, use a simplified header
   if (isMobile) {
@@ -124,9 +129,9 @@ const Header: React.FC = () => {
             <Logo size="md" variant="header" />
           </Link>
           
-          {/* Navigation - show AI Monitor regardless of auth status */}
+          {/* Navigation - Show AI Monitor only for non-authenticated users */}
           <nav className="hidden md:flex space-x-1">
-            {filteredNavLinks.map((link) => (
+            {navLinks.filter(link => !link.protected || isAuthenticated).map((link) => (
               <Link
                 key={link.path}
                 to={link.path}
@@ -222,7 +227,7 @@ const Header: React.FC = () => {
         )}
       >
         <nav className="flex flex-col p-4 space-y-2">
-          {filteredNavLinks.map((link) => (
+          {navLinks.filter(link => !link.protected || isAuthenticated).map((link) => (
             <Link
               key={link.path}
               to={link.path}
