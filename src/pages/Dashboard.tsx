@@ -19,6 +19,8 @@ import {
   Award,
   BookOpen,
   Calendar as CalendarIcon,
+  CheckCircle2,
+  XCircle,
 } from 'lucide-react';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
@@ -46,6 +48,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
+import { format } from 'date-fns';
 
 const Dashboard: React.FC = () => {
   const stats = [
@@ -80,11 +83,41 @@ const Dashboard: React.FC = () => {
   ];
 
   const teamMembers = [
-    { id: 1, name: 'John Doe', role: 'Roofer', status: 'safe', lastInspection: '2 hours ago' },
-    { id: 2, name: 'Jane Smith', role: 'Utilities Worker', status: 'safe', lastInspection: '1 hour ago' },
-    { id: 3, name: 'Mike Johnson', role: 'Window Cleaner', status: 'warning', lastInspection: '3 days ago' },
-    { id: 4, name: 'Sarah Williams', role: 'Roofer', status: 'danger', lastInspection: 'Not completed' },
-    { id: 5, name: 'David Brown', role: 'Utilities Worker', status: 'safe', lastInspection: '30 minutes ago' },
+    { 
+      id: 1, 
+      name: 'John Doe', 
+      role: 'Roofer', 
+      status: 'complete', 
+      lastInspection: new Date('2023-06-15T10:30:00') 
+    },
+    { 
+      id: 2, 
+      name: 'Jane Smith', 
+      role: 'Utilities Worker', 
+      status: 'complete', 
+      lastInspection: new Date('2023-06-15T11:45:00') 
+    },
+    { 
+      id: 3, 
+      name: 'Mike Johnson', 
+      role: 'Window Cleaner', 
+      status: 'incomplete', 
+      lastInspection: new Date('2023-06-12T09:15:00') 
+    },
+    { 
+      id: 4, 
+      name: 'Sarah Williams', 
+      role: 'Roofer', 
+      status: 'incomplete', 
+      lastInspection: null 
+    },
+    { 
+      id: 5, 
+      name: 'David Brown', 
+      role: 'Utilities Worker', 
+      status: 'complete', 
+      lastInspection: new Date('2023-06-15T12:20:00') 
+    },
   ];
 
   const equipmentItems = [
@@ -314,14 +347,21 @@ const Dashboard: React.FC = () => {
                           <TableCell>{member.role}</TableCell>
                           <TableCell>
                             <div className="flex items-center gap-2">
-                              <SafetyStatus status={member.status as any} />
+                              {member.status === 'complete' ? (
+                                <CheckCircle2 className="h-5 w-5 text-ds-success-500" />
+                              ) : (
+                                <XCircle className="h-5 w-5 text-ds-danger-500" />
+                              )}
                               <span className="text-sm capitalize">
-                                {member.status === 'safe' ? 'Compliant' : 
-                                 member.status === 'warning' ? 'Due Soon' : 'Overdue'}
+                                {member.status === 'complete' ? 'Complete' : 'Incomplete'}
                               </span>
                             </div>
                           </TableCell>
-                          <TableCell className="text-ds-neutral-600">{member.lastInspection}</TableCell>
+                          <TableCell className="text-ds-neutral-600">
+                            {member.lastInspection 
+                              ? format(member.lastInspection, 'MMM d, yyyy h:mm a')
+                              : 'Not completed'}
+                          </TableCell>
                           <TableCell>
                             <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
                               <ChevronRight className="h-4 w-4" />
