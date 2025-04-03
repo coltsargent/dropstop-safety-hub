@@ -1,13 +1,13 @@
-
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Shield, Camera, Bot, AlertTriangle, CheckCircle2, LineChart, Clock, Bell } from 'lucide-react';
+import { Shield, Camera, Bot, AlertTriangle, CheckCircle2, LineChart, Clock, Bell, Ribbon } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Separator } from '@/components/ui/separator';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 
 const AISafetyMonitor: React.FC = () => {
   const { toast } = useToast();
@@ -26,11 +26,20 @@ const AISafetyMonitor: React.FC = () => {
       className="container mx-auto px-4 py-8 pt-20 pb-24"
     >
       <div className="flex flex-col space-y-6">
-        <div className="flex flex-col space-y-2">
-          <h1 className="text-3xl font-bold">AI Safety Monitor</h1>
-          <p className="text-muted-foreground">
-            AI-powered fall protection monitoring systems for enhanced workplace safety
-          </p>
+        <div className="relative mb-4">
+          <div className="absolute -top-6 right-0 transform rotate-45 origin-bottom-right md:right-4">
+            <div className="flex items-center justify-center bg-ds-blue-600 text-white py-1 px-10 shadow-md">
+              <Ribbon className="h-4 w-4 mr-2" />
+              <span className="text-sm font-medium">Drop Stop Safety</span>
+            </div>
+          </div>
+          
+          <div className="flex flex-col space-y-2">
+            <h1 className="text-3xl font-bold">AI Safety Monitor</h1>
+            <p className="text-muted-foreground">
+              AI-powered fall protection monitoring systems for enhanced workplace safety
+            </p>
+          </div>
         </div>
         
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -86,6 +95,13 @@ const AISafetyMonitor: React.FC = () => {
             </CardContent>
           </Card>
         </div>
+        
+        <Alert className="bg-ds-blue-50 border-ds-blue-200">
+          <AlertDescription className="text-ds-blue-800 flex items-center">
+            <Ribbon className="h-5 w-5 mr-2 text-ds-blue-600" />
+            <span>Introducing cutting-edge AI safety technology for fall protection compliance</span>
+          </AlertDescription>
+        </Alert>
         
         <Tabs defaultValue="system" className="w-full">
           <TabsList className="grid w-full grid-cols-3">
