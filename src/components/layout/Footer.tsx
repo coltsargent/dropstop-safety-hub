@@ -1,6 +1,6 @@
+
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import Logo from '@/components/shared/Logo';
 import CalendlyButton from '@/components/shared/CalendlyButton';
 import {
   AlertDialog,
@@ -28,7 +28,11 @@ const Footer: React.FC = () => {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div className="col-span-1 md:col-span-1 flex flex-col space-y-3">
             <div className="mb-2">
-              <Logo size="md" />
+              <img 
+                src="/lovable-uploads/7ccae409-5f9a-4047-98f8-74c0428c1426.png" 
+                alt="Drop Stop Safety" 
+                className="h-20 w-auto object-contain"
+              />
             </div>
             <p className="text-sm text-ds-neutral-600 max-w-xs">
               Enhancing workplace safety with innovative fall protection asset management and compliance solutions.
