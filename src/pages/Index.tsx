@@ -7,6 +7,7 @@ import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 import { useAuth } from '@/contexts/AuthContext';
 import HarnessIcon from '@/components/icons/HarnessIcon';
+import CalendlyButton from '@/components/shared/CalendlyButton';
 import {
   Carousel,
   CarouselContent,
@@ -29,10 +30,6 @@ const Index: React.FC = () => {
     
     return () => clearInterval(timer);
   }, []);
-
-  const openCalendly = () => {
-    window.open(CALENDLY_URL, '_blank');
-  };
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -73,14 +70,13 @@ const Index: React.FC = () => {
               <Button asChild size="lg" className="rounded-full font-medium">
                 <Link to="/intake">Get Started</Link>
               </Button>
-              <Button 
+              <CalendlyButton 
                 variant="outline" 
                 size="lg" 
                 className="rounded-full border-ds-blue-200 font-medium"
-                onClick={openCalendly}
               >
                 Schedule Demo
-              </Button>
+              </CalendlyButton>
             </div>
           </motion.div>
           
@@ -323,14 +319,13 @@ const Index: React.FC = () => {
             >
               <Link to="/intake">Get Started Free</Link>
             </Button>
-            <Button 
+            <CalendlyButton 
               variant="outline" 
               size="lg" 
-              className="rounded-full border-white/30 text-ds-blue-600 hover:bg-white/10 font-medium"
-              onClick={openCalendly}
+              className="rounded-full border-white/30 text-white hover:bg-white/10 font-medium"
             >
               Contact Sales
-            </Button>
+            </CalendlyButton>
           </div>
         </div>
       </section>

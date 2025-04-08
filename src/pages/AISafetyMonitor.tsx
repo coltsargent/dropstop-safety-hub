@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
 import { Alert, AlertDescription } from '@/components/ui/alert';
+import CalendlyButton from '@/components/shared/CalendlyButton';
 
 const AISafetyMonitor: React.FC = () => {
   const { toast } = useToast();
@@ -86,12 +87,12 @@ const AISafetyMonitor: React.FC = () => {
                 Interested in seeing how our AI Safety Monitor can enhance safety compliance 
                 on your worksite? Request a demonstration today.
               </p>
-              <Button 
-                onClick={handleDemoRequest} 
+              <CalendlyButton 
+                variant="default"
                 className="w-full bg-ds-blue-600 hover:bg-ds-blue-700"
               >
                 Request Demo
-              </Button>
+              </CalendlyButton>
             </CardContent>
           </Card>
         </div>

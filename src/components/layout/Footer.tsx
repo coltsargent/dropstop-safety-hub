@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import Logo from '@/components/shared/Logo';
+import CalendlyButton from '@/components/shared/CalendlyButton';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -11,7 +12,6 @@ import {
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
 
-// Calendly link
 const CALENDLY_URL = "https://calendly.com/colt-sargent-dropstopsafety";
 
 const Footer: React.FC = () => {
@@ -91,12 +91,13 @@ const Footer: React.FC = () => {
                 </button>
               </li>
               <li>
-                <button 
-                  onClick={openCalendly} 
-                  className="text-sm text-ds-neutral-600 hover:text-ds-blue-600 transition-colors text-left"
+                <CalendlyButton 
+                  variant="link" 
+                  size="sm" 
+                  className="text-sm text-ds-neutral-600 hover:text-ds-blue-600 transition-colors text-left p-0 h-auto"
                 >
                   Schedule Demo
-                </button>
+                </CalendlyButton>
               </li>
             </ul>
           </div>
