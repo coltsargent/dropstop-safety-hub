@@ -14,6 +14,7 @@ import {
 
 const Footer: React.FC = () => {
   const [showTrainingDialog, setShowTrainingDialog] = useState(false);
+  const [showSupportDialog, setShowSupportDialog] = useState(false);
 
   return (
     <footer className="bg-white border-t border-ds-neutral-200">
@@ -74,9 +75,12 @@ const Footer: React.FC = () => {
                 </Link>
               </li>
               <li>
-                <Link to="/dashboard" className="text-sm text-ds-neutral-600 hover:text-ds-blue-600 transition-colors">
+                <button 
+                  onClick={() => setShowSupportDialog(true)} 
+                  className="text-sm text-ds-neutral-600 hover:text-ds-blue-600 transition-colors text-left"
+                >
                   Support Center
-                </Link>
+                </button>
               </li>
             </ul>
           </div>
@@ -146,6 +150,23 @@ const Footer: React.FC = () => {
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogAction onClick={() => setShowTrainingDialog(false)}>
+              Return to Home Page
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      {/* Support Center Dialog */}
+      <AlertDialog open={showSupportDialog} onOpenChange={setShowSupportDialog}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Under Construction</AlertDialogTitle>
+            <AlertDialogDescription>
+              The Support Center is currently under construction. We're working to bring you helpful support resources soon.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogAction onClick={() => setShowSupportDialog(false)}>
               Return to Home Page
             </AlertDialogAction>
           </AlertDialogFooter>
