@@ -7,6 +7,14 @@ import Logo from '@/components/shared/Logo';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/contexts/AuthContext';
 import HeaderUserMenu from './HeaderUserMenu';
+import {
+  NavigationMenu,
+  NavigationMenuContent,
+  NavigationMenuItem,
+  NavigationMenuLink,
+  NavigationMenuList,
+  NavigationMenuTrigger,
+} from "@/components/ui/navigation-menu";
 
 interface DesktopHeaderProps {
   scrolled: boolean;
@@ -33,7 +41,7 @@ const DesktopHeader: React.FC<DesktopHeaderProps> = ({ scrolled, navLinks }) => 
             <Logo size="md" variant="header" />
           </Link>
           
-          {/* Navigation */}
+          {/* Main Navigation */}
           <nav className="hidden md:flex space-x-1">
             {navLinks.map((link) => (
               <Link
@@ -49,6 +57,158 @@ const DesktopHeader: React.FC<DesktopHeaderProps> = ({ scrolled, navLinks }) => 
                 {link.name}
               </Link>
             ))}
+            
+            {/* Additional Navigation Categories */}
+            <NavigationMenu className="ml-2">
+              <NavigationMenuList>
+                {/* Solutions */}
+                <NavigationMenuItem>
+                  <NavigationMenuTrigger className="text-sm font-medium text-ds-neutral-700 hover:text-ds-blue-600 bg-transparent hover:bg-ds-blue-50/50 data-[state=open]:bg-ds-blue-50/50">Solutions</NavigationMenuTrigger>
+                  <NavigationMenuContent>
+                    <ul className="grid gap-3 p-4 w-[220px]">
+                      <li>
+                        <NavigationMenuLink asChild>
+                          <Link to="/dashboard" className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-ds-blue-50 hover:text-ds-blue-600">
+                            <div className="text-sm font-medium">PPE Inspections</div>
+                            <p className="line-clamp-2 text-sm leading-snug text-ds-neutral-600">
+                              Digital inspection checklists and compliance tracking
+                            </p>
+                          </Link>
+                        </NavigationMenuLink>
+                      </li>
+                      <li>
+                        <NavigationMenuLink asChild>
+                          <Link to="/dashboard" className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-ds-blue-50 hover:text-ds-blue-600">
+                            <div className="text-sm font-medium">Fall Notifications</div>
+                            <p className="line-clamp-2 text-sm leading-snug text-ds-neutral-600">
+                              Real-time alerts and emergency response coordination
+                            </p>
+                          </Link>
+                        </NavigationMenuLink>
+                      </li>
+                      <li>
+                        <NavigationMenuLink asChild>
+                          <Link to="/dashboard" className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-ds-blue-50 hover:text-ds-blue-600">
+                            <div className="text-sm font-medium">Compliance Tracking</div>
+                            <p className="line-clamp-2 text-sm leading-snug text-ds-neutral-600">
+                              Automated record-keeping for regulatory audits
+                            </p>
+                          </Link>
+                        </NavigationMenuLink>
+                      </li>
+                      <li>
+                        <NavigationMenuLink asChild>
+                          <Link to="/dashboard" className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-ds-blue-50 hover:text-ds-blue-600">
+                            <div className="text-sm font-medium">Training Management</div>
+                            <p className="line-clamp-2 text-sm leading-snug text-ds-neutral-600">
+                              Certification and training requirement tracking
+                            </p>
+                          </Link>
+                        </NavigationMenuLink>
+                      </li>
+                    </ul>
+                  </NavigationMenuContent>
+                </NavigationMenuItem>
+                
+                {/* Resources */}
+                <NavigationMenuItem>
+                  <NavigationMenuTrigger className="text-sm font-medium text-ds-neutral-700 hover:text-ds-blue-600 bg-transparent hover:bg-ds-blue-50/50 data-[state=open]:bg-ds-blue-50/50">Resources</NavigationMenuTrigger>
+                  <NavigationMenuContent>
+                    <ul className="grid gap-3 p-4 w-[220px]">
+                      <li>
+                        <NavigationMenuLink asChild>
+                          <Link to="/safety-articles" className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-ds-blue-50 hover:text-ds-blue-600">
+                            <div className="text-sm font-medium">Safety Articles</div>
+                            <p className="line-clamp-2 text-sm leading-snug text-ds-neutral-600">
+                              Latest information on workplace safety best practices
+                            </p>
+                          </Link>
+                        </NavigationMenuLink>
+                      </li>
+                      <li>
+                        <Button variant="ghost" className="w-full justify-start p-3 h-auto">
+                          <div className="text-left">
+                            <div className="text-sm font-medium">Training Resources</div>
+                            <p className="line-clamp-2 text-sm leading-snug text-ds-neutral-600">
+                              Educational materials for safety professionals
+                            </p>
+                          </div>
+                        </Button>
+                      </li>
+                      <li>
+                        <NavigationMenuLink asChild>
+                          <Link to="/regulations" className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-ds-blue-50 hover:text-ds-blue-600">
+                            <div className="text-sm font-medium">Regulations</div>
+                            <p className="line-clamp-2 text-sm leading-snug text-ds-neutral-600">
+                              Stay updated on safety compliance requirements
+                            </p>
+                          </Link>
+                        </NavigationMenuLink>
+                      </li>
+                      <li>
+                        <Button variant="ghost" className="w-full justify-start p-3 h-auto">
+                          <div className="text-left">
+                            <div className="text-sm font-medium">Support Center</div>
+                            <p className="line-clamp-2 text-sm leading-snug text-ds-neutral-600">
+                              Find answers to your questions
+                            </p>
+                          </div>
+                        </Button>
+                      </li>
+                    </ul>
+                  </NavigationMenuContent>
+                </NavigationMenuItem>
+                
+                {/* Company */}
+                <NavigationMenuItem>
+                  <NavigationMenuTrigger className="text-sm font-medium text-ds-neutral-700 hover:text-ds-blue-600 bg-transparent hover:bg-ds-blue-50/50 data-[state=open]:bg-ds-blue-50/50">Company</NavigationMenuTrigger>
+                  <NavigationMenuContent>
+                    <ul className="grid gap-3 p-4 w-[220px]">
+                      <li>
+                        <NavigationMenuLink asChild>
+                          <Link to="/about-us" className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-ds-blue-50 hover:text-ds-blue-600">
+                            <div className="text-sm font-medium">About Us</div>
+                            <p className="line-clamp-2 text-sm leading-snug text-ds-neutral-600">
+                              Learn about our mission and team
+                            </p>
+                          </Link>
+                        </NavigationMenuLink>
+                      </li>
+                      <li>
+                        <NavigationMenuLink asChild>
+                          <Link to="/careers" className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-ds-blue-50 hover:text-ds-blue-600">
+                            <div className="text-sm font-medium">Careers</div>
+                            <p className="line-clamp-2 text-sm leading-snug text-ds-neutral-600">
+                              Join our team of safety experts
+                            </p>
+                          </Link>
+                        </NavigationMenuLink>
+                      </li>
+                      <li>
+                        <NavigationMenuLink asChild>
+                          <Link to="/intake" className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-ds-blue-50 hover:text-ds-blue-600">
+                            <div className="text-sm font-medium">Contact</div>
+                            <p className="line-clamp-2 text-sm leading-snug text-ds-neutral-600">
+                              Get in touch with our team
+                            </p>
+                          </Link>
+                        </NavigationMenuLink>
+                      </li>
+                      <li>
+                        <NavigationMenuLink asChild>
+                          <Link to="/privacy-policy" className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-ds-blue-50 hover:text-ds-blue-600">
+                            <div className="text-sm font-medium">Privacy Policy</div>
+                            <p className="line-clamp-2 text-sm leading-snug text-ds-neutral-600">
+                              Our commitment to data privacy
+                            </p>
+                          </Link>
+                        </NavigationMenuLink>
+                      </li>
+                    </ul>
+                  </NavigationMenuContent>
+                </NavigationMenuItem>
+              </NavigationMenuList>
+            </NavigationMenu>
           </nav>
         </div>
 
