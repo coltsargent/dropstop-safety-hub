@@ -20,6 +20,7 @@ import Training from "./pages/Training";
 import Equipment from "./pages/Equipment";
 import AISafetyMonitor from "./pages/AISafetyMonitor";
 import Careers from "./pages/Careers";
+import PrivacyPolicy from "./pages/PrivacyPolicy";
 import NotFound from "./pages/NotFound";
 import MobileNavigation from "./components/layout/MobileNavigation";
 
@@ -54,6 +55,7 @@ const App = () => (
                 <Route path="/auth" element={<Auth />} />
                 <Route path="/intake" element={<IntakeForm />} />
                 <Route path="/careers" element={<Careers />} />
+                <Route path="/privacy-policy" element={<PrivacyPolicy />} />
                 <Route path="/ai-monitor" element={<AISafetyMonitor />} />
                 
                 {/* Protected Routes */}
