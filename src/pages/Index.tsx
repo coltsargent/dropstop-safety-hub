@@ -1,4 +1,5 @@
-import React from 'react';
+
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { CheckCircle, Shield, LineChart, ArrowRight, LogIn, FileText, Award } from 'lucide-react';
@@ -7,11 +8,28 @@ import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 import { useAuth } from '@/contexts/AuthContext';
 import HarnessIcon from '@/components/icons/HarnessIcon';
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
 
 const CALENDLY_URL = "https://calendly.com/drop-stop/demo";
 
 const Index: React.FC = () => {
   const { isAuthenticated } = useAuth();
+  const [activeIndex, setActiveIndex] = useState(0);
+  
+  // Auto advance carousel every 5 seconds
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setActiveIndex((current) => (current + 1) % 4);
+    }, 5000);
+    
+    return () => clearInterval(timer);
+  }, []);
 
   const openCalendly = () => {
     window.open(CALENDLY_URL, '_blank');
@@ -73,11 +91,66 @@ const Index: React.FC = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.3 }}
           >
-            <img 
-              src="/lovable-uploads/97e464fc-ae77-4cd9-8487-436df7d422db.png" 
-              alt="Construction worker on rooftop at sunset" 
-              className="w-full h-auto object-cover rounded-xl"
-            />
+            <Carousel
+              className="w-full"
+              opts={{
+                loop: true,
+                align: "start",
+              }}
+              setApi={(api) => {
+                if (api) {
+                  api.on("select", () => {
+                    setActiveIndex(api.selectedScrollSnap());
+                  });
+                }
+              }}
+              value={activeIndex}
+            >
+              <CarouselContent>
+                <CarouselItem>
+                  <img 
+                    src="/lovable-uploads/0ada4541-4b46-4053-aa01-cf99e8c5be84.png" 
+                    alt="Construction worker checking equipment and safety gear" 
+                    className="w-full h-[400px] object-cover rounded-xl"
+                  />
+                </CarouselItem>
+                <CarouselItem>
+                  <img 
+                    src="/lovable-uploads/3fdab088-6d96-4a4e-8c93-9bef28e924c0.png" 
+                    alt="Worker attaching safety equipment to harness" 
+                    className="w-full h-[400px] object-cover rounded-xl"
+                  />
+                </CarouselItem>
+                <CarouselItem>
+                  <img 
+                    src="/lovable-uploads/cd0ec4fb-5d15-4358-8a76-afaac013a0a9.png" 
+                    alt="Construction workers with safety harnesses on a roof" 
+                    className="w-full h-[400px] object-cover rounded-xl"
+                  />
+                </CarouselItem>
+                <CarouselItem>
+                  <img 
+                    src="/lovable-uploads/027fc5cc-77a5-4445-b1a9-c0530485fb61.png" 
+                    alt="Workers on suspended platform with safety equipment" 
+                    className="w-full h-[400px] object-cover rounded-xl"
+                  />
+                </CarouselItem>
+              </CarouselContent>
+              <div className="absolute bottom-4 left-0 right-0 flex justify-center gap-2">
+                {[0, 1, 2, 3].map((index) => (
+                  <button
+                    key={index}
+                    className={`h-2 rounded-full transition-all ${
+                      activeIndex === index ? "w-8 bg-white" : "w-2 bg-white/60"
+                    }`}
+                    onClick={() => setActiveIndex(index)}
+                    aria-label={`Go to slide ${index + 1}`}
+                  />
+                ))}
+              </div>
+              <CarouselPrevious className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white" />
+              <CarouselNext className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white" />
+            </Carousel>
           </motion.div>
         </div>
       </section>
