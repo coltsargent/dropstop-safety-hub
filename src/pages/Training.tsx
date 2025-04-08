@@ -1,6 +1,6 @@
-
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
@@ -9,6 +9,15 @@ import { CircleDashed, AlertCircle, CheckCircle2, Clock, Users, UserCheck, FileW
 import { Progress } from '@/components/ui/progress';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
 
 const employeeTrainingStatuses = [
   {
@@ -19,7 +28,7 @@ const employeeTrainingStatuses = [
     competent: false,
     lastTraining: '2023-06-12',
     nextDue: '2024-06-12',
-    status: 'current' // 'current', 'expiring-soon', 'expired'
+    status: 'current'
   },
   {
     id: 2,
@@ -38,7 +47,7 @@ const employeeTrainingStatuses = [
     authorized: true,
     competent: false,
     lastTraining: '2023-09-05',
-    nextDue: '2024-03-15', // Changed to be expiring soon
+    nextDue: '2024-03-15',
     status: 'expiring-soon'
   },
   {
@@ -113,7 +122,18 @@ const statusIcons = {
 };
 
 const Training: React.FC = () => {
-  // Function to get progress bar color based on status
+  const [open, setOpen] = useState(true);
+  const navigate = useNavigate();
+  
+  useEffect(() => {
+    setOpen(true);
+  }, []);
+
+  const handleAction = () => {
+    setOpen(false);
+    navigate('/');
+  };
+
   const getStatusColorClasses = (status: string) => {
     switch (status) {
       case 'current':
@@ -127,7 +147,6 @@ const Training: React.FC = () => {
     }
   };
 
-  // Function to get descriptive text for status
   const getStatusText = (status: string) => {
     switch (status) {
       case 'current':
@@ -145,6 +164,22 @@ const Training: React.FC = () => {
     <TooltipProvider>
       <div className="min-h-screen flex flex-col bg-gray-50">
         <Header />
+        
+        <AlertDialog open={open} onOpenChange={setOpen}>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Under Construction</AlertDialogTitle>
+              <AlertDialogDescription>
+                The Training Resources section is currently under construction. We're working to bring you valuable training content soon.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogAction onClick={handleAction}>
+                Return to Home Page
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
         
         <main className="flex-1 pt-24 pb-16 px-4">
           <div className="container mx-auto max-w-6xl">
@@ -186,7 +221,6 @@ const Training: React.FC = () => {
                 </div>
               </div>
 
-              {/* Certification Overview */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
                 <Card className="bg-white border-none shadow-sm">
                   <CardHeader className="pb-2">
@@ -231,7 +265,6 @@ const Training: React.FC = () => {
                 </Card>
               </div>
 
-              {/* Employee Training Status Table */}
               <Card className="bg-white border-none shadow-sm mb-8">
                 <CardHeader>
                   <CardTitle>Employee Training Status</CardTitle>
@@ -280,7 +313,6 @@ const Training: React.FC = () => {
                 </CardContent>
               </Card>
 
-              {/* Training Resources */}
               <Card className="bg-white border-none shadow-sm mb-8">
                 <CardHeader>
                   <div className="flex justify-between items-center">
@@ -331,7 +363,6 @@ const Training: React.FC = () => {
                 </CardContent>
               </Card>
 
-              {/* Critical Certification Alerts */}
               <Card className="bg-white border-none shadow-sm">
                 <CardHeader>
                   <CardTitle>Critical Certification Alerts</CardTitle>
