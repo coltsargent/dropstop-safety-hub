@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { 
@@ -60,10 +59,8 @@ const Header: React.FC = () => {
     { name: 'Equipment', path: '/equipment', protected: true },
   ];
 
-  // Public links available to all users
-  const publicNavLinks = [
-    { name: 'Training', path: '/training', protected: false },
-  ];
+  // Public links available to all users - removed Training link
+  const publicNavLinks = [];
 
   // Choose which links to display based on authentication
   const navLinks = isAuthenticated 
