@@ -12,9 +12,16 @@ import {
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
 
+// Calendly link
+const CALENDLY_URL = "https://calendly.com/colt-sargent-dropstopsafety";
+
 const Footer: React.FC = () => {
   const [showTrainingDialog, setShowTrainingDialog] = useState(false);
   const [showSupportDialog, setShowSupportDialog] = useState(false);
+
+  const openCalendly = () => {
+    window.open(CALENDLY_URL, '_blank');
+  };
 
   return (
     <footer className="bg-white border-t border-ds-neutral-200">
@@ -80,6 +87,14 @@ const Footer: React.FC = () => {
                   className="text-sm text-ds-neutral-600 hover:text-ds-blue-600 transition-colors text-left"
                 >
                   Support Center
+                </button>
+              </li>
+              <li>
+                <button 
+                  onClick={openCalendly} 
+                  className="text-sm text-ds-neutral-600 hover:text-ds-blue-600 transition-colors text-left"
+                >
+                  Schedule Demo
                 </button>
               </li>
             </ul>
