@@ -22,6 +22,7 @@ import AISafetyMonitor from "./pages/AISafetyMonitor";
 import Careers from "./pages/Careers";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import AboutUs from "./pages/AboutUs";
+import Regulations from "./pages/Regulations";
 import NotFound from "./pages/NotFound";
 import MobileNavigation from "./components/layout/MobileNavigation";
 
@@ -58,6 +59,7 @@ const App = () => (
                 <Route path="/careers" element={<Careers />} />
                 <Route path="/privacy-policy" element={<PrivacyPolicy />} />
                 <Route path="/about-us" element={<AboutUs />} />
+                <Route path="/regulations" element={<Regulations />} />
                 <Route path="/ai-monitor" element={<AISafetyMonitor />} />
                 
                 {/* Protected Routes */}
