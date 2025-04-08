@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
@@ -30,14 +29,14 @@ import { Textarea } from '@/components/ui/textarea';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 
-// Form schema validation
+// Form schema validation - updated to make contactPhone optional
 const formSchema = z.object({
   companyName: z.string().min(2, { message: "Company name must be at least 2 characters." }),
   industry: z.string().min(1, { message: "Please select an industry." }),
   teamSize: z.string().min(1, { message: "Please select your field team size." }),
   contactName: z.string().min(2, { message: "Contact name must be at least 2 characters." }),
   contactEmail: z.string().email({ message: "Please enter a valid email address." }),
-  contactPhone: z.string().min(10, { message: "Please enter a valid phone number." }),
+  contactPhone: z.string().optional(), // Changed from required to optional
   additionalInfo: z.string().optional(),
 });
 
@@ -222,7 +221,7 @@ const IntakeForm: React.FC = () => {
                       name="contactPhone"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Phone Number</FormLabel>
+                          <FormLabel>Phone Number (optional)</FormLabel>
                           <FormControl>
                             <Input placeholder="(555) 123-4567" {...field} />
                           </FormControl>
