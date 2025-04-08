@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import Logo from '@/components/shared/Logo';
@@ -27,9 +26,11 @@ const Footer: React.FC = () => {
     <footer className="bg-white border-t border-ds-neutral-200">
       <div className="container mx-auto px-4 py-10">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-          <div className="col-span-1 md:col-span-1">
-            <Logo size="md" />
-            <p className="mt-4 text-sm text-ds-neutral-600 max-w-xs">
+          <div className="col-span-1 md:col-span-1 flex flex-col space-y-3">
+            <div className="mb-2">
+              <Logo size="md" />
+            </div>
+            <p className="text-sm text-ds-neutral-600 max-w-xs">
               Enhancing workplace safety with innovative fall protection asset management and compliance solutions.
             </p>
           </div>
@@ -154,7 +155,6 @@ const Footer: React.FC = () => {
         </div>
       </div>
       
-      {/* Training Resources Dialog */}
       <AlertDialog open={showTrainingDialog} onOpenChange={setShowTrainingDialog}>
         <AlertDialogContent>
           <AlertDialogHeader>
@@ -171,7 +171,6 @@ const Footer: React.FC = () => {
         </AlertDialogContent>
       </AlertDialog>
 
-      {/* Support Center Dialog */}
       <AlertDialog open={showSupportDialog} onOpenChange={setShowSupportDialog}>
         <AlertDialogContent>
           <AlertDialogHeader>
