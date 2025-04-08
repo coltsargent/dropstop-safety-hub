@@ -1,16 +1,54 @@
 
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Layout } from "@/components/layout/Layout";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { articlesData } from "@/data/articlesData";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 
 const SafetyArticles = () => {
-  // Category badge color mapping is now included in the articlesData
+  const [open, setOpen] = useState(true);
+  const navigate = useNavigate();
+  
+  // Automatically open the dialog when the component mounts
+  useEffect(() => {
+    setOpen(true);
+  }, []);
+
+  const handleAction = () => {
+    setOpen(false);
+    navigate('/');
+  };
 
   return (
     <Layout>
+      <AlertDialog open={open} onOpenChange={setOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Under Construction</AlertDialogTitle>
+            <AlertDialogDescription>
+              The Safety Articles section is currently under construction. We're working to bring you valuable safety content soon.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogAction onClick={handleAction}>
+              Return to Home Page
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
       <div className="container mx-auto px-4 py-12">
         <div className="max-w-4xl mx-auto">
           <h1 className="text-3xl md:text-4xl font-bold mb-3 text-ds-neutral-900">Safety Articles</h1>
