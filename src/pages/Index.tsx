@@ -321,7 +321,7 @@ const Index: React.FC = () => {
             <CalendlyButton 
               variant="outline" 
               size="lg" 
-              className="rounded-full border-white/30 text-white hover:bg-white/10 font-medium"
+              className="rounded-full border-white/30 text-white hover:bg-ds-blue-500 bg-ds-blue-600 font-medium"
             >
               Contact Sales
             </CalendlyButton>
