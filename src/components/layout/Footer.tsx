@@ -31,7 +31,7 @@ const Footer: React.FC = () => {
               <img 
                 src="/lovable-uploads/7ccae409-5f9a-4047-98f8-74c0428c1426.png" 
                 alt="Drop Stop Safety" 
-                className="h-20 w-auto object-contain"
+                className="h-40 w-auto object-contain" // Changed from h-20 to h-40 (doubled)
               />
             </div>
             <p className="text-sm text-ds-neutral-600 max-w-xs">
