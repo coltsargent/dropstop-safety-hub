@@ -24,6 +24,7 @@ import PrivacyPolicy from "./pages/PrivacyPolicy";
 import AboutUs from "./pages/AboutUs";
 import Regulations from "./pages/Regulations";
 import SafetyArticles from "./pages/SafetyArticles";
+import ArticleContent from "./components/safety/ArticleContent";
 import NotFound from "./pages/NotFound";
 import MobileNavigation from "./components/layout/MobileNavigation";
 
@@ -62,6 +63,7 @@ const App = () => (
                 <Route path="/about-us" element={<AboutUs />} />
                 <Route path="/regulations" element={<Regulations />} />
                 <Route path="/safety-articles" element={<SafetyArticles />} />
+                <Route path="/safety-articles/:articleId" element={<ArticleContent />} />
                 <Route path="/ai-monitor" element={<AISafetyMonitor />} />
                 
                 {/* Protected Routes */}
