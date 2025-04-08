@@ -1,9 +1,20 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import Logo from '@/components/shared/Logo';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
 
 const Footer: React.FC = () => {
+  const [showTrainingDialog, setShowTrainingDialog] = useState(false);
+
   return (
     <footer className="bg-white border-t border-ds-neutral-200">
       <div className="container mx-auto px-4 py-10">
@@ -50,9 +61,12 @@ const Footer: React.FC = () => {
                 </Link>
               </li>
               <li>
-                <Link to="/dashboard" className="text-sm text-ds-neutral-600 hover:text-ds-blue-600 transition-colors">
+                <button 
+                  onClick={() => setShowTrainingDialog(true)} 
+                  className="text-sm text-ds-neutral-600 hover:text-ds-blue-600 transition-colors text-left"
+                >
                   Training Resources
-                </Link>
+                </button>
               </li>
               <li>
                 <Link to="/regulations" className="text-sm text-ds-neutral-600 hover:text-ds-blue-600 transition-colors">
@@ -120,6 +134,23 @@ const Footer: React.FC = () => {
           </div>
         </div>
       </div>
+      
+      {/* Training Resources Dialog */}
+      <AlertDialog open={showTrainingDialog} onOpenChange={setShowTrainingDialog}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Under Construction</AlertDialogTitle>
+            <AlertDialogDescription>
+              The Training Resources section is currently under construction. We're working to bring you valuable training content soon.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogAction onClick={() => setShowTrainingDialog(false)}>
+              Return to Home Page
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </footer>
   );
 };
