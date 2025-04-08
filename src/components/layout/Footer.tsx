@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Link } from 'react-router-dom';
 import Logo from '@/components/shared/Logo';
@@ -44,7 +45,7 @@ const Footer: React.FC = () => {
             <h3 className="text-sm font-semibold mb-4 text-ds-neutral-800">Resources</h3>
             <ul className="space-y-2">
               <li>
-                <Link to="/dashboard" className="text-sm text-ds-neutral-600 hover:text-ds-blue-600 transition-colors">
+                <Link to="/safety-articles" className="text-sm text-ds-neutral-600 hover:text-ds-blue-600 transition-colors">
                   Safety Articles
                 </Link>
               </li>
