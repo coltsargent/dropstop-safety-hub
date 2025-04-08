@@ -1,8 +1,9 @@
 
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Mail } from 'lucide-react';
+import { Mail, FileText } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { Link } from 'react-router-dom';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 
@@ -61,9 +62,9 @@ const Careers: React.FC = () => {
                 Contact Us
               </h2>
               <p className="text-ds-neutral-700 mb-6">
-                If you're interested in exploring opportunities with Drop Stop, please reach out to us directly.
+                If you're interested in exploring opportunities with Drop Stop, please reach out to us directly or fill out our intake form.
               </p>
-              <div className="flex flex-col sm:flex-row gap-4 items-center">
+              <div className="flex flex-col sm:flex-row gap-4 items-center mb-6">
                 <div className="bg-white p-4 rounded-lg flex items-center gap-3 flex-1">
                   <Mail className="h-5 w-5 text-ds-blue-600" />
                   <span className="text-ds-neutral-800">colt.sargent@dropstopsafety.com</span>
@@ -74,6 +75,16 @@ const Careers: React.FC = () => {
                 >
                   Send Email
                 </Button>
+              </div>
+              <div className="mt-4 text-center sm:text-left">
+                <Link to="/intake">
+                  <Button 
+                    className="bg-ds-blue-600 hover:bg-ds-blue-700 w-full sm:w-auto"
+                  >
+                    <FileText className="mr-2 h-5 w-5" />
+                    Fill Out Intake Form
+                  </Button>
+                </Link>
               </div>
             </div>
           </motion.div>
