@@ -22,7 +22,6 @@ const Index: React.FC = () => {
   const { isAuthenticated } = useAuth();
   const [activeIndex, setActiveIndex] = useState(0);
   
-  // Auto advance carousel every 5 seconds
   useEffect(() => {
     const timer = setInterval(() => {
       setActiveIndex((current) => (current + 1) % 4);
