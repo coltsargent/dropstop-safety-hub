@@ -8,8 +8,7 @@ import {
   User, 
   X,
   ChevronDown,
-  LogIn,
-  Shield
+  LogIn
 } from 'lucide-react';
 import Logo from '@/components/shared/Logo';
 import { Button } from '@/components/ui/button';
@@ -54,7 +53,7 @@ const Header: React.FC = () => {
 
   const isActive = (path: string) => location.pathname === path;
 
-  // Removed AI Safety Monitor from protected navLinks
+  // Only include protected routes in navLinks
   const authNavLinks = [
     { name: 'Dashboard', path: '/dashboard', protected: true },
     { name: 'Inspections', path: '/inspection', protected: true },
@@ -62,13 +61,8 @@ const Header: React.FC = () => {
     { name: 'Equipment', path: '/equipment', protected: true },
   ];
 
-  // Public links including AI Safety Monitor
-  const publicNavLinks = [
-    { name: 'AI Safety Monitor', path: '/ai-monitor', protected: false },
-  ];
-  
   // Choose which links to display based on authentication
-  const navLinks = isAuthenticated ? authNavLinks : [...authNavLinks, ...publicNavLinks];
+  const navLinks = isAuthenticated ? authNavLinks : [];
 
   // For mobile, use a simplified header
   if (isMobile) {
@@ -95,19 +89,12 @@ const Header: React.FC = () => {
                 </Button>
               </>
             ) : (
-              <>
-                <Button asChild variant="ghost" size="sm" className="rounded-full">
-                  <Link to="/ai-monitor">
-                    <Shield className="h-4 w-4 text-ds-neutral-700" />
-                  </Link>
-                </Button>
-                <Button asChild variant="default" size="sm" className="rounded-full gap-1 bg-ds-blue-600 hover:bg-ds-blue-700 text-white">
-                  <Link to="/auth">
-                    <LogIn className="h-4 w-4" />
-                    <span>Login</span>
-                  </Link>
-                </Button>
-              </>
+              <Button asChild variant="default" size="sm" className="rounded-full gap-1 bg-ds-blue-600 hover:bg-ds-blue-700 text-white">
+                <Link to="/auth">
+                  <LogIn className="h-4 w-4" />
+                  <span>Login</span>
+                </Link>
+              </Button>
             )}
           </div>
         </div>
@@ -129,7 +116,7 @@ const Header: React.FC = () => {
             <Logo size="md" variant="header" />
           </Link>
           
-          {/* Navigation - Show AI Monitor only for non-authenticated users */}
+          {/* Navigation - Only show for authenticated users */}
           <nav className="hidden md:flex space-x-1">
             {navLinks.filter(link => !link.protected || isAuthenticated).map((link) => (
               <Link

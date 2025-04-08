@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
@@ -104,7 +103,6 @@ const Index: React.FC = () => {
                   });
                 }
               }}
-              value={activeIndex}
             >
               <CarouselContent>
                 <CarouselItem>

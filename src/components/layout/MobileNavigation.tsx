@@ -1,10 +1,8 @@
 
 import React from 'react';
 import { useLocation, Link } from 'react-router-dom';
-import { Home, ClipboardCheck, GraduationCap, HardHat, Shield } from 'lucide-react';
+import { Home, ClipboardCheck, GraduationCap, HardHat } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
-import { Button } from '@/components/ui/button';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { useAuth } from '@/contexts/AuthContext';
 
@@ -20,7 +18,6 @@ const MobileNavigation = () => {
     // Default items for non-authenticated users
     const publicItems = [
       { icon: Home, label: 'Home', path: '/' },
-      { icon: Shield, label: 'AI Safety Monitor', path: '/ai-monitor' },
     ];
     
     if (!isAuthenticated) return publicItems;
