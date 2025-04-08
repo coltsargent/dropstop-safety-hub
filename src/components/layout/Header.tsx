@@ -57,12 +57,18 @@ const Header: React.FC = () => {
   const authNavLinks = [
     { name: 'Dashboard', path: '/dashboard', protected: true },
     { name: 'Inspections', path: '/inspection', protected: true },
-    { name: 'Training', path: '/training', protected: true },
     { name: 'Equipment', path: '/equipment', protected: true },
   ];
 
+  // Public links available to all users
+  const publicNavLinks = [
+    { name: 'Training', path: '/training', protected: false },
+  ];
+
   // Choose which links to display based on authentication
-  const navLinks = isAuthenticated ? authNavLinks : [];
+  const navLinks = isAuthenticated 
+    ? [...authNavLinks, ...publicNavLinks]
+    : publicNavLinks;
 
   // For mobile, use a simplified header
   if (isMobile) {
@@ -116,9 +122,9 @@ const Header: React.FC = () => {
             <Logo size="md" variant="header" />
           </Link>
           
-          {/* Navigation - Only show for authenticated users */}
+          {/* Navigation */}
           <nav className="hidden md:flex space-x-1">
-            {navLinks.filter(link => !link.protected || isAuthenticated).map((link) => (
+            {navLinks.map((link) => (
               <Link
                 key={link.path}
                 to={link.path}
@@ -214,7 +220,7 @@ const Header: React.FC = () => {
         )}
       >
         <nav className="flex flex-col p-4 space-y-2">
-          {navLinks.filter(link => !link.protected || isAuthenticated).map((link) => (
+          {navLinks.map((link) => (
             <Link
               key={link.path}
               to={link.path}

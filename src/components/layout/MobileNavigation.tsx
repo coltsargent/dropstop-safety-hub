@@ -18,6 +18,7 @@ const MobileNavigation = () => {
     // Default items for non-authenticated users
     const publicItems = [
       { icon: Home, label: 'Home', path: '/' },
+      { icon: GraduationCap, label: 'Training', path: '/training' },
     ];
     
     if (!isAuthenticated) return publicItems;

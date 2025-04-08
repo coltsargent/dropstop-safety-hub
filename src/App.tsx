@@ -65,6 +65,7 @@ const App = () => (
                 <Route path="/safety-articles" element={<SafetyArticles />} />
                 <Route path="/safety-articles/:articleId" element={<ArticleContent />} />
                 <Route path="/ai-monitor" element={<AISafetyMonitor />} />
+                <Route path="/training" element={<Training />} />
                 
                 {/* Protected Routes */}
                 <Route path="/dashboard" element={
@@ -88,11 +89,6 @@ const App = () => (
                 <Route path="/inspection" element={
                   <ProtectedRoute>
                     <Inspection />
-                  </ProtectedRoute>
-                } />
-                <Route path="/training" element={
-                  <ProtectedRoute>
-                    <Training />
                   </ProtectedRoute>
                 } />
                 <Route path="/equipment" element={
