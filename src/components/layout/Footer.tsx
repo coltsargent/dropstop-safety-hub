@@ -71,7 +71,7 @@ const Footer: React.FC = () => {
             <h3 className="text-sm font-semibold mb-4 text-ds-neutral-800">Company</h3>
             <ul className="space-y-2">
               <li>
-                <Link to="/dashboard" className="text-sm text-ds-neutral-600 hover:text-ds-blue-600 transition-colors">
+                <Link to="/about-us" className="text-sm text-ds-neutral-600 hover:text-ds-blue-600 transition-colors">
                   About Us
                 </Link>
               </li>
@@ -96,7 +96,7 @@ const Footer: React.FC = () => {
         
         <div className="border-t border-ds-neutral-200 mt-8 pt-6 flex flex-col md:flex-row justify-between items-center">
           <p className="text-xs text-ds-neutral-500 mb-4 md:mb-0">
-            &copy; {new Date().getFullYear()} Drop Stop. All rights reserved.
+            &copy; {new Date().getFullYear()} Drop Stop Safety. All rights reserved.
           </p>
           <div className="flex items-center space-x-4">
             <Link to="/dashboard" className="text-ds-neutral-600 hover:text-ds-blue-600 transition-colors">

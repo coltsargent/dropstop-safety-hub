@@ -21,6 +21,7 @@ import Equipment from "./pages/Equipment";
 import AISafetyMonitor from "./pages/AISafetyMonitor";
 import Careers from "./pages/Careers";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
+import AboutUs from "./pages/AboutUs";
 import NotFound from "./pages/NotFound";
 import MobileNavigation from "./components/layout/MobileNavigation";
 
@@ -56,6 +57,7 @@ const App = () => (
                 <Route path="/intake" element={<IntakeForm />} />
                 <Route path="/careers" element={<Careers />} />
                 <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+                <Route path="/about-us" element={<AboutUs />} />
                 <Route path="/ai-monitor" element={<AISafetyMonitor />} />
                 
                 {/* Protected Routes */}
