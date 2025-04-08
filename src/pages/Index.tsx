@@ -301,18 +301,6 @@ const Index: React.FC = () => {
                       </li>
                     ))}
                   </ul>
-                  <div className="mt-6 pt-4 border-t border-ds-neutral-100">
-                    <Button 
-                      asChild 
-                      variant="outline" 
-                      className="w-full justify-between border-ds-blue-200 hover:bg-ds-blue-50"
-                    >
-                      <Link to="/auth">
-                        <span>Learn More</span>
-                        <ArrowRight className="h-4 w-4" />
-                      </Link>
-                    </Button>
-                  </div>
                 </div>
               </motion.div>
             ))}
