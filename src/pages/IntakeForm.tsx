@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
@@ -59,18 +60,49 @@ const IntakeForm: React.FC = () => {
   });
 
   const onSubmit = async (data: FormValues) => {
-    // In a real implementation, this would send data to your backend
+    // Log the form data
     console.log('Form submitted:', data);
     
-    // Show success toast
-    toast.success("Form submitted successfully!", {
-      description: "A sales representative will contact you shortly.",
-    });
-    
-    // Redirect to home page after submission
-    setTimeout(() => {
-      navigate('/');
-    }, 2000);
+    try {
+      // Send email to the specified address
+      // In a real implementation, you would use a backend service or API
+      // Here, we're using mailto: which will open the user's email client
+      const subject = encodeURIComponent('New Drop Stop Intake Form Submission');
+      const body = encodeURIComponent(`
+        Company Information:
+        Company Name: ${data.companyName}
+        Industry: ${data.industry}
+        
+        Team Information:
+        Field Team Size: ${data.teamSize}
+        
+        Contact Information:
+        Contact Name: ${data.contactName}
+        Contact Email: ${data.contactEmail}
+        Contact Phone: ${data.contactPhone || 'Not provided'}
+        
+        Additional Information:
+        ${data.additionalInfo || 'None provided'}
+      `);
+      
+      // Open the user's email client with the information pre-filled
+      window.open(`mailto:colt.sargent@dropstopsafety.com?subject=${subject}&body=${body}`);
+      
+      // Show success toast
+      toast.success("Form submitted successfully!", {
+        description: "A sales representative will contact you shortly.",
+      });
+      
+      // Redirect to home page after submission
+      setTimeout(() => {
+        navigate('/');
+      }, 2000);
+    } catch (error) {
+      toast.error("Error submitting form", {
+        description: "Please try again or contact us directly.",
+      });
+      console.error("Form submission error:", error);
+    }
   };
 
   return (
