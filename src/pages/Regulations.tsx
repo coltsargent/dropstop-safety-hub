@@ -1,15 +1,9 @@
 
 import React from 'react';
 import { Layout } from '@/components/layout/Layout';
-import { ExternalLink, FileText, Search, Shield, Clipboard, HardHat } from "lucide-react";
+import { ExternalLink, FileText, Shield, Clipboard, HardHat } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { 
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
 
 const Regulations: React.FC = () => {
   return (
@@ -26,236 +20,275 @@ const Regulations: React.FC = () => {
                 safety program remains compliant with current industry standards.
               </p>
               
-              <Accordion type="single" collapsible className="w-full">
-                <AccordionItem value="osha">
-                  <AccordionTrigger className="py-5">
-                    <div className="flex items-center gap-3">
-                      <div className="bg-orange-100 p-2 rounded-full">
-                        <Shield className="h-6 w-6 text-orange-600" />
-                      </div>
-                      <h2 className="text-xl font-semibold text-left">OSHA Regulations</h2>
-                    </div>
-                  </AccordionTrigger>
-                  <AccordionContent className="pl-14">
-                    <ul className="space-y-4">
-                      <li>
-                        <a href="https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.140" 
-                          target="_blank" 
-                          rel="noopener noreferrer" 
-                          className="flex items-center gap-2 text-ds-blue-600 hover:text-ds-blue-800 hover:underline">
-                          <FileText className="h-4 w-4" />
-                          <span>1910.140 - Personal Fall Protection Systems (General Industry)</span>
-                          <ExternalLink className="h-3 w-3 ml-1" />
-                        </a>
-                        <p className="mt-1 text-sm text-ds-neutral-600 pl-6">
-                          Covers design, maintenance, and inspection requirements for personal fall protection systems.
-                        </p>
-                      </li>
-                      <li>
-                        <a href="https://www.osha.gov/laws-regs/regulations/standardnumber/1926/1926.502" 
-                          target="_blank" 
-                          rel="noopener noreferrer" 
-                          className="flex items-center gap-2 text-ds-blue-600 hover:text-ds-blue-800 hover:underline">
-                          <FileText className="h-4 w-4" />
-                          <span>1926.502 - Fall Protection Systems Criteria and Practices (Construction)</span>
-                          <ExternalLink className="h-3 w-3 ml-1" />
-                        </a>
-                        <p className="mt-1 text-sm text-ds-neutral-600 pl-6">
-                          Details requirements for guardrail systems, safety net systems, personal fall arrest systems, etc.
-                        </p>
-                      </li>
-                      <li>
-                        <a href="https://www.osha.gov/laws-regs/regulations/standardnumber/1926/1926.503" 
-                          target="_blank" 
-                          rel="noopener noreferrer" 
-                          className="flex items-center gap-2 text-ds-blue-600 hover:text-ds-blue-800 hover:underline">
-                          <FileText className="h-4 w-4" />
-                          <span>1926.503 - Training Requirements (Construction)</span>
-                          <ExternalLink className="h-3 w-3 ml-1" />
-                        </a>
-                        <p className="mt-1 text-sm text-ds-neutral-600 pl-6">
-                          Outlines requirements for fall protection training and certification.
-                        </p>
-                      </li>
-                      <li>
-                        <a href="https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.66" 
-                          target="_blank" 
-                          rel="noopener noreferrer" 
-                          className="flex items-center gap-2 text-ds-blue-600 hover:text-ds-blue-800 hover:underline">
-                          <FileText className="h-4 w-4" />
-                          <span>1910.66 App C - Personal Fall Arrest System</span>
-                          <ExternalLink className="h-3 w-3 ml-1" />
-                        </a>
-                        <p className="mt-1 text-sm text-ds-neutral-600 pl-6">
-                          Guidelines for selection, use, and inspection of personal fall arrest systems.
-                        </p>
-                      </li>
-                    </ul>
-                  </AccordionContent>
-                </AccordionItem>
-
-                <AccordionItem value="ansi">
-                  <AccordionTrigger className="py-5">
-                    <div className="flex items-center gap-3">
-                      <div className="bg-blue-100 p-2 rounded-full">
-                        <Clipboard className="h-6 w-6 text-blue-600" />
-                      </div>
-                      <h2 className="text-xl font-semibold text-left">ANSI Standards</h2>
-                    </div>
-                  </AccordionTrigger>
-                  <AccordionContent className="pl-14">
-                    <ul className="space-y-4">
-                      <li>
-                        <a href="https://webstore.ansi.org/Standards/ASSE/ANSIASSEISEA3212016" 
-                          target="_blank" 
-                          rel="noopener noreferrer" 
-                          className="flex items-center gap-2 text-ds-blue-600 hover:text-ds-blue-800 hover:underline">
-                          <FileText className="h-4 w-4" />
-                          <span>ANSI/ASSP Z359.1 - Safety Requirements for Personal Fall Arrest Systems</span>
-                          <ExternalLink className="h-3 w-3 ml-1" />
-                        </a>
-                        <p className="mt-1 text-sm text-ds-neutral-600 pl-6">
-                          Establishes requirements for the performance, design, marking, qualification, instruction, training, and more.
-                        </p>
-                      </li>
-                      <li>
-                        <a href="https://webstore.ansi.org/Standards/ASSE/ANSIASSEZ3592019" 
-                          target="_blank" 
-                          rel="noopener noreferrer" 
-                          className="flex items-center gap-2 text-ds-blue-600 hover:text-ds-blue-800 hover:underline">
-                          <FileText className="h-4 w-4" />
-                          <span>ANSI/ASSP Z359.2 - Minimum Requirements for a Comprehensive Managed Fall Protection Program</span>
-                          <ExternalLink className="h-3 w-3 ml-1" />
-                        </a>
-                        <p className="mt-1 text-sm text-ds-neutral-600 pl-6">
-                          Provides guidelines for employers to identify, evaluate, and manage fall hazards. Includes inspection protocols.
-                        </p>
-                      </li>
-                      <li>
-                        <a href="https://webstore.ansi.org/Standards/ASSE/ANSIASSEZ35972019" 
-                          target="_blank" 
-                          rel="noopener noreferrer" 
-                          className="flex items-center gap-2 text-ds-blue-600 hover:text-ds-blue-800 hover:underline">
-                          <FileText className="h-4 w-4" />
-                          <span>ANSI/ASSP Z359.7 - Testing and Certification of Fall Protection Products</span>
-                          <ExternalLink className="h-3 w-3 ml-1" />
-                        </a>
-                        <p className="mt-1 text-sm text-ds-neutral-600 pl-6">
-                          Covers third-party certification requirements for fall protection products.
-                        </p>
-                      </li>
-                    </ul>
-                  </AccordionContent>
-                </AccordionItem>
-
-                <AccordionItem value="msha">
-                  <AccordionTrigger className="py-5">
-                    <div className="flex items-center gap-3">
-                      <div className="bg-yellow-100 p-2 rounded-full">
-                        <HardHat className="h-6 w-6 text-yellow-600" />
-                      </div>
-                      <h2 className="text-xl font-semibold text-left">MSHA Regulations</h2>
-                    </div>
-                  </AccordionTrigger>
-                  <AccordionContent className="pl-14">
-                    <ul className="space-y-4">
-                      <li>
-                        <a href="https://www.ecfr.gov/current/title-30/chapter-I/subchapter-H/part-56/subpart-N/section-56.15005" 
-                          target="_blank" 
-                          rel="noopener noreferrer" 
-                          className="flex items-center gap-2 text-ds-blue-600 hover:text-ds-blue-800 hover:underline">
-                          <FileText className="h-4 w-4" />
-                          <span>30 CFR § 56.15005 - Safety belts and lines (Surface)</span>
-                          <ExternalLink className="h-3 w-3 ml-1" />
-                        </a>
-                        <p className="mt-1 text-sm text-ds-neutral-600 pl-6">
-                          Safety belt and line requirements for surface mining operations.
-                        </p>
-                      </li>
-                      <li>
-                        <a href="https://www.ecfr.gov/current/title-30/chapter-I/subchapter-H/part-57/subpart-N/section-57.15005" 
-                          target="_blank" 
-                          rel="noopener noreferrer" 
-                          className="flex items-center gap-2 text-ds-blue-600 hover:text-ds-blue-800 hover:underline">
-                          <FileText className="h-4 w-4" />
-                          <span>30 CFR § 57.15005 - Safety belts and lines (Underground)</span>
-                          <ExternalLink className="h-3 w-3 ml-1" />
-                        </a>
-                        <p className="mt-1 text-sm text-ds-neutral-600 pl-6">
-                          Safety belt and line requirements for underground mining operations.
-                        </p>
-                      </li>
-                      <li>
-                        <a href="https://www.msha.gov/regulations/policy" 
-                          target="_blank" 
-                          rel="noopener noreferrer" 
-                          className="flex items-center gap-2 text-ds-blue-600 hover:text-ds-blue-800 hover:underline">
-                          <FileText className="h-4 w-4" />
-                          <span>MSHA Program Policy Manual</span>
-                          <ExternalLink className="h-3 w-3 ml-1" />
-                        </a>
-                        <p className="mt-1 text-sm text-ds-neutral-600 pl-6">
-                          Contains MSHA's interpretive guidance on its safety standards, including fall protection.
-                        </p>
-                      </li>
-                    </ul>
-                  </AccordionContent>
-                </AccordionItem>
-
-                <AccordionItem value="inspection">
-                  <AccordionTrigger className="py-5">
-                    <div className="flex items-center gap-3">
-                      <div className="bg-green-100 p-2 rounded-full">
-                        <Search className="h-6 w-6 text-green-600" />
-                      </div>
-                      <h2 className="text-xl font-semibold text-left">Inspection-Specific Guidelines</h2>
-                    </div>
-                  </AccordionTrigger>
-                  <AccordionContent className="pl-14">
-                    <ul className="space-y-4">
-                      <li>
-                        <a href="https://www.osha.gov/sites/default/files/publications/fall_protection_factsheet.pdf" 
-                          target="_blank" 
-                          rel="noopener noreferrer" 
-                          className="flex items-center gap-2 text-ds-blue-600 hover:text-ds-blue-800 hover:underline">
-                          <FileText className="h-4 w-4" />
-                          <span>OSHA Fact Sheet: Inspection of Personal Fall Protection Equipment</span>
-                          <ExternalLink className="h-3 w-3 ml-1" />
-                        </a>
-                        <p className="mt-1 text-sm text-ds-neutral-600 pl-6">
-                          Guidelines for inspecting harnesses, lanyards, and other fall protection components.
-                        </p>
-                      </li>
-                      <li>
-                        <a href="https://www.osha.gov/harness-inspection/index.html" 
-                          target="_blank" 
-                          rel="noopener noreferrer" 
-                          className="flex items-center gap-2 text-ds-blue-600 hover:text-ds-blue-800 hover:underline">
-                          <FileText className="h-4 w-4" />
-                          <span>OSHA Harness Inspection Tool</span>
-                          <ExternalLink className="h-3 w-3 ml-1" />
-                        </a>
-                        <p className="mt-1 text-sm text-ds-neutral-600 pl-6">
-                          Interactive tool to guide inspections of fall arrest harnesses.
-                        </p>
-                      </li>
-                      <li>
-                        <a href="https://webstore.ansi.org/Standards/ASSE/ANSIASSEZ3592019" 
-                          target="_blank" 
-                          rel="noopener noreferrer" 
-                          className="flex items-center gap-2 text-ds-blue-600 hover:text-ds-blue-800 hover:underline">
-                          <FileText className="h-4 w-4" />
-                          <span>ANSI/ASSP Z359.2-2017 - Section 5.4: Equipment Inspection</span>
-                          <ExternalLink className="h-3 w-3 ml-1" />
-                        </a>
-                        <p className="mt-1 text-sm text-ds-neutral-600 pl-6">
-                          Detailed requirements for frequency and documentation of fall protection equipment inspections.
-                        </p>
-                      </li>
-                    </ul>
-                  </AccordionContent>
-                </AccordionItem>
-              </Accordion>
+              {/* OSHA Regulations Section */}
+              <div className="mb-10">
+                <div className="flex items-center gap-3 mb-5">
+                  <div className="bg-orange-100 p-2 rounded-full">
+                    <Shield className="h-6 w-6 text-orange-600" />
+                  </div>
+                  <h2 className="text-xl font-semibold">OSHA Regulations</h2>
+                </div>
+                
+                <ul className="space-y-6 pl-12">
+                  <li>
+                    <a href="https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.140" 
+                      target="_blank" 
+                      rel="noopener noreferrer" 
+                      className="flex items-center gap-2 text-ds-blue-600 hover:text-ds-blue-800 hover:underline">
+                      <FileText className="h-4 w-4" />
+                      <span>1910.140 - Personal Fall Protection Systems (General Industry)</span>
+                      <ExternalLink className="h-3 w-3 ml-1" />
+                    </a>
+                    <p className="mt-2 text-ds-neutral-600 pl-6">
+                      Covers design, maintenance, and inspection requirements for personal fall protection systems.
+                      This standard sets forth requirements for personal fall protection systems, which include personal fall arrest systems, positioning systems, and travel restraint systems.
+                      It details specific requirements for anchorages, body harnesses, and connecting components.
+                    </p>
+                  </li>
+                  
+                  <li>
+                    <a href="https://www.osha.gov/laws-regs/regulations/standardnumber/1926/1926.502" 
+                      target="_blank" 
+                      rel="noopener noreferrer" 
+                      className="flex items-center gap-2 text-ds-blue-600 hover:text-ds-blue-800 hover:underline">
+                      <FileText className="h-4 w-4" />
+                      <span>1926.502 - Fall Protection Systems Criteria and Practices (Construction)</span>
+                      <ExternalLink className="h-3 w-3 ml-1" />
+                    </a>
+                    <p className="mt-2 text-ds-neutral-600 pl-6">
+                      Details requirements for guardrail systems, safety net systems, personal fall arrest systems, positioning device systems, warning line systems,
+                      controlled access zones, safety monitoring systems, covers, protection from falling objects, and fall protection plans.
+                      This standard is crucial for construction sites where workers are exposed to fall hazards.
+                    </p>
+                  </li>
+                  
+                  <li>
+                    <a href="https://www.osha.gov/laws-regs/regulations/standardnumber/1926/1926.503" 
+                      target="_blank" 
+                      rel="noopener noreferrer" 
+                      className="flex items-center gap-2 text-ds-blue-600 hover:text-ds-blue-800 hover:underline">
+                      <FileText className="h-4 w-4" />
+                      <span>1926.503 - Training Requirements (Construction)</span>
+                      <ExternalLink className="h-3 w-3 ml-1" />
+                    </a>
+                    <p className="mt-2 text-ds-neutral-600 pl-6">
+                      Outlines requirements for fall protection training and certification. This standard specifies that employers must provide a training program for 
+                      each employee who might be exposed to fall hazards. The program must enable each employee to recognize the hazards of falling and the procedures
+                      to follow to minimize these hazards. The standard also details requirements for certification and retraining.
+                    </p>
+                  </li>
+                  
+                  <li>
+                    <a href="https://www.osha.gov/laws-regs/regulations/standardnumber/1910/1910.66" 
+                      target="_blank" 
+                      rel="noopener noreferrer" 
+                      className="flex items-center gap-2 text-ds-blue-600 hover:text-ds-blue-800 hover:underline">
+                      <FileText className="h-4 w-4" />
+                      <span>1910.66 App C - Personal Fall Arrest System</span>
+                      <ExternalLink className="h-3 w-3 ml-1" />
+                    </a>
+                    <p className="mt-2 text-ds-neutral-600 pl-6">
+                      Guidelines for selection, use, and inspection of personal fall arrest systems. This appendix provides guidance on the proper selection, 
+                      installation, and use of fall arrest systems, including detailed information on component compatibility, anchorage strength, 
+                      and system performance criteria. It also addresses inspection protocols and maintenance requirements to ensure the ongoing 
+                      safety and reliability of the equipment.
+                    </p>
+                  </li>
+                </ul>
+              </div>
+              
+              <Separator className="my-10" />
+              
+              {/* ANSI Standards Section */}
+              <div className="mb-10">
+                <div className="flex items-center gap-3 mb-5">
+                  <div className="bg-blue-100 p-2 rounded-full">
+                    <Clipboard className="h-6 w-6 text-blue-600" />
+                  </div>
+                  <h2 className="text-xl font-semibold">ANSI Standards</h2>
+                </div>
+                
+                <ul className="space-y-6 pl-12">
+                  <li>
+                    <a href="https://webstore.ansi.org/Standards/ASSE/ANSIASSEISEA3212016" 
+                      target="_blank" 
+                      rel="noopener noreferrer" 
+                      className="flex items-center gap-2 text-ds-blue-600 hover:text-ds-blue-800 hover:underline">
+                      <FileText className="h-4 w-4" />
+                      <span>ANSI/ASSP Z359.1 - Safety Requirements for Personal Fall Arrest Systems</span>
+                      <ExternalLink className="h-3 w-3 ml-1" />
+                    </a>
+                    <p className="mt-2 text-ds-neutral-600 pl-6">
+                      Establishes requirements for the performance, design, marking, qualification, instruction, training, inspection, use, maintenance, and 
+                      removal from service of connectors, full body harnesses, lanyards, energy absorbers, anchorage connectors, fall arresters, vertical 
+                      lifelines, and self-retracting lanyards comprising personal fall arrest systems for users within the capacity range of 130 to 310 pounds.
+                    </p>
+                  </li>
+                  
+                  <li>
+                    <a href="https://webstore.ansi.org/Standards/ASSE/ANSIASSEZ3592019" 
+                      target="_blank" 
+                      rel="noopener noreferrer" 
+                      className="flex items-center gap-2 text-ds-blue-600 hover:text-ds-blue-800 hover:underline">
+                      <FileText className="h-4 w-4" />
+                      <span>ANSI/ASSP Z359.2 - Minimum Requirements for a Comprehensive Managed Fall Protection Program</span>
+                      <ExternalLink className="h-3 w-3 ml-1" />
+                    </a>
+                    <p className="mt-2 text-ds-neutral-600 pl-6">
+                      Provides guidelines for employers to identify, evaluate, and manage fall hazards. This standard establishes the minimum requirements for 
+                      an occupational fall protection program. It includes detailed protocols for equipment inspection, maintenance, and storage, as well as
+                      comprehensive documentation requirements for program elements. The standard also outlines specific roles and responsibilities for 
+                      program administrators, competent persons, and authorized persons.
+                    </p>
+                  </li>
+                  
+                  <li>
+                    <a href="https://webstore.ansi.org/Standards/ASSE/ANSIASSEZ35972019" 
+                      target="_blank" 
+                      rel="noopener noreferrer" 
+                      className="flex items-center gap-2 text-ds-blue-600 hover:text-ds-blue-800 hover:underline">
+                      <FileText className="h-4 w-4" />
+                      <span>ANSI/ASSP Z359.7 - Testing and Certification of Fall Protection Products</span>
+                      <ExternalLink className="h-3 w-3 ml-1" />
+                    </a>
+                    <p className="mt-2 text-ds-neutral-600 pl-6">
+                      Covers third-party certification requirements for fall protection products. This standard establishes requirements for third-party testing, 
+                      evaluation, and certification of active fall protection equipment. It details the specific testing methodologies, including static and 
+                      dynamic testing protocols, to ensure the reliability and consistency of fall protection equipment performance. The standard also 
+                      addresses conformity assessment procedures and the issuance of certification marks.
+                    </p>
+                  </li>
+                </ul>
+              </div>
+              
+              <Separator className="my-10" />
+              
+              {/* MSHA Regulations Section */}
+              <div className="mb-10">
+                <div className="flex items-center gap-3 mb-5">
+                  <div className="bg-yellow-100 p-2 rounded-full">
+                    <HardHat className="h-6 w-6 text-yellow-600" />
+                  </div>
+                  <h2 className="text-xl font-semibold">MSHA Regulations</h2>
+                </div>
+                
+                <ul className="space-y-6 pl-12">
+                  <li>
+                    <a href="https://www.ecfr.gov/current/title-30/chapter-I/subchapter-H/part-56/subpart-N/section-56.15005" 
+                      target="_blank" 
+                      rel="noopener noreferrer" 
+                      className="flex items-center gap-2 text-ds-blue-600 hover:text-ds-blue-800 hover:underline">
+                      <FileText className="h-4 w-4" />
+                      <span>30 CFR § 56.15005 - Safety belts and lines (Surface)</span>
+                      <ExternalLink className="h-3 w-3 ml-1" />
+                    </a>
+                    <p className="mt-2 text-ds-neutral-600 pl-6">
+                      Safety belt and line requirements for surface mining operations. This regulation requires that safety belts and lines be worn when
+                      persons work where there is a danger of falling. The regulation applies to all surface metal and nonmetal mining operations and 
+                      includes specific requirements for anchorage points and equipment inspection before use.
+                    </p>
+                  </li>
+                  
+                  <li>
+                    <a href="https://www.ecfr.gov/current/title-30/chapter-I/subchapter-H/part-57/subpart-N/section-57.15005" 
+                      target="_blank" 
+                      rel="noopener noreferrer" 
+                      className="flex items-center gap-2 text-ds-blue-600 hover:text-ds-blue-800 hover:underline">
+                      <FileText className="h-4 w-4" />
+                      <span>30 CFR § 57.15005 - Safety belts and lines (Underground)</span>
+                      <ExternalLink className="h-3 w-3 ml-1" />
+                    </a>
+                    <p className="mt-2 text-ds-neutral-600 pl-6">
+                      Safety belt and line requirements for underground mining operations. Similar to the surface mining regulation, this standard requires
+                      that safety belts and lines be worn when persons work in elevated positions or where there is a danger of falling. The regulation
+                      addresses the unique challenges and hazards associated with underground mining environments, including considerations for limited
+                      space and emergency evacuation scenarios.
+                    </p>
+                  </li>
+                  
+                  <li>
+                    <a href="https://www.msha.gov/regulations/policy" 
+                      target="_blank" 
+                      rel="noopener noreferrer" 
+                      className="flex items-center gap-2 text-ds-blue-600 hover:text-ds-blue-800 hover:underline">
+                      <FileText className="h-4 w-4" />
+                      <span>MSHA Program Policy Manual</span>
+                      <ExternalLink className="h-3 w-3 ml-1" />
+                    </a>
+                    <p className="mt-2 text-ds-neutral-600 pl-6">
+                      Contains MSHA's interpretive guidance on its safety standards, including fall protection. The Program Policy Manual provides
+                      detailed interpretation and application guidance for MSHA's regulations. It includes specific sections dedicated to fall protection
+                      requirements, addressing topics such as when fall protection is required, what types of fall protection are acceptable in various
+                      mining scenarios, and how inspectors evaluate compliance with fall protection standards.
+                    </p>
+                  </li>
+                </ul>
+              </div>
+              
+              <Separator className="my-10" />
+              
+              {/* Inspection-Specific Guidelines Section */}
+              <div className="mb-6">
+                <div className="flex items-center gap-3 mb-5">
+                  <div className="bg-green-100 p-2 rounded-full">
+                    <Shield className="h-6 w-6 text-green-600" />
+                  </div>
+                  <h2 className="text-xl font-semibold">Inspection-Specific Guidelines</h2>
+                </div>
+                
+                <ul className="space-y-6 pl-12">
+                  <li>
+                    <a href="https://www.osha.gov/sites/default/files/publications/fall_protection_factsheet.pdf" 
+                      target="_blank" 
+                      rel="noopener noreferrer" 
+                      className="flex items-center gap-2 text-ds-blue-600 hover:text-ds-blue-800 hover:underline">
+                      <FileText className="h-4 w-4" />
+                      <span>OSHA Fact Sheet: Inspection of Personal Fall Protection Equipment</span>
+                      <ExternalLink className="h-3 w-3 ml-1" />
+                    </a>
+                    <p className="mt-2 text-ds-neutral-600 pl-6">
+                      Guidelines for inspecting harnesses, lanyards, and other fall protection components. This fact sheet provides comprehensive guidance
+                      on how to conduct thorough inspections of fall protection equipment, including visual and tactile examination techniques for
+                      identifying wear, damage, or deterioration. It outlines specific inspection points for different equipment types and provides
+                      clear criteria for when equipment should be removed from service.
+                    </p>
+                  </li>
+                  
+                  <li>
+                    <a href="https://www.osha.gov/harness-inspection/index.html" 
+                      target="_blank" 
+                      rel="noopener noreferrer" 
+                      className="flex items-center gap-2 text-ds-blue-600 hover:text-ds-blue-800 hover:underline">
+                      <FileText className="h-4 w-4" />
+                      <span>OSHA Harness Inspection Tool</span>
+                      <ExternalLink className="h-3 w-3 ml-1" />
+                    </a>
+                    <p className="mt-2 text-ds-neutral-600 pl-6">
+                      Interactive tool to guide inspections of fall arrest harnesses. This online tool provides step-by-step guidance for conducting
+                      comprehensive harness inspections. It includes interactive elements that help inspectors systematically check all critical
+                      components, including webbing, stitching, D-rings, buckles, and labels. The tool also provides reference images to help
+                      identify common defects and explains the significance of various types of damage.
+                    </p>
+                  </li>
+                  
+                  <li>
+                    <a href="https://webstore.ansi.org/Standards/ASSE/ANSIASSEZ3592019" 
+                      target="_blank" 
+                      rel="noopener noreferrer" 
+                      className="flex items-center gap-2 text-ds-blue-600 hover:text-ds-blue-800 hover:underline">
+                      <FileText className="h-4 w-4" />
+                      <span>ANSI/ASSP Z359.2-2017 - Section 5.4: Equipment Inspection</span>
+                      <ExternalLink className="h-3 w-3 ml-1" />
+                    </a>
+                    <p className="mt-2 text-ds-neutral-600 pl-6">
+                      Detailed requirements for frequency and documentation of fall protection equipment inspections. This section of the Z359.2 standard
+                      specifies comprehensive inspection requirements, including pre-use inspections by authorized persons, detailed inspections by
+                      competent persons, and formal inspection documentation procedures. It addresses inspection frequency requirements based on use
+                      conditions and environmental factors, and outlines specific criteria for equipment retirement and removal from service.
+                    </p>
+                  </li>
+                </ul>
+              </div>
 
               <div className="mt-8 pt-6 border-t border-ds-neutral-200">
                 <p className="text-sm text-ds-neutral-600">
