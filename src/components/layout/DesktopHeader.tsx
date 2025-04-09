@@ -58,121 +58,123 @@ const DesktopHeader: React.FC<DesktopHeaderProps> = ({ scrolled, navLinks }) => 
               </Link>
             ))}
             
-            {/* Additional Navigation Categories */}
-            <NavigationMenu className="ml-2">
-              <NavigationMenuList>
-                {/* Solutions */}
-                <NavigationMenuItem>
-                  <NavigationMenuTrigger className="text-sm font-medium text-ds-neutral-700 hover:text-ds-blue-600 bg-transparent hover:bg-ds-blue-50/50 data-[state=open]:bg-ds-blue-50/50">Solutions</NavigationMenuTrigger>
-                  <NavigationMenuContent>
-                    <ul className="grid gap-3 p-4 w-[220px]">
-                      <li>
-                        <NavigationMenuLink asChild>
-                          <Link to="/dashboard" className="block select-none rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-ds-blue-50 hover:text-ds-blue-600">
-                            <div className="text-sm font-medium">PPE Inspections</div>
-                          </Link>
-                        </NavigationMenuLink>
-                      </li>
-                      <li>
-                        <NavigationMenuLink asChild>
-                          <Link to="/dashboard" className="block select-none rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-ds-blue-50 hover:text-ds-blue-600">
-                            <div className="text-sm font-medium">Fall Notifications</div>
-                          </Link>
-                        </NavigationMenuLink>
-                      </li>
-                      <li>
-                        <NavigationMenuLink asChild>
-                          <Link to="/dashboard" className="block select-none rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-ds-blue-50 hover:text-ds-blue-600">
-                            <div className="text-sm font-medium">Compliance Tracking</div>
-                          </Link>
-                        </NavigationMenuLink>
-                      </li>
-                      <li>
-                        <NavigationMenuLink asChild>
-                          <Link to="/dashboard" className="block select-none rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-ds-blue-50 hover:text-ds-blue-600">
-                            <div className="text-sm font-medium">Training Management</div>
-                          </Link>
-                        </NavigationMenuLink>
-                      </li>
-                    </ul>
-                  </NavigationMenuContent>
-                </NavigationMenuItem>
-                
-                {/* Resources */}
-                <NavigationMenuItem>
-                  <NavigationMenuTrigger className="text-sm font-medium text-ds-neutral-700 hover:text-ds-blue-600 bg-transparent hover:bg-ds-blue-50/50 data-[state=open]:bg-ds-blue-50/50">Resources</NavigationMenuTrigger>
-                  <NavigationMenuContent>
-                    <ul className="grid gap-3 p-4 w-[220px]">
-                      <li>
-                        <NavigationMenuLink asChild>
-                          <Link to="/safety-articles" className="block select-none rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-ds-blue-50 hover:text-ds-blue-600">
-                            <div className="text-sm font-medium">Safety Articles</div>
-                          </Link>
-                        </NavigationMenuLink>
-                      </li>
-                      <li>
-                        <Button variant="ghost" className="w-full justify-start p-3 h-auto">
-                          <div className="text-left">
-                            <div className="text-sm font-medium">Training Resources</div>
-                          </div>
-                        </Button>
-                      </li>
-                      <li>
-                        <NavigationMenuLink asChild>
-                          <Link to="/regulations" className="block select-none rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-ds-blue-50 hover:text-ds-blue-600">
-                            <div className="text-sm font-medium">Regulations</div>
-                          </Link>
-                        </NavigationMenuLink>
-                      </li>
-                      <li>
-                        <Button variant="ghost" className="w-full justify-start p-3 h-auto">
-                          <div className="text-left">
-                            <div className="text-sm font-medium">Support Center</div>
-                          </div>
-                        </Button>
-                      </li>
-                    </ul>
-                  </NavigationMenuContent>
-                </NavigationMenuItem>
-                
-                {/* Company */}
-                <NavigationMenuItem>
-                  <NavigationMenuTrigger className="text-sm font-medium text-ds-neutral-700 hover:text-ds-blue-600 bg-transparent hover:bg-ds-blue-50/50 data-[state=open]:bg-ds-blue-50/50">Company</NavigationMenuTrigger>
-                  <NavigationMenuContent>
-                    <ul className="grid gap-3 p-4 w-[220px]">
-                      <li>
-                        <NavigationMenuLink asChild>
-                          <Link to="/about-us" className="block select-none rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-ds-blue-50 hover:text-ds-blue-600">
-                            <div className="text-sm font-medium">About Us</div>
-                          </Link>
-                        </NavigationMenuLink>
-                      </li>
-                      <li>
-                        <NavigationMenuLink asChild>
-                          <Link to="/careers" className="block select-none rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-ds-blue-50 hover:text-ds-blue-600">
-                            <div className="text-sm font-medium">Careers</div>
-                          </Link>
-                        </NavigationMenuLink>
-                      </li>
-                      <li>
-                        <NavigationMenuLink asChild>
-                          <Link to="/intake" className="block select-none rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-ds-blue-50 hover:text-ds-blue-600">
-                            <div className="text-sm font-medium">Contact</div>
-                          </Link>
-                        </NavigationMenuLink>
-                      </li>
-                      <li>
-                        <NavigationMenuLink asChild>
-                          <Link to="/privacy-policy" className="block select-none rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-ds-blue-50 hover:text-ds-blue-600">
-                            <div className="text-sm font-medium">Privacy Policy</div>
-                          </Link>
-                        </NavigationMenuLink>
-                      </li>
-                    </ul>
-                  </NavigationMenuContent>
-                </NavigationMenuItem>
-              </NavigationMenuList>
-            </NavigationMenu>
+            {/* Additional Navigation Categories - Only shown when not authenticated */}
+            {!isAuthenticated && (
+              <NavigationMenu className="ml-2">
+                <NavigationMenuList>
+                  {/* Solutions */}
+                  <NavigationMenuItem>
+                    <NavigationMenuTrigger className="text-sm font-medium text-ds-neutral-700 hover:text-ds-blue-600 bg-transparent hover:bg-ds-blue-50/50 data-[state=open]:bg-ds-blue-50/50">Solutions</NavigationMenuTrigger>
+                    <NavigationMenuContent>
+                      <ul className="grid gap-3 p-4 w-[220px]">
+                        <li>
+                          <NavigationMenuLink asChild>
+                            <Link to="/dashboard" className="block select-none rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-ds-blue-50 hover:text-ds-blue-600">
+                              <div className="text-sm font-medium">PPE Inspections</div>
+                            </Link>
+                          </NavigationMenuLink>
+                        </li>
+                        <li>
+                          <NavigationMenuLink asChild>
+                            <Link to="/dashboard" className="block select-none rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-ds-blue-50 hover:text-ds-blue-600">
+                              <div className="text-sm font-medium">Fall Notifications</div>
+                            </Link>
+                          </NavigationMenuLink>
+                        </li>
+                        <li>
+                          <NavigationMenuLink asChild>
+                            <Link to="/dashboard" className="block select-none rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-ds-blue-50 hover:text-ds-blue-600">
+                              <div className="text-sm font-medium">Compliance Tracking</div>
+                            </Link>
+                          </NavigationMenuLink>
+                        </li>
+                        <li>
+                          <NavigationMenuLink asChild>
+                            <Link to="/dashboard" className="block select-none rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-ds-blue-50 hover:text-ds-blue-600">
+                              <div className="text-sm font-medium">Training Management</div>
+                            </Link>
+                          </NavigationMenuLink>
+                        </li>
+                      </ul>
+                    </NavigationMenuContent>
+                  </NavigationMenuItem>
+                  
+                  {/* Resources */}
+                  <NavigationMenuItem>
+                    <NavigationMenuTrigger className="text-sm font-medium text-ds-neutral-700 hover:text-ds-blue-600 bg-transparent hover:bg-ds-blue-50/50 data-[state=open]:bg-ds-blue-50/50">Resources</NavigationMenuTrigger>
+                    <NavigationMenuContent>
+                      <ul className="grid gap-3 p-4 w-[220px]">
+                        <li>
+                          <NavigationMenuLink asChild>
+                            <Link to="/safety-articles" className="block select-none rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-ds-blue-50 hover:text-ds-blue-600">
+                              <div className="text-sm font-medium">Safety Articles</div>
+                            </Link>
+                          </NavigationMenuLink>
+                        </li>
+                        <li>
+                          <Button variant="ghost" className="w-full justify-start p-3 h-auto">
+                            <div className="text-left">
+                              <div className="text-sm font-medium">Training Resources</div>
+                            </div>
+                          </Button>
+                        </li>
+                        <li>
+                          <NavigationMenuLink asChild>
+                            <Link to="/regulations" className="block select-none rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-ds-blue-50 hover:text-ds-blue-600">
+                              <div className="text-sm font-medium">Regulations</div>
+                            </Link>
+                          </NavigationMenuLink>
+                        </li>
+                        <li>
+                          <Button variant="ghost" className="w-full justify-start p-3 h-auto">
+                            <div className="text-left">
+                              <div className="text-sm font-medium">Support Center</div>
+                            </div>
+                          </Button>
+                        </li>
+                      </ul>
+                    </NavigationMenuContent>
+                  </NavigationMenuItem>
+                  
+                  {/* Company */}
+                  <NavigationMenuItem>
+                    <NavigationMenuTrigger className="text-sm font-medium text-ds-neutral-700 hover:text-ds-blue-600 bg-transparent hover:bg-ds-blue-50/50 data-[state=open]:bg-ds-blue-50/50">Company</NavigationMenuTrigger>
+                    <NavigationMenuContent>
+                      <ul className="grid gap-3 p-4 w-[220px]">
+                        <li>
+                          <NavigationMenuLink asChild>
+                            <Link to="/about-us" className="block select-none rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-ds-blue-50 hover:text-ds-blue-600">
+                              <div className="text-sm font-medium">About Us</div>
+                            </Link>
+                          </NavigationMenuLink>
+                        </li>
+                        <li>
+                          <NavigationMenuLink asChild>
+                            <Link to="/careers" className="block select-none rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-ds-blue-50 hover:text-ds-blue-600">
+                              <div className="text-sm font-medium">Careers</div>
+                            </Link>
+                          </NavigationMenuLink>
+                        </li>
+                        <li>
+                          <NavigationMenuLink asChild>
+                            <Link to="/intake" className="block select-none rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-ds-blue-50 hover:text-ds-blue-600">
+                              <div className="text-sm font-medium">Contact</div>
+                            </Link>
+                          </NavigationMenuLink>
+                        </li>
+                        <li>
+                          <NavigationMenuLink asChild>
+                            <Link to="/privacy-policy" className="block select-none rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-ds-blue-50 hover:text-ds-blue-600">
+                              <div className="text-sm font-medium">Privacy Policy</div>
+                            </Link>
+                          </NavigationMenuLink>
+                        </li>
+                      </ul>
+                    </NavigationMenuContent>
+                  </NavigationMenuItem>
+                </NavigationMenuList>
+              </NavigationMenu>
+            )}
           </nav>
         </div>
 
