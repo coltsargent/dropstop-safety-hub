@@ -96,27 +96,27 @@
   }
   
   .safety-status-indicator.safe {
-    @apply bg-ds-success-500;
+    @apply bg-ds-blue-500;
   }
   
   .safety-status-indicator.safe::after {
-    @apply bg-ds-success-400;
+    @apply bg-ds-blue-400;
   }
   
   .safety-status-indicator.warning {
-    @apply bg-ds-warning-500;
+    @apply bg-ds-blue-400;
   }
   
   .safety-status-indicator.warning::after {
-    @apply bg-ds-warning-400;
+    @apply bg-ds-blue-300;
   }
   
   .safety-status-indicator.danger {
-    @apply bg-ds-danger-500;
+    @apply bg-ds-blue-700;
   }
   
   .safety-status-indicator.danger::after {
-    @apply bg-ds-danger-400;
+    @apply bg-ds-blue-600;
   }
   
   .page-transition-enter {

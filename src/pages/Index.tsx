@@ -64,8 +64,8 @@ const Index: React.FC = () => {
       <section className="pt-32 pb-16 md:pt-40 md:pb-24 px-4 relative overflow-hidden">
         <div className="absolute inset-0 -z-10 bg-gradient-to-b from-ds-blue-100 to-white" />
         <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_top_right,_#c9e2ff,_transparent_70%)]" />
-        <div className="absolute top-1/4 left-1/4 -z-10 w-64 h-64 bg-ds-success-100 rounded-full mix-blend-multiply filter blur-xl opacity-30 animate-pulse-slow" />
-        <div className="absolute bottom-1/4 right-1/3 -z-10 w-72 h-72 bg-ds-warning-100 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse-slow" />
+        <div className="absolute top-1/4 left-1/4 -z-10 w-64 h-64 bg-ds-blue-100 rounded-full mix-blend-multiply filter blur-xl opacity-30 animate-pulse-slow" />
+        <div className="absolute bottom-1/4 right-1/3 -z-10 w-72 h-72 bg-ds-blue-200 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse-slow" />
         
         <div className="container mx-auto max-w-6xl">
           <motion.div 
@@ -126,7 +126,7 @@ const Index: React.FC = () => {
                 <Button 
                   asChild 
                   size="lg" 
-                  className="rounded-full font-medium bg-gradient-to-r from-ds-success-500 to-ds-success-600 hover:shadow-lg hover:shadow-ds-success-200/50 text-white border-0 transition-all duration-300"
+                  className="rounded-full font-medium bg-gradient-to-r from-ds-blue-500 to-ds-blue-600 hover:shadow-lg hover:shadow-ds-blue-200/50 text-white border-0 transition-all duration-300"
                 >
                   <Link to="/intake">Get Started</Link>
                 </Button>
@@ -222,7 +222,7 @@ const Index: React.FC = () => {
       {/* Features Section - Enhanced with gradients and staggered animations */}
       <section className="py-16 md:py-24 px-4 bg-gradient-to-b from-white via-ds-neutral-50 to-white relative overflow-hidden">
         <div className="absolute top-0 left-1/4 w-96 h-96 bg-ds-blue-50 rounded-full mix-blend-multiply filter blur-3xl opacity-20" />
-        <div className="absolute bottom-0 right-1/5 w-80 h-80 bg-ds-success-50 rounded-full mix-blend-multiply filter blur-3xl opacity-20" />
+        <div className="absolute bottom-0 right-1/5 w-80 h-80 bg-ds-blue-100 rounded-full mix-blend-multiply filter blur-3xl opacity-20" />
         
         <div className="container mx-auto max-w-6xl relative z-10">
           <motion.div 
@@ -258,13 +258,13 @@ const Index: React.FC = () => {
                 icon: <Shield className="h-8 w-8 text-white" />,
                 title: 'Real-Time Fall Notifications',
                 description: 'Immediate alerts improve rescue response time and reduce claim severity.',
-                gradient: 'from-ds-success-500 to-ds-success-600'
+                gradient: 'from-ds-blue-400 to-ds-blue-500'
               },
               {
                 icon: <LineChart className="h-8 w-8 text-white" />,
                 title: 'Compliance Tracking',
                 description: 'Automate record-keeping for regulatory audits and insurance requirements.',
-                gradient: 'from-ds-warning-500 to-ds-warning-600'
+                gradient: 'from-ds-blue-300 to-ds-blue-400'
               }
             ].map((feature, index) => (
               <motion.div
@@ -293,19 +293,19 @@ const Index: React.FC = () => {
                 icon: <FileText className="h-8 w-8 text-white" />,
                 title: 'Incident & Near Miss Documentation',
                 description: 'Document and analyze incidents to identify root causes and prevent future occurrences.',
-                gradient: 'from-ds-danger-500 to-ds-danger-600'
+                gradient: 'from-ds-blue-600 to-ds-blue-700'
               },
               {
                 icon: <HarnessIcon className="h-8 w-8 text-white" size={32} />,
                 title: 'PPE Library',
                 description: 'Centralized repository for equipment specifications, manuals, and maintenance history.',
-                gradient: 'from-ds-blue-600 to-ds-blue-700'
+                gradient: 'from-ds-blue-500 to-ds-blue-600'
               },
               {
                 icon: <Award className="h-8 w-8 text-white" />,
                 title: 'Training & Certification Management',
                 description: 'Tracks employee safety credentials, certifications, and training requirements to ensure compliance.',
-                gradient: 'from-ds-success-600 to-ds-success-700'
+                gradient: 'from-ds-blue-400 to-ds-blue-500'
               }
             ].map((feature, index) => (
               <motion.div
@@ -327,7 +327,7 @@ const Index: React.FC = () => {
       {/* Roles Section - Enhanced with gradients and animations */}
       <section className="py-16 md:py-24 px-4 bg-gradient-to-b from-ds-blue-50 to-white relative overflow-hidden">
         <div className="absolute top-0 right-0 w-1/3 h-1/3 bg-gradient-to-br from-ds-blue-100 to-transparent opacity-60" />
-        <div className="absolute bottom-0 left-0 w-1/3 h-1/3 bg-gradient-to-tr from-ds-success-50 to-transparent opacity-30" />
+        <div className="absolute bottom-0 left-0 w-1/3 h-1/3 bg-gradient-to-tr from-ds-blue-50 to-transparent opacity-30" />
         
         <div className="container mx-auto max-w-6xl relative z-10">
           <motion.div 
@@ -365,7 +365,7 @@ const Index: React.FC = () => {
               },
               {
                 role: 'Safety Professionals',
-                gradient: 'from-ds-success-600 via-ds-success-500 to-ds-success-600',
+                gradient: 'from-ds-blue-500 via-ds-blue-400 to-ds-blue-500',
                 features: [
                   'Comprehensive dashboard',
                   'Team inspection monitoring',
@@ -375,7 +375,7 @@ const Index: React.FC = () => {
               },
               {
                 role: 'Inspectors',
-                gradient: 'from-ds-warning-600 via-ds-warning-500 to-ds-warning-600',
+                gradient: 'from-ds-blue-400 via-ds-blue-300 to-ds-blue-400',
                 features: [
                   'Batch inspection tools',
                   'RFID/barcode scanning',
