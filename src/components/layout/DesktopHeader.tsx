@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Bell, LogIn, Search } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -15,6 +15,15 @@ import {
   NavigationMenuList,
   NavigationMenuTrigger,
 } from "@/components/ui/navigation-menu";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 
 interface DesktopHeaderProps {
   scrolled: boolean;
@@ -25,8 +34,16 @@ const DesktopHeader: React.FC<DesktopHeaderProps> = ({ scrolled, navLinks }) => 
   const { isAuthenticated } = useAuth();
   const location = useLocation();
   const isLandingPage = location.pathname === '/';
+  const [openDialog, setOpenDialog] = useState(false);
+  const [dialogTitle, setDialogTitle] = useState('');
   
   const isActive = (path: string) => location.pathname === path;
+
+  const handleSolutionClick = (title: string, e: React.MouseEvent) => {
+    e.preventDefault();
+    setDialogTitle(title);
+    setOpenDialog(true);
+  };
 
   return (
     <header
@@ -35,6 +52,22 @@ const DesktopHeader: React.FC<DesktopHeaderProps> = ({ scrolled, navLinks }) => 
         scrolled ? 'bg-white/90 backdrop-blur-md shadow-sm' : 'bg-transparent'
       )}
     >
+      <AlertDialog open={openDialog} onOpenChange={setOpenDialog}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Under Construction</AlertDialogTitle>
+            <AlertDialogDescription>
+              The {dialogTitle} section is currently under construction. We're working to bring you valuable content soon.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogAction onClick={() => setOpenDialog(false)}>
+              Close
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
       <div className="container mx-auto px-4 h-16 flex items-center justify-between">
         <div className="flex items-center">
           <Link to="/" className="mr-8">
@@ -69,30 +102,30 @@ const DesktopHeader: React.FC<DesktopHeaderProps> = ({ scrolled, navLinks }) => 
                       <ul className="grid gap-3 p-4 w-[220px]">
                         <li>
                           <NavigationMenuLink asChild>
-                            <Link to="/dashboard" className="block select-none rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-ds-blue-50 hover:text-ds-blue-600">
+                            <a href="#" onClick={(e) => handleSolutionClick('PPE Inspections', e)} className="block select-none rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-ds-blue-50 hover:text-ds-blue-600">
                               <div className="text-sm font-medium">PPE Inspections</div>
-                            </Link>
+                            </a>
                           </NavigationMenuLink>
                         </li>
                         <li>
                           <NavigationMenuLink asChild>
-                            <Link to="/dashboard" className="block select-none rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-ds-blue-50 hover:text-ds-blue-600">
+                            <a href="#" onClick={(e) => handleSolutionClick('Fall Notifications', e)} className="block select-none rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-ds-blue-50 hover:text-ds-blue-600">
                               <div className="text-sm font-medium">Fall Notifications</div>
-                            </Link>
+                            </a>
                           </NavigationMenuLink>
                         </li>
                         <li>
                           <NavigationMenuLink asChild>
-                            <Link to="/dashboard" className="block select-none rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-ds-blue-50 hover:text-ds-blue-600">
+                            <a href="#" onClick={(e) => handleSolutionClick('Compliance Tracking', e)} className="block select-none rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-ds-blue-50 hover:text-ds-blue-600">
                               <div className="text-sm font-medium">Compliance Tracking</div>
-                            </Link>
+                            </a>
                           </NavigationMenuLink>
                         </li>
                         <li>
                           <NavigationMenuLink asChild>
-                            <Link to="/dashboard" className="block select-none rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-ds-blue-50 hover:text-ds-blue-600">
+                            <a href="#" onClick={(e) => handleSolutionClick('Training Management', e)} className="block select-none rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-ds-blue-50 hover:text-ds-blue-600">
                               <div className="text-sm font-medium">Training Management</div>
-                            </Link>
+                            </a>
                           </NavigationMenuLink>
                         </li>
                       </ul>
@@ -112,7 +145,11 @@ const DesktopHeader: React.FC<DesktopHeaderProps> = ({ scrolled, navLinks }) => 
                           </NavigationMenuLink>
                         </li>
                         <li>
-                          <Button variant="ghost" className="w-full justify-start p-3 h-auto">
+                          <Button variant="ghost" onClick={(e) => {
+                            e.preventDefault();
+                            setDialogTitle('Training Resources');
+                            setOpenDialog(true);
+                          }} className="w-full justify-start p-3 h-auto">
                             <div className="text-left">
                               <div className="text-sm font-medium">Training Resources</div>
                             </div>
@@ -126,7 +163,11 @@ const DesktopHeader: React.FC<DesktopHeaderProps> = ({ scrolled, navLinks }) => 
                           </NavigationMenuLink>
                         </li>
                         <li>
-                          <Button variant="ghost" className="w-full justify-start p-3 h-auto">
+                          <Button variant="ghost" onClick={(e) => {
+                            e.preventDefault();
+                            setDialogTitle('Support Center');
+                            setOpenDialog(true);
+                          }} className="w-full justify-start p-3 h-auto">
                             <div className="text-left">
                               <div className="text-sm font-medium">Support Center</div>
                             </div>
