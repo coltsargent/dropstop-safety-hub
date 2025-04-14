@@ -30,6 +30,7 @@ import GeolocationDisplay from '@/components/safety/GeolocationDisplay';
 import FallAlertButton from '@/components/safety/FallAlertButton';
 import { useNavigate } from 'react-router-dom';
 import { format } from 'date-fns';
+import MonthlyCalendar from '@/components/calendar/MonthlyCalendar';
 import {
   Popover,
   PopoverContent,
@@ -273,9 +274,10 @@ const FieldWorkerDashboard: React.FC = () => {
         </div>
         
         <Tabs defaultValue="safety-tasks" className="w-full">
-          <TabsList className="grid w-full grid-cols-3">
+          <TabsList className="grid w-full grid-cols-4">
             <TabsTrigger value="safety-tasks">Safety Tasks</TabsTrigger>
             <TabsTrigger value="clock">Clock In/Out</TabsTrigger>
+            <TabsTrigger value="calendar">Calendar</TabsTrigger>
             <TabsTrigger value="history">History</TabsTrigger>
           </TabsList>
           
@@ -448,6 +450,10 @@ const FieldWorkerDashboard: React.FC = () => {
                 </div>
               </CardContent>
             </Card>
+          </TabsContent>
+          
+          <TabsContent value="calendar">
+            <MonthlyCalendar />
           </TabsContent>
           
           <TabsContent value="history">
