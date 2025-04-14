@@ -7,7 +7,6 @@ import {
   AlertTriangle, 
   Clipboard, 
   MapPin,
-  Upload,
   Shield,
   Bell,
   User,
@@ -16,7 +15,10 @@ import {
   Building,
   FileText,
   LogOut,
-  Settings
+  Settings,
+  Clock,
+  CheckSquare,
+  Calendar
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
@@ -42,6 +44,16 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Label } from "@/components/ui/label";
 import LogoutButton from '@/components/auth/LogoutButton';
 
 type InspectionItem = {
@@ -58,12 +70,38 @@ const mockEquipment: InspectionItem[] = [
   { id: '3', name: 'Lanyard', type: 'Connector', status: 'pending', lastInspected: '2023-12-01' },
 ];
 
+type ClockRecord = {
+  type: 'in' | 'out';
+  timestamp: Date;
+  location?: { latitude: number; longitude: number };
+};
+
+type PPEItem = {
+  id: string;
+  name: string;
+  required: boolean;
+  checked: boolean;
+};
+
 const FieldWorkerDashboard: React.FC = () => {
   const { user, logout } = useAuth();
   const { toast } = useToast();
   const navigate = useNavigate();
   const { coordinates, loading: locationLoading, error: locationError } = useLocation();
   const [equipment] = useState<InspectionItem[]>(mockEquipment);
+  const [clockRecords, setClockRecords] = useState<ClockRecord[]>([]);
+  const [clockedIn, setClockedIn] = useState<boolean>(false);
+  const [showPPEDialog, setShowPPEDialog] = useState<boolean>(false);
+  const [ppeItems, setPpeItems] = useState<PPEItem[]>([
+    { id: '1', name: 'Full Body Harness', required: true, checked: false },
+    { id: '2', name: 'Self-Retracting Lifeline', required: true, checked: false },
+    { id: '3', name: 'Lanyard', required: true, checked: false },
+    { id: '4', name: 'Hard Hat', required: true, checked: false },
+    { id: '5', name: 'Safety Glasses', required: true, checked: false },
+    { id: '6', name: 'Safety Boots', required: true, checked: false },
+    { id: '7', name: 'Gloves', required: false, checked: false },
+    { id: '8', name: 'Reflective Vest', required: false, checked: false },
+  ]);
   
   const handleStartInspection = () => {
     navigate('/inspection');
@@ -91,6 +129,45 @@ const FieldWorkerDashboard: React.FC = () => {
   const isExpirationSoon = daysUntilExpiration <= 30;
 
   const today = format(new Date(), 'EEEE, MMMM d, yyyy');
+
+  const handleClock = (type: 'in' | 'out') => {
+    const newRecord: ClockRecord = {
+      type,
+      timestamp: new Date(),
+      location: coordinates ? { latitude: coordinates.latitude, longitude: coordinates.longitude } : undefined
+    };
+    
+    setClockRecords([...clockRecords, newRecord]);
+    
+    if (type === 'in') {
+      setClockedIn(true);
+      setShowPPEDialog(true);
+      toast({
+        title: "Clocked In",
+        description: `You have clocked in at ${format(new Date(), 'h:mm a')}`,
+      });
+    } else {
+      setClockedIn(false);
+      toast({
+        title: "Clocked Out",
+        description: `You have clocked out at ${format(new Date(), 'h:mm a')}`,
+      });
+    }
+  };
+
+  const handlePPEInspectionSubmit = () => {
+    setShowPPEDialog(false);
+    toast({
+      title: "PPE Inspection Documented",
+      description: "Your daily PPE inspection has been documented.",
+    });
+  };
+
+  const togglePPEItem = (id: string) => {
+    setPpeItems(ppeItems.map(item => 
+      item.id === id ? { ...item, checked: !item.checked } : item
+    ));
+  };
 
   return (
     <motion.div
@@ -204,12 +281,12 @@ const FieldWorkerDashboard: React.FC = () => {
         
         {/* Safety Alert Banner (if training is expiring soon) */}
         {isExpirationSoon && (
-          <div className="bg-amber-50 border-l-4 border-amber-400 p-4 rounded-md">
+          <div className="bg-ds-blue-50 border-l-4 border-ds-blue-400 p-4 rounded-md">
             <div className="flex items-start">
-              <AlertTriangle className="h-5 w-5 text-amber-500 mr-2 mt-0.5" />
+              <AlertTriangle className="h-5 w-5 text-ds-blue-500 mr-2 mt-0.5" />
               <div>
-                <h3 className="font-medium text-amber-800">Training Expiration Notice</h3>
-                <p className="text-sm text-amber-700">
+                <h3 className="font-medium text-ds-blue-800">Training Expiration Notice</h3>
+                <p className="text-sm text-ds-blue-700">
                   Your safety training certification expires in {daysUntilExpiration} days. 
                   Please schedule a renewal session.
                 </p>
@@ -218,23 +295,25 @@ const FieldWorkerDashboard: React.FC = () => {
           </div>
         )}
 
-        <Tabs defaultValue="daily-inspection" className="w-full">
+        <Tabs defaultValue="safety-tasks" className="w-full">
           <TabsList className="grid w-full grid-cols-3">
-            <TabsTrigger value="daily-inspection">Daily Inspection</TabsTrigger>
-            <TabsTrigger value="training">My Training</TabsTrigger>
+            <TabsTrigger value="safety-tasks">Safety Tasks</TabsTrigger>
+            <TabsTrigger value="clock">Clock In/Out</TabsTrigger>
             <TabsTrigger value="history">History</TabsTrigger>
           </TabsList>
           
-          <TabsContent value="daily-inspection" className="space-y-4">
+          <TabsContent value="safety-tasks" className="space-y-4">
             <Card>
               <CardHeader>
-                <CardTitle>Daily Equipment Inspection</CardTitle>
+                <CardTitle>Daily Safety Tasks</CardTitle>
                 <CardDescription>
-                  Perform your required safety equipment inspection for today.
+                  Manage your equipment inspections and training requirements.
                 </CardDescription>
               </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="grid grid-cols-1 gap-4">
+              <CardContent className="space-y-6">
+                {/* Equipment Inspection Section */}
+                <div>
+                  <h3 className="text-lg font-medium mb-3">Equipment Inspection</h3>
                   <div className="flex items-center justify-between p-4 bg-ds-blue-50 rounded-md">
                     <div className="flex items-center gap-3">
                       <CheckCircle2 className="h-6 w-6 text-ds-blue-600" />
@@ -248,7 +327,7 @@ const FieldWorkerDashboard: React.FC = () => {
                     </Button>
                   </div>
                   
-                  <div className="p-4 border rounded-md">
+                  <div className="p-4 border rounded-md mt-4">
                     <div className="flex items-center gap-3 mb-3">
                       <MapPin className="h-5 w-5 text-slate-500" />
                       <div>
@@ -275,20 +354,10 @@ const FieldWorkerDashboard: React.FC = () => {
                   
                   <FallAlertButton />
                 </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
-          
-          <TabsContent value="training">
-            <Card>
-              <CardHeader>
-                <CardTitle>My Training Status</CardTitle>
-                <CardDescription>
-                  View your current training certifications and status.
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="space-y-4">
+
+                {/* Training Section */}
+                <div className="pt-4 border-t">
+                  <h3 className="text-lg font-medium mb-3">My Training Status</h3>
                   <div className="border rounded-lg p-4">
                     <div className="flex justify-between items-start mb-2">
                       <div className="flex gap-3">
@@ -299,7 +368,7 @@ const FieldWorkerDashboard: React.FC = () => {
                         </div>
                       </div>
                       <span className={`px-2 py-1 text-xs font-medium rounded-full ${
-                        isExpirationSoon ? 'bg-amber-100 text-amber-800' : 'bg-green-100 text-green-800'
+                        isExpirationSoon ? 'bg-ds-blue-100 text-ds-blue-800' : 'bg-ds-blue-100 text-ds-blue-800'
                       }`}>
                         {isExpirationSoon ? 'Renewal Needed' : 'Active'}
                       </span>
@@ -318,7 +387,7 @@ const FieldWorkerDashboard: React.FC = () => {
                   
                   <Button 
                     variant="outline" 
-                    className="w-full flex gap-2"
+                    className="w-full flex gap-2 mt-4"
                     onClick={() => navigate('/training')}
                   >
                     <CalendarClock className="h-4 w-4" />
@@ -329,12 +398,89 @@ const FieldWorkerDashboard: React.FC = () => {
             </Card>
           </TabsContent>
           
+          <TabsContent value="clock">
+            <Card>
+              <CardHeader>
+                <CardTitle>Clock In/Out</CardTitle>
+                <CardDescription>
+                  Track your work hours and manage daily safety requirements.
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                <div className="flex flex-col items-center justify-center p-6 border rounded-lg bg-ds-blue-50">
+                  <div className="text-center mb-6">
+                    <Clock className="h-12 w-12 text-ds-blue-600 mx-auto mb-2" />
+                    <h3 className="text-xl font-medium">
+                      {format(new Date(), 'h:mm a')}
+                    </h3>
+                    <p className="text-sm text-slate-500">{format(new Date(), 'EEEE, MMMM d, yyyy')}</p>
+                  </div>
+                  
+                  <div className="flex flex-col sm:flex-row gap-3 w-full max-w-md">
+                    <Button 
+                      className="flex-1" 
+                      onClick={() => handleClock('in')}
+                      disabled={clockedIn}
+                    >
+                      <Clock className="h-4 w-4 mr-2" />
+                      Clock In
+                    </Button>
+                    <Button 
+                      className="flex-1" 
+                      variant="outline"
+                      onClick={() => handleClock('out')}
+                      disabled={!clockedIn}
+                    >
+                      <Clock className="h-4 w-4 mr-2" />
+                      Clock Out
+                    </Button>
+                  </div>
+                </div>
+                
+                <div>
+                  <h3 className="text-lg font-medium mb-2">Today's Clock Activity</h3>
+                  {clockRecords.length > 0 ? (
+                    <div className="border rounded-lg divide-y">
+                      {clockRecords.map((record, index) => (
+                        <div key={index} className="p-3 flex justify-between items-center">
+                          <div className="flex items-center">
+                            <div className={`h-8 w-8 rounded-full ${record.type === 'in' ? 'bg-ds-blue-100' : 'bg-ds-blue-50'} flex items-center justify-center mr-3`}>
+                              <Clock className={`h-4 w-4 ${record.type === 'in' ? 'text-ds-blue-600' : 'text-ds-blue-400'}`} />
+                            </div>
+                            <div>
+                              <p className="font-medium">
+                                {record.type === 'in' ? 'Clock In' : 'Clock Out'}
+                              </p>
+                              {record.location && (
+                                <p className="text-xs text-slate-500">
+                                  Location: {record.location.latitude.toFixed(4)}, {record.location.longitude.toFixed(4)}
+                                </p>
+                              )}
+                            </div>
+                          </div>
+                          <p className="text-sm">
+                            {format(record.timestamp, 'h:mm a')}
+                          </p>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="text-center p-6 border rounded-lg">
+                      <p className="text-slate-500">No clock activity recorded today</p>
+                      <p className="text-sm text-slate-400">Clock in to start tracking your work hours</p>
+                    </div>
+                  )}
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+          
           <TabsContent value="history">
             <Card>
               <CardHeader>
-                <CardTitle>Inspection History</CardTitle>
+                <CardTitle>Activity History</CardTitle>
                 <CardDescription>
-                  View your past equipment inspections.
+                  View your past equipment inspections and work hours.
                 </CardDescription>
               </CardHeader>
               <CardContent>
@@ -343,7 +489,7 @@ const FieldWorkerDashboard: React.FC = () => {
                     <div className="flex justify-between items-center">
                       <div>
                         <h3 className="font-medium">March 15, 2024</h3>
-                        <p className="text-sm text-slate-600">3 items inspected</p>
+                        <p className="text-sm text-slate-600">3 items inspected • 8.5 hours worked</p>
                       </div>
                       <Button variant="outline" size="sm">View</Button>
                     </div>
@@ -353,7 +499,7 @@ const FieldWorkerDashboard: React.FC = () => {
                     <div className="flex justify-between items-center">
                       <div>
                         <h3 className="font-medium">March 14, 2024</h3>
-                        <p className="text-sm text-slate-600">3 items inspected</p>
+                        <p className="text-sm text-slate-600">3 items inspected • 7.75 hours worked</p>
                       </div>
                       <Button variant="outline" size="sm">View</Button>
                     </div>
@@ -363,7 +509,7 @@ const FieldWorkerDashboard: React.FC = () => {
                     <div className="flex justify-between items-center">
                       <div>
                         <h3 className="font-medium">March 13, 2024</h3>
-                        <p className="text-sm text-slate-600">3 items inspected</p>
+                        <p className="text-sm text-slate-600">3 items inspected • 8 hours worked</p>
                       </div>
                       <Button variant="outline" size="sm">View</Button>
                     </div>
@@ -388,6 +534,59 @@ const FieldWorkerDashboard: React.FC = () => {
           </TabsContent>
         </Tabs>
       </div>
+
+      {/* PPE Inspection Dialog */}
+      <Dialog open={showPPEDialog} onOpenChange={setShowPPEDialog}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>Daily PPE Inspection</DialogTitle>
+            <DialogDescription>
+              Document your daily Personal Protective Equipment inspection before starting work.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4 py-4">
+            <div className="space-y-2">
+              {ppeItems.map((item) => (
+                <div key={item.id} className="flex items-center space-x-2">
+                  <Checkbox 
+                    id={`ppe-${item.id}`} 
+                    checked={item.checked}
+                    onCheckedChange={() => togglePPEItem(item.id)}
+                  />
+                  <Label 
+                    htmlFor={`ppe-${item.id}`}
+                    className="flex items-center"
+                  >
+                    {item.name}
+                    {item.required && (
+                      <span className="ml-2 text-xs bg-ds-blue-100 text-ds-blue-800 px-2 py-0.5 rounded-full">
+                        Required
+                      </span>
+                    )}
+                  </Label>
+                </div>
+              ))}
+            </div>
+          </div>
+          <DialogFooter>
+            <Button 
+              type="button" 
+              variant="outline" 
+              onClick={() => setShowPPEDialog(false)}
+            >
+              Skip
+            </Button>
+            <Button 
+              type="submit"
+              onClick={handlePPEInspectionSubmit}
+              disabled={!ppeItems.some(item => item.required && item.checked)}
+            >
+              <CheckSquare className="mr-2 h-4 w-4" />
+              Submit Inspection
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </motion.div>
   );
 };

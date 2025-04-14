@@ -1,5 +1,4 @@
 
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -181,6 +180,11 @@
   .hover-glow:hover {
     @apply shadow-lg shadow-primary/20;
   }
+
+  /* Clock animation */
+  .clock-pulse {
+    @apply animate-pulse-slow;
+  }
 }
 
 /* Custom Scrollbar */
@@ -264,4 +268,3 @@ html {
 a, button {
   @apply transition-all duration-300;
 }
-
