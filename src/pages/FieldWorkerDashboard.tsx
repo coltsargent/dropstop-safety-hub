@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { 
@@ -64,12 +63,6 @@ type InspectionItem = {
   lastInspected?: string;
 };
 
-const mockEquipment: InspectionItem[] = [
-  { id: '1', name: 'Full Body Harness', type: 'Harness', status: 'pending', lastInspected: '2023-10-15' },
-  { id: '2', name: 'Self-Retracting Lifeline', type: 'Lifeline', status: 'pending', lastInspected: '2023-11-20' },
-  { id: '3', name: 'Lanyard', type: 'Connector', status: 'pending', lastInspected: '2023-12-01' },
-];
-
 type ClockRecord = {
   type: 'in' | 'out';
   timestamp: Date;
@@ -82,6 +75,12 @@ type PPEItem = {
   required: boolean;
   checked: boolean;
 };
+
+const mockEquipment: InspectionItem[] = [
+  { id: '1', name: 'Full Body Harness', type: 'Harness', status: 'pending', lastInspected: '2023-10-15' },
+  { id: '2', name: 'Self-Retracting Lifeline', type: 'Lifeline', status: 'pending', lastInspected: '2023-11-20' },
+  { id: '3', name: 'Lanyard', type: 'Connector', status: 'pending', lastInspected: '2023-12-01' },
+];
 
 const FieldWorkerDashboard: React.FC = () => {
   const { user, logout } = useAuth();
@@ -97,10 +96,6 @@ const FieldWorkerDashboard: React.FC = () => {
     { id: '2', name: 'Self-Retracting Lifeline', required: true, checked: false },
     { id: '3', name: 'Lanyard', required: true, checked: false },
     { id: '4', name: 'Hard Hat', required: true, checked: false },
-    { id: '5', name: 'Safety Glasses', required: true, checked: false },
-    { id: '6', name: 'Safety Boots', required: true, checked: false },
-    { id: '7', name: 'Gloves', required: false, checked: false },
-    { id: '8', name: 'Reflective Vest', required: false, checked: false },
   ]);
   
   const handleStartInspection = () => {
@@ -120,7 +115,6 @@ const FieldWorkerDashboard: React.FC = () => {
     navigate('/');
   };
 
-  // Calculate training expiration (mock data)
   const trainingDate = new Date('2023-10-15');
   const expirationDate = new Date(trainingDate);
   expirationDate.setFullYear(expirationDate.getFullYear() + 1);
@@ -183,7 +177,6 @@ const FieldWorkerDashboard: React.FC = () => {
               <h1 className="text-2xl font-bold">Field Worker Dashboard</h1>
             </div>
             
-            {/* Header Actions: Profile and Logout */}
             <div className="flex items-center gap-3">
               <Popover>
                 <PopoverTrigger asChild>
@@ -279,22 +272,6 @@ const FieldWorkerDashboard: React.FC = () => {
           </p>
         </div>
         
-        {/* Safety Alert Banner (if training is expiring soon) */}
-        {isExpirationSoon && (
-          <div className="bg-ds-blue-50 border-l-4 border-ds-blue-400 p-4 rounded-md">
-            <div className="flex items-start">
-              <AlertTriangle className="h-5 w-5 text-ds-blue-500 mr-2 mt-0.5" />
-              <div>
-                <h3 className="font-medium text-ds-blue-800">Training Expiration Notice</h3>
-                <p className="text-sm text-ds-blue-700">
-                  Your safety training certification expires in {daysUntilExpiration} days. 
-                  Please schedule a renewal session.
-                </p>
-              </div>
-            </div>
-          </div>
-        )}
-
         <Tabs defaultValue="safety-tasks" className="w-full">
           <TabsList className="grid w-full grid-cols-3">
             <TabsTrigger value="safety-tasks">Safety Tasks</TabsTrigger>
@@ -311,7 +288,6 @@ const FieldWorkerDashboard: React.FC = () => {
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-6">
-                {/* Equipment Inspection Section */}
                 <div>
                   <h3 className="text-lg font-medium mb-3">Equipment Inspection</h3>
                   <div className="flex items-center justify-between p-4 bg-ds-blue-50 rounded-md">
@@ -355,7 +331,6 @@ const FieldWorkerDashboard: React.FC = () => {
                   <FallAlertButton />
                 </div>
 
-                {/* Training Section */}
                 <div className="pt-4 border-t">
                   <h3 className="text-lg font-medium mb-3">My Training Status</h3>
                   <div className="border rounded-lg p-4">
@@ -535,7 +510,6 @@ const FieldWorkerDashboard: React.FC = () => {
         </Tabs>
       </div>
 
-      {/* PPE Inspection Dialog */}
       <Dialog open={showPPEDialog} onOpenChange={setShowPPEDialog}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
