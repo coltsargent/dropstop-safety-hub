@@ -17,7 +17,6 @@ import {
   Settings,
   Clock,
   CheckSquare,
-  Calendar
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
@@ -249,10 +248,9 @@ const FieldWorkerDashboard: React.FC = () => {
         </div>
         
         <Tabs defaultValue="safety-tasks" className="w-full">
-          <TabsList className="grid w-full grid-cols-4">
+          <TabsList className="grid w-full grid-cols-3">
             <TabsTrigger value="safety-tasks">Safety Tasks</TabsTrigger>
             <TabsTrigger value="clock">Clock In/Out</TabsTrigger>
-            <TabsTrigger value="calendar">Calendar</TabsTrigger>
             <TabsTrigger value="history">History</TabsTrigger>
           </TabsList>
           
@@ -351,10 +349,6 @@ const FieldWorkerDashboard: React.FC = () => {
           </TabsContent>
           
           <TabsContent value="clock">
-            <MonthlyCalendar />
-          </TabsContent>
-          
-          <TabsContent value="calendar">
             <MonthlyCalendar />
           </TabsContent>
           
