@@ -14,9 +14,20 @@ type CalendarEvent = {
   id: string;
   title: string;
   date: Date;
-  type: 'inspection' | 'training' | 'meeting' | 'other' | 'clock-in' | 'clock-out';
+  type: 'inspection' | 'training' | 'meeting' | 'other';
   completed?: boolean;
 };
+
+// Define a separate type for clock records events
+type ClockEventType = {
+  id: string;
+  title: string;
+  date: Date;
+  type: 'clock-in' | 'clock-out';
+};
+
+// Union type for all event types
+type AllEventTypes = CalendarEvent | ClockEventType;
 
 interface MonthlyCalendarProps {
   events?: CalendarEvent[];
@@ -83,7 +94,7 @@ const MonthlyCalendar: React.FC<MonthlyCalendarProps> = ({ events = [] }) => {
   ];
   
   // Combine sample events with clock records events
-  const calendarEvents = [
+  const calendarEvents: AllEventTypes[] = [
     ...events.length > 0 ? events : sampleEvents,
     ...clockRecords.map((record, index) => ({
       id: `clock-${index}-${record.timestamp.getTime()}`,
@@ -288,37 +299,49 @@ const MonthlyCalendar: React.FC<MonthlyCalendarProps> = ({ events = [] }) => {
           <h3 className="text-sm font-medium">Upcoming Activities</h3>
           <div className="space-y-2 max-h-60 overflow-y-auto">
             {calendarEvents
-              .filter(event => isWithinInterval(event.date, { start: twoWeeksAgo, end: nextWeek }) && !['clock-in', 'clock-out'].includes(event.type))
+              .filter(event => {
+                // Filter out clock events and only show upcoming activities
+                if (event.type === 'clock-in' || event.type === 'clock-out') return false;
+                return isWithinInterval(event.date, { start: twoWeeksAgo, end: nextWeek });
+              })
               .sort((a, b) => a.date.getTime() - b.date.getTime())
-              .map((event) => (
-                <div 
-                  key={event.id} 
-                  className={cn(
-                    "p-2 rounded-md border flex justify-between items-center",
-                    event.completed ? "bg-gray-50" : "bg-white"
-                  )}
-                >
-                  <div className="flex flex-col">
-                    <div className="flex items-center gap-2">
-                      <Badge className={cn("text-xs", getEventBadgeColor(event.type))}>
-                        {event.type.charAt(0).toUpperCase() + event.type.slice(1)}
-                      </Badge>
-                      <span className={cn(
-                        "text-sm font-medium",
-                        event.completed && "text-gray-500 line-through"
-                      )}>
-                        {event.title}
+              .map((event) => {
+                // Type guard to check if the event is a CalendarEvent (which might have completed property)
+                const isCalendarEvent = (e: AllEventTypes): e is CalendarEvent => 
+                  ['inspection', 'training', 'meeting', 'other'].includes(e.type);
+                
+                const completed = isCalendarEvent(event) ? event.completed : false;
+                
+                return (
+                  <div 
+                    key={event.id} 
+                    className={cn(
+                      "p-2 rounded-md border flex justify-between items-center",
+                      completed ? "bg-gray-50" : "bg-white"
+                    )}
+                  >
+                    <div className="flex flex-col">
+                      <div className="flex items-center gap-2">
+                        <Badge className={cn("text-xs", getEventBadgeColor(event.type))}>
+                          {event.type.charAt(0).toUpperCase() + event.type.slice(1)}
+                        </Badge>
+                        <span className={cn(
+                          "text-sm font-medium",
+                          completed && "text-gray-500 line-through"
+                        )}>
+                          {event.title}
+                        </span>
+                      </div>
+                      <span className="text-xs text-gray-500">
+                        {format(event.date, 'MMM d, yyyy')}
                       </span>
                     </div>
-                    <span className="text-xs text-gray-500">
-                      {format(event.date, 'MMM d, yyyy')}
-                    </span>
+                    {completed && (
+                      <Badge className="bg-green-100 text-green-700 text-xs">Completed</Badge>
+                    )}
                   </div>
-                  {event.completed && (
-                    <Badge className="bg-green-100 text-green-700 text-xs">Completed</Badge>
-                  )}
-                </div>
-              ))}
+                );
+              })}
           </div>
         </div>
       </CardContent>
