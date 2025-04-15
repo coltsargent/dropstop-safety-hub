@@ -125,31 +125,6 @@ const FieldWorkerDashboard: React.FC = () => {
 
   const today = format(new Date(), 'EEEE, MMMM d, yyyy');
 
-  const handleClock = (type: 'in' | 'out') => {
-    const newRecord: ClockRecord = {
-      type,
-      timestamp: new Date(),
-      location: coordinates ? { latitude: coordinates.latitude, longitude: coordinates.longitude } : undefined
-    };
-    
-    setClockRecords([...clockRecords, newRecord]);
-    
-    if (type === 'in') {
-      setClockedIn(true);
-      setShowPPEDialog(true);
-      toast({
-        title: "Clocked In",
-        description: `You have clocked in at ${format(new Date(), 'h:mm a')}`,
-      });
-    } else {
-      setClockedIn(false);
-      toast({
-        title: "Clocked Out",
-        description: `You have clocked out at ${format(new Date(), 'h:mm a')}`,
-      });
-    }
-  };
-
   const handlePPEInspectionSubmit = () => {
     setShowPPEDialog(false);
     toast({
@@ -376,80 +351,7 @@ const FieldWorkerDashboard: React.FC = () => {
           </TabsContent>
           
           <TabsContent value="clock">
-            <Card>
-              <CardHeader>
-                <CardTitle>Clock In/Out</CardTitle>
-                <CardDescription>
-                  Track your work hours and manage daily safety requirements.
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-6">
-                <div className="flex flex-col items-center justify-center p-6 border rounded-lg bg-ds-blue-50">
-                  <div className="text-center mb-6">
-                    <Clock className="h-12 w-12 text-ds-blue-600 mx-auto mb-2" />
-                    <h3 className="text-xl font-medium">
-                      {format(new Date(), 'h:mm a')}
-                    </h3>
-                    <p className="text-sm text-slate-500">{format(new Date(), 'EEEE, MMMM d, yyyy')}</p>
-                  </div>
-                  
-                  <div className="flex flex-col sm:flex-row gap-3 w-full max-w-md">
-                    <Button 
-                      className="flex-1" 
-                      onClick={() => handleClock('in')}
-                      disabled={clockedIn}
-                    >
-                      <Clock className="h-4 w-4 mr-2" />
-                      Clock In
-                    </Button>
-                    <Button 
-                      className="flex-1" 
-                      variant="outline"
-                      onClick={() => handleClock('out')}
-                      disabled={!clockedIn}
-                    >
-                      <Clock className="h-4 w-4 mr-2" />
-                      Clock Out
-                    </Button>
-                  </div>
-                </div>
-                
-                <div>
-                  <h3 className="text-lg font-medium mb-2">Today's Clock Activity</h3>
-                  {clockRecords.length > 0 ? (
-                    <div className="border rounded-lg divide-y">
-                      {clockRecords.map((record, index) => (
-                        <div key={index} className="p-3 flex justify-between items-center">
-                          <div className="flex items-center">
-                            <div className={`h-8 w-8 rounded-full ${record.type === 'in' ? 'bg-ds-blue-100' : 'bg-ds-blue-50'} flex items-center justify-center mr-3`}>
-                              <Clock className={`h-4 w-4 ${record.type === 'in' ? 'text-ds-blue-600' : 'text-ds-blue-400'}`} />
-                            </div>
-                            <div>
-                              <p className="font-medium">
-                                {record.type === 'in' ? 'Clock In' : 'Clock Out'}
-                              </p>
-                              {record.location && (
-                                <p className="text-xs text-slate-500">
-                                  Location: {record.location.latitude.toFixed(4)}, {record.location.longitude.toFixed(4)}
-                                </p>
-                              )}
-                            </div>
-                          </div>
-                          <p className="text-sm">
-                            {format(record.timestamp, 'h:mm a')}
-                          </p>
-                        </div>
-                      ))}
-                    </div>
-                  ) : (
-                    <div className="text-center p-6 border rounded-lg">
-                      <p className="text-slate-500">No clock activity recorded today</p>
-                      <p className="text-sm text-slate-400">Clock in to start tracking your work hours</p>
-                    </div>
-                  )}
-                </div>
-              </CardContent>
-            </Card>
+            <MonthlyCalendar />
           </TabsContent>
           
           <TabsContent value="calendar">
