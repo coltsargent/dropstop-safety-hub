@@ -15,30 +15,28 @@ const Logo: React.FC<LogoProps> = ({
   showTagline = false,
   variant = 'default'
 }) => {
-  // For header variant, now use full size instead of half
+  // Reduced sizes by half for both header and default variants
   const getHeightClass = () => {
     if (variant === 'header') {
-      // Full-sized for header, doubled from previous implementation
       const headerSizeClasses = {
-        xs: 'h-6', 
-        sm: 'h-12', 
-        md: 'h-20', 
-        lg: 'h-32', 
-        xl: 'h-40', 
-        '2xl': 'h-48', 
-        '3xl': 'h-64', 
+        xs: 'h-3', 
+        sm: 'h-6', 
+        md: 'h-10', 
+        lg: 'h-16', 
+        xl: 'h-20', 
+        '2xl': 'h-24', 
+        '3xl': 'h-32', 
       };
       return headerSizeClasses[size];
     } else {
-      // Original sizes for default variant, now with an added 'xs' option
       const defaultSizeClasses = {
-        xs: 'h-6', 
-        sm: 'h-30', 
-        md: 'h-48', 
-        lg: 'h-72', 
-        xl: 'h-96', 
-        '2xl': 'h-[32rem]', 
-        '3xl': 'h-[40rem]', 
+        xs: 'h-3', 
+        sm: 'h-15', 
+        md: 'h-24', 
+        lg: 'h-36', 
+        xl: 'h-48', 
+        '2xl': 'h-[16rem]', 
+        '3xl': 'h-[20rem]', 
       };
       return defaultSizeClasses[size];
     }
