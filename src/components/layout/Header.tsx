@@ -49,7 +49,7 @@ const Header: React.FC = () => {
     ? [...authNavLinks, ...publicNavLinks]
     : publicNavLinks;
 
-  // For mobile, use a simplified header
+  // For mobile, use a simplified header with the menu button positioned properly
   if (isMobile) {
     return (
       <>
@@ -58,7 +58,7 @@ const Header: React.FC = () => {
           <Button
             variant="ghost"
             size="icon"
-            className="rounded-full fixed top-4 right-4 z-50"
+            className="fixed top-2 right-2 z-50 rounded-full bg-white/80 shadow-sm"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
           >
             {mobileMenuOpen ? (
