@@ -1,643 +1,1093 @@
-
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { 
-  AlertTriangle, 
+import {
   Calendar,
-  Check, 
-  Clipboard, 
-  Clock, 
-  FileText,
+  ClipboardCheck,
+  Users,
+  AlertTriangle,
+  Clock,
+  ChevronRight,
   Shield,
-  User,
+  Bell,
+  ArrowUpRight,
+  BarChart4,
+  CheckCircle,
+  HardHat,
+  ArrowDown,
+  ArrowUp,
+  Award,
+  BookOpen,
   Calendar as CalendarIcon,
-  Clock as ClockIcon,
-  UserCheck,
+  CheckCircle2,
+  XCircle,
+  Filter,
+  Download,
+  FileText,
 } from 'lucide-react';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Input } from '@/components/ui/input';
+import Header from '@/components/layout/Header';
+import Footer from '@/components/layout/Footer';
+import SafetyStatus from '@/components/ui-extensions/SafetyStatus';
 import { Button } from '@/components/ui/button';
-import { Progress } from '@/components/ui/progress';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { useAuth } from '@/contexts/AuthContext';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from '@/components/ui/tabs';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table';
+import { format, addDays, parseISO } from 'date-fns';
+import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
+import { Select } from '@/components/ui/select';
 import { useToast } from '@/hooks/use-toast';
-import TimesheetDetails from '@/components/timesheets/TimesheetDetails';
-import TimesheetSummaryCard from '@/components/timesheets/TimesheetSummaryCard';
-
-interface User {
-  id: string;
-  name: string;
-  role: string;
-  photo?: string;
-  status: 'active' | 'offline' | 'away';
-}
-
-interface TimeRecord {
-  id: string;
-  employee: string;
-  employeeId: string;
-  date: string;
-  hoursWorked: number;
-  status: 'approved' | 'pending' | 'rejected';
-}
-
-interface TimeSheet {
-  id: string;
-  employee: string;
-  role: string;
-  weekStarting: string;
-  hoursWorked: number;
-  status: 'approved' | 'pending' | 'rejected';
-  lastSubmitted: string;
-}
-
-const mockUsers: User[] = [
-  {
-    id: '1',
-    name: 'John Doe',
-    role: 'Field Worker',
-    status: 'active'
-  },
-  {
-    id: '2',
-    name: 'Jane Smith',
-    role: 'Inspector',
-    status: 'active'
-  },
-  {
-    id: '3',
-    name: 'Mike Johnson',
-    role: 'Field Worker',
-    status: 'offline'
-  },
-  {
-    id: '4',
-    name: 'Sarah Williams',
-    role: 'Field Worker',
-    status: 'away'
-  }
-];
-
-const mockTimeRecords: TimeRecord[] = [
-  {
-    id: '1',
-    employee: 'John Doe',
-    employeeId: '1',
-    date: '2024-04-15',
-    hoursWorked: 8.5,
-    status: 'approved'
-  },
-  {
-    id: '2',
-    employee: 'Jane Smith',
-    employeeId: '2',
-    date: '2024-04-15',
-    hoursWorked: 7.75,
-    status: 'approved'
-  },
-  {
-    id: '3',
-    employee: 'Mike Johnson',
-    employeeId: '3',
-    date: '2024-04-15',
-    hoursWorked: 9,
-    status: 'pending'
-  },
-  {
-    id: '4',
-    employee: 'John Doe',
-    employeeId: '1',
-    date: '2024-04-16',
-    hoursWorked: 8.25,
-    status: 'pending'
-  },
-  {
-    id: '5',
-    employee: 'Sarah Williams',
-    employeeId: '4',
-    date: '2024-04-16',
-    hoursWorked: 6,
-    status: 'pending'
-  }
-];
-
-const mockTimeSheets: TimeSheet[] = [
-  {
-    id: '1',
-    employee: 'John Doe',
-    role: 'Field Worker',
-    weekStarting: '2024-04-15',
-    hoursWorked: 40.5,
-    status: 'pending',
-    lastSubmitted: '2024-04-19T15:30:00Z'
-  },
-  {
-    id: '2',
-    employee: 'Jane Smith',
-    role: 'Inspector',
-    weekStarting: '2024-04-15',
-    hoursWorked: 38.75,
-    status: 'pending',
-    lastSubmitted: '2024-04-19T16:45:00Z'
-  },
-  {
-    id: '3',
-    employee: 'Mike Johnson',
-    role: 'Field Worker',
-    weekStarting: '2024-04-08',
-    hoursWorked: 42,
-    status: 'approved',
-    lastSubmitted: '2024-04-12T17:00:00Z'
-  },
-  {
-    id: '4',
-    employee: 'Sarah Williams',
-    role: 'Field Worker',
-    weekStarting: '2024-04-08',
-    hoursWorked: 35.5,
-    status: 'rejected',
-    lastSubmitted: '2024-04-12T14:20:00Z'
-  }
-];
 
 const Dashboard: React.FC = () => {
-  const { user } = useAuth();
+  const [showOnlyIncomplete, setShowOnlyIncomplete] = useState(false);
+  const [selectedTimeTab, setSelectedTimeTab] = useState('thisWeek');
+  const [selectedEmployee, setSelectedEmployee] = useState('all');
   const { toast } = useToast();
-  const [selectedTimesheet, setSelectedTimesheet] = useState<TimeSheet | null>(null);
-  const [timesheetModalOpen, setTimesheetModalOpen] = useState<boolean>(false);
-  const [selectedFilter, setSelectedFilter] = useState<string>('all');
   
-  const filteredTimesheets = selectedFilter === 'all' 
-    ? mockTimeSheets 
-    : mockTimeSheets.filter(ts => ts.status === selectedFilter);
-  
-  const pendingTimesheets = mockTimeSheets.filter(ts => ts.status === 'pending');
-  const totalHoursThisWeek = mockTimeRecords
-    .filter(record => new Date(record.date) >= new Date(Date.now() - 7 * 24 * 60 * 60 * 1000))
-    .reduce((sum, record) => sum + record.hoursWorked, 0);
+  const stats = [
+    { 
+      title: 'Team Members', 
+      value: '24', 
+      icon: <Users className="h-5 w-5 text-ds-blue-600" />,
+      change: '+2 this month',
+      trend: 'up'
+    },
+    { 
+      title: 'Inspections Today', 
+      value: '18/24', 
+      icon: <ClipboardCheck className="h-5 w-5 text-ds-blue-600" />,
+      change: '75% compliance',
+      trend: 'neutral'
+    },
+    { 
+      title: 'Equipment Items', 
+      value: '86', 
+      icon: <HardHat className="h-5 w-5 text-ds-blue-600" />,
+      change: '12 need inspection',
+      trend: 'neutral'
+    },
+    { 
+      title: 'Safety Incidents', 
+      value: '0', 
+      icon: <AlertTriangle className="h-5 w-5 text-ds-success-500" />,
+      change: '-2 from last month',
+      trend: 'down'
+    },
+  ];
 
-  const handleViewTimesheet = (timesheet: TimeSheet) => {
-    setSelectedTimesheet(timesheet);
-    setTimesheetModalOpen(true);
-  };
-  
-  const handleApproveTimesheet = () => {
-    toast({
-      title: "Timesheet Approved",
-      description: `You have approved ${selectedTimesheet?.employee}'s timesheet.`,
-    });
-    setTimesheetModalOpen(false);
-  };
-  
-  const handleRejectTimesheet = () => {
-    toast({
-      title: "Timesheet Rejected",
-      description: `You have rejected ${selectedTimesheet?.employee}'s timesheet.`,
-    });
-    setTimesheetModalOpen(false);
-  };
+  const teamMembers = [
+    { 
+      id: 1, 
+      name: 'John Doe', 
+      role: 'Roofer', 
+      status: 'complete', 
+      lastInspection: new Date('2023-06-15T10:30:00') 
+    },
+    { 
+      id: 2, 
+      name: 'Jane Smith', 
+      role: 'Utilities Worker', 
+      status: 'complete', 
+      lastInspection: new Date('2023-06-15T11:45:00') 
+    },
+    { 
+      id: 3, 
+      name: 'Mike Johnson', 
+      role: 'Window Cleaner', 
+      status: 'incomplete', 
+      lastInspection: new Date('2023-06-12T09:15:00') 
+    },
+    { 
+      id: 4, 
+      name: 'Sarah Williams', 
+      role: 'Roofer', 
+      status: 'incomplete', 
+      lastInspection: null 
+    },
+    { 
+      id: 5, 
+      name: 'David Brown', 
+      role: 'Utilities Worker', 
+      status: 'complete', 
+      lastInspection: new Date('2023-06-15T12:20:00') 
+    },
+  ];
 
-  const handleOpenTimesheetsTab = () => {
-    // Find the timesheets tab and click it
-    const timesheetsTab = document.querySelector('[data-value="timesheets"]');
-    if (timesheetsTab) {
-      (timesheetsTab as HTMLElement).click();
+  const filteredTeamMembers = showOnlyIncomplete 
+    ? teamMembers.filter(member => member.status === 'incomplete')
+    : teamMembers;
+
+  const equipmentItems = [
+    { id: 'HAR-001', name: 'Full Body Harness', type: 'Harness', lastInspection: '2023-10-01', nextInspection: '2024-01-01', status: 'safe' },
+    { id: 'LAN-003', name: 'Self-Retracting Lanyard', type: 'Lanyard', lastInspection: '2023-11-15', nextInspection: '2023-12-15', status: 'warning' },
+    { id: 'ANC-007', name: 'Roof Anchor Point', type: 'Anchor', lastInspection: '2023-09-10', nextInspection: '2024-03-10', status: 'safe' },
+    { id: 'HAR-015', name: 'Construction Harness', type: 'Harness', lastInspection: '2023-08-22', nextInspection: '2023-11-22', status: 'danger' },
+  ];
+
+  const upcomingTraining = [
+    { id: 1, name: 'Fall Protection Awareness', date: '2023-12-10', attendees: 8 },
+    { id: 2, name: 'Equipment Inspection', date: '2023-12-15', attendees: 12 },
+    { id: 3, name: 'Rescue Procedures', date: '2023-12-22', attendees: 15 },
+  ];
+
+  const teamTrainingStatus = [
+    { 
+      id: 1, 
+      name: 'John Doe', 
+      role: 'Roofer', 
+      authorizedTraining: { 
+        completed: '2023-10-15', 
+        expires: '2024-10-15',
+        status: 'valid'
+      },
+      competentTraining: { 
+        completed: '2023-08-10', 
+        expires: '2024-08-10',
+        status: 'valid'
+      }
+    },
+    { 
+      id: 2, 
+      name: 'Jane Smith', 
+      role: 'Utilities Worker', 
+      authorizedTraining: { 
+        completed: '2023-04-22', 
+        expires: '2024-04-22',
+        status: 'expiring-soon'
+      },
+      competentTraining: { 
+        completed: '2023-11-05', 
+        expires: '2024-11-05',
+        status: 'valid'
+      }
+    },
+    { 
+      id: 3, 
+      name: 'Mike Johnson', 
+      role: 'Window Cleaner', 
+      authorizedTraining: { 
+        completed: '2023-05-12', 
+        expires: '2024-05-12',
+        status: 'expiring-soon'
+      },
+      competentTraining: null
+    },
+    { 
+      id: 4, 
+      name: 'Sarah Williams', 
+      role: 'Roofer', 
+      authorizedTraining: { 
+        completed: '2023-01-15', 
+        expires: '2024-01-15',
+        status: 'expired'
+      },
+      competentTraining: { 
+        completed: '2022-12-05', 
+        expires: '2023-12-05',
+        status: 'expired'
+      }
+    },
+    { 
+      id: 5, 
+      name: 'David Brown', 
+      role: 'Utilities Worker', 
+      authorizedTraining: { 
+        completed: '2023-11-20', 
+        expires: '2024-11-20',
+        status: 'valid'
+      },
+      competentTraining: null
+    },
+  ];
+
+  const trainingMetrics = {
+    authorized: {
+      valid: 3,
+      expiringSoon: 2,
+      expired: 1,
+      total: 6
+    },
+    competent: {
+      valid: 2,
+      expiringSoon: 0,
+      expired: 1,
+      total: 3
     }
   };
+
+  const getStatusColor = (status: string) => {
+    switch(status) {
+      case 'valid': return 'text-ds-success-600';
+      case 'expiring-soon': return 'text-ds-warning-500';
+      case 'expired': return 'text-ds-danger-500';
+      default: return 'text-ds-neutral-500';
+    }
+  };
+
+  const getStatusIcon = (status: string) => {
+    switch(status) {
+      case 'valid': return <CheckCircle className="h-4 w-4 text-ds-success-500" />;
+      case 'expiring-soon': return <Clock className="h-4 w-4 text-ds-warning-500" />;
+      case 'expired': return <AlertTriangle className="h-4 w-4 text-ds-danger-500" />;
+      default: return null;
+    }
+  };
+
+  const formatDate = (dateStr: string) => {
+    return new Date(dateStr).toLocaleDateString('en-US', { 
+      year: 'numeric', 
+      month: 'short', 
+      day: 'numeric' 
+    });
+  };
+
+  const timesheetData = [
+    {
+      id: '1',
+      employee: 'John Doe',
+      role: 'Roofer',
+      weekStarting: '2024-04-08',
+      hoursWorked: 37.5,
+      status: 'pending',
+      lastSubmitted: '2024-04-12T18:30:00'
+    },
+    {
+      id: '2',
+      employee: 'Jane Smith',
+      role: 'Utilities Worker',
+      weekStarting: '2024-04-08',
+      hoursWorked: 40.0,
+      status: 'approved',
+      lastSubmitted: '2024-04-12T17:15:00'
+    },
+    {
+      id: '3',
+      employee: 'Mike Johnson',
+      role: 'Window Cleaner',
+      weekStarting: '2024-04-08',
+      hoursWorked: 32.5,
+      status: 'rejected',
+      lastSubmitted: '2024-04-12T16:45:00'
+    },
+    {
+      id: '4',
+      employee: 'Sarah Williams',
+      role: 'Roofer',
+      weekStarting: '2024-04-01',
+      hoursWorked: 39.0,
+      status: 'approved',
+      lastSubmitted: '2024-04-05T17:30:00'
+    },
+    {
+      id: '5',
+      employee: 'David Brown',
+      role: 'Utilities Worker',
+      weekStarting: '2024-04-01',
+      hoursWorked: 40.0,
+      status: 'approved',
+      lastSubmitted: '2024-04-05T16:15:00'
+    }
+  ];
   
+  const filteredTimesheets = timesheetData.filter(timesheet => {
+    if (selectedTimeTab === 'thisWeek') {
+      return timesheet.weekStarting === '2024-04-08';
+    } else if (selectedTimeTab === 'lastWeek') {
+      return timesheet.weekStarting === '2024-04-01';
+    }
+    return true;
+  }).filter(timesheet => {
+    if (selectedEmployee === 'all') {
+      return true;
+    }
+    return timesheet.employee.toLowerCase().includes(selectedEmployee.toLowerCase());
+  });
+  
+  const getStatusBadge = (status: string) => {
+    switch(status) {
+      case 'approved':
+        return <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200">Approved</Badge>;
+      case 'rejected':
+        return <Badge variant="outline" className="bg-red-50 text-red-700 border-red-200">Rejected</Badge>;
+      default:
+        return <Badge variant="outline" className="bg-yellow-50 text-yellow-700 border-yellow-200">Pending</Badge>;
+    }
+  };
+
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      className="container mx-auto px-4 py-8"
-    >
-      <div className="flex flex-col space-y-6">
-        <div>
-          <h1 className="text-3xl font-bold">Supervisor Dashboard</h1>
-          <p className="text-muted-foreground">
-            Welcome, {user?.name || 'Supervisor'}. Monitor your team's activities and safety status.
-          </p>
-        </div>
-        
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
-          <div className="md:col-span-8">
-            <Card className="h-full">
-              <CardHeader>
-                <CardTitle>Safety Overview</CardTitle>
-                <CardDescription>
-                  Monitor your team's safety compliance and active inspections
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-6">
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                    <div className="bg-green-50 p-4 rounded-md flex items-center gap-3">
-                      <div className="bg-green-100 p-2 rounded-full">
-                        <Check className="h-5 w-5 text-green-600" />
-                      </div>
-                      <div>
-                        <p className="text-sm text-muted-foreground">Equipment Inspected</p>
-                        <p className="text-2xl font-semibold">94%</p>
-                      </div>
-                    </div>
-                    <div className="bg-yellow-50 p-4 rounded-md flex items-center gap-3">
-                      <div className="bg-yellow-100 p-2 rounded-full">
-                        <AlertTriangle className="h-5 w-5 text-yellow-600" />
-                      </div>
-                      <div>
-                        <p className="text-sm text-muted-foreground">Reported Issues</p>
-                        <p className="text-2xl font-semibold">3</p>
-                      </div>
-                    </div>
-                    <div className="bg-blue-50 p-4 rounded-md flex items-center gap-3">
-                      <div className="bg-blue-100 p-2 rounded-full">
-                        <UserCheck className="h-5 w-5 text-blue-600" />
-                      </div>
-                      <div>
-                        <p className="text-sm text-muted-foreground">Active Users</p>
-                        <p className="text-2xl font-semibold">{mockUsers.filter(u => u.status === 'active').length}</p>
-                      </div>
-                    </div>
-                  </div>
-                  
-                  <div>
-                    <h3 className="font-medium mb-2">Team Status</h3>
-                    <div className="border rounded-lg overflow-hidden">
-                      <Table>
-                        <TableHeader>
-                          <TableRow>
-                            <TableHead>Employee</TableHead>
-                            <TableHead>Role</TableHead>
-                            <TableHead>Status</TableHead>
-                            <TableHead>Last Activity</TableHead>
-                          </TableRow>
-                        </TableHeader>
-                        <TableBody>
-                          {mockUsers.map(user => (
-                            <TableRow key={user.id}>
-                              <TableCell className="font-medium">{user.name}</TableCell>
-                              <TableCell>{user.role}</TableCell>
-                              <TableCell>
-                                <div className="flex items-center gap-2">
-                                  <div className={`h-2 w-2 rounded-full ${
-                                    user.status === 'active' ? 'bg-green-500' :
-                                    user.status === 'away' ? 'bg-yellow-500' : 'bg-gray-500'
-                                  }`}></div>
-                                  <span className="capitalize">{user.status}</span>
-                                </div>
-                              </TableCell>
-                              <TableCell>5 mins ago</TableCell>
-                            </TableRow>
-                          ))}
-                        </TableBody>
-                      </Table>
-                    </div>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-          
-          <div className="md:col-span-4">
-            <TimesheetSummaryCard 
-              pendingCount={pendingTimesheets.length} 
-              totalHours={totalHoursThisWeek}
-              onClick={handleOpenTimesheetsTab}
-            />
-          </div>
-        </div>
-        
-        <Tabs defaultValue="overview" className="w-full">
-          <TabsList className="grid w-full grid-cols-3">
-            <TabsTrigger value="overview">Overview</TabsTrigger>
-            <TabsTrigger value="timesheets" data-value="timesheets">Timesheets</TabsTrigger>
-            <TabsTrigger value="compliance">Compliance</TabsTrigger>
-          </TabsList>
-          
-          <TabsContent value="overview" className="space-y-4">
-            <Card>
-              <CardHeader>
-                <CardTitle>Weekly Safety Metrics</CardTitle>
-                <CardDescription>
-                  View safety performance metrics for the current week
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-6">
-                <div>
-                  <div className="flex justify-between items-center mb-2">
-                    <span className="text-sm font-medium">PPE Compliance</span>
-                    <span className="text-sm font-medium">90%</span>
-                  </div>
-                  <Progress value={90} className="h-2" />
-                </div>
-                <div>
-                  <div className="flex justify-between items-center mb-2">
-                    <span className="text-sm font-medium">Inspections Completed</span>
-                    <span className="text-sm font-medium">85%</span>
-                  </div>
-                  <Progress value={85} className="h-2" />
-                </div>
-                <div>
-                  <div className="flex justify-between items-center mb-2">
-                    <span className="text-sm font-medium">Training Attendance</span>
-                    <span className="text-sm font-medium">95%</span>
-                  </div>
-                  <Progress value={95} className="h-2" />
-                </div>
-                <div>
-                  <div className="flex justify-between items-center mb-2">
-                    <span className="text-sm font-medium">Incident Reporting</span>
-                    <span className="text-sm font-medium">100%</span>
-                  </div>
-                  <Progress value={100} className="h-2" />
-                </div>
-              </CardContent>
-            </Card>
+    <div className="min-h-screen flex flex-col bg-ds-neutral-50">
+      <Header />
+      
+      <main className="flex-grow pt-16 px-4">
+        <div className="container mx-auto py-8">
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-8">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+            >
+              <h1 className="text-3xl font-bold text-ds-neutral-900">Supervisor Dashboard</h1>
+              <p className="text-ds-neutral-600">
+                <span className="font-medium">Good morning, Supervisor</span> • {new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
+              </p>
+            </motion.div>
             
-            <Card>
-              <CardHeader>
-                <CardTitle>Recent Activity</CardTitle>
-                <CardDescription>
-                  Latest safety activities from your team
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  <div className="flex items-start gap-4">
-                    <div className="bg-blue-100 p-2 rounded-full">
-                      <Clipboard className="h-4 w-4 text-blue-600" />
-                    </div>
-                    <div>
-                      <p className="font-medium">John Doe completed harness inspection</p>
-                      <p className="text-sm text-muted-foreground">Today, 10:30 AM</p>
-                    </div>
-                  </div>
-                  <div className="flex items-start gap-4">
-                    <div className="bg-green-100 p-2 rounded-full">
-                      <Check className="h-4 w-4 text-green-600" />
-                    </div>
-                    <div>
-                      <p className="font-medium">Safety training completed by 3 team members</p>
-                      <p className="text-sm text-muted-foreground">Yesterday, 2:15 PM</p>
-                    </div>
-                  </div>
-                  <div className="flex items-start gap-4">
-                    <div className="bg-yellow-100 p-2 rounded-full">
-                      <AlertTriangle className="h-4 w-4 text-yellow-600" />
-                    </div>
-                    <div>
-                      <p className="font-medium">Equipment issue reported by Jane Smith</p>
-                      <p className="text-sm text-muted-foreground">Yesterday, 11:05 AM</p>
-                    </div>
-                  </div>
-                </div>
-              </CardContent>
-              <CardFooter>
-                <Button variant="outline" className="w-full">View All Activity</Button>
-              </CardFooter>
-            </Card>
-          </TabsContent>
+            <motion.div
+              className="flex items-center gap-2 mt-4 md:mt-0"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+            >
+              <Button variant="outline" className="gap-1 border-ds-neutral-200">
+                <Calendar className="h-4 w-4 text-ds-neutral-500" />
+                <span>Schedule</span>
+              </Button>
+              <Button className="gap-1">
+                <Bell className="h-4 w-4" />
+                <span>Alerts</span>
+              </Button>
+            </motion.div>
+          </div>
           
-          <TabsContent value="timesheets" className="space-y-4">
-            <Card>
-              <CardHeader>
-                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-                  <div>
-                    <CardTitle>Employee Timesheets</CardTitle>
-                    <CardDescription>
-                      Review and approve employee time records
-                    </CardDescription>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+            {stats.map((stat, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
+              >
+                <Card className="border-ds-neutral-200">
+                  <CardContent className="p-6">
+                    <div className="flex justify-between items-start">
+                      <div>
+                        <p className="text-sm font-medium text-ds-neutral-500">{stat.title}</p>
+                        <h3 className="text-2xl font-bold mt-1 text-ds-neutral-900">{stat.value}</h3>
+                        <div className="flex items-center mt-1">
+                          {stat.trend === 'up' && <ArrowUp className="h-3 w-3 text-ds-blue-600 mr-1" />}
+                          {stat.trend === 'down' && <ArrowDown className="h-3 w-3 text-ds-success-600 mr-1" />}
+                          <span className={`text-xs ${stat.trend === 'up' ? 'text-ds-blue-600' : stat.trend === 'down' ? 'text-ds-success-600' : 'text-ds-neutral-500'}`}>
+                            {stat.change}
+                          </span>
+                        </div>
+                      </div>
+                      <div className="h-10 w-10 rounded-full bg-ds-blue-50 flex items-center justify-center">
+                        {stat.icon}
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </motion.div>
+            ))}
+          </div>
+          
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <motion.div 
+              className="lg:col-span-2"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.3 }}
+            >
+              <Card className="border-ds-neutral-200">
+                <CardHeader className="pb-2">
+                  <div className="flex items-center justify-between">
+                    <CardTitle>Team Inspection Status</CardTitle>
+                    <div className="flex items-center gap-2">
+                      <Button 
+                        variant="ghost" 
+                        size="sm" 
+                        className={`gap-1 ${showOnlyIncomplete ? 'bg-ds-neutral-100 text-ds-blue-600' : 'text-ds-blue-600'}`}
+                        onClick={() => setShowOnlyIncomplete(!showOnlyIncomplete)}
+                      >
+                        <Filter className="h-4 w-4" />
+                        <span>{showOnlyIncomplete ? 'Show All' : 'Show Incomplete'}</span>
+                      </Button>
+                      <Button variant="ghost" size="sm" className="gap-1 text-ds-blue-600">
+                        <span>View All</span>
+                        <ChevronRight className="h-4 w-4" />
+                      </Button>
+                    </div>
                   </div>
-                  <div className="flex gap-2">
-                    <Button 
-                      variant={selectedFilter === 'all' ? 'default' : 'outline'} 
-                      size="sm"
-                      onClick={() => setSelectedFilter('all')}
-                    >
-                      All
-                    </Button>
-                    <Button 
-                      variant={selectedFilter === 'pending' ? 'default' : 'outline'} 
-                      size="sm"
-                      onClick={() => setSelectedFilter('pending')}
-                    >
-                      Pending
-                    </Button>
-                    <Button 
-                      variant={selectedFilter === 'approved' ? 'default' : 'outline'} 
-                      size="sm"
-                      onClick={() => setSelectedFilter('approved')}
-                    >
-                      Approved
-                    </Button>
-                    <Button 
-                      variant={selectedFilter === 'rejected' ? 'default' : 'outline'} 
-                      size="sm"
-                      onClick={() => setSelectedFilter('rejected')}
-                    >
-                      Rejected
-                    </Button>
-                  </div>
-                </div>
-              </CardHeader>
-              <CardContent>
-                <div className="flex items-center space-x-2 mb-4">
-                  <Input 
-                    placeholder="Search employee..." 
-                    className="max-w-sm" 
-                  />
-                  <Button variant="outline">
-                    <CalendarIcon className="h-4 w-4 mr-2" />
-                    Filter by Date
-                  </Button>
-                </div>
-                
-                <div className="border rounded-lg overflow-hidden">
+                  <CardDescription>Daily PPE inspection compliance</CardDescription>
+                </CardHeader>
+                <CardContent>
                   <Table>
                     <TableHeader>
                       <TableRow>
-                        <TableHead>Employee</TableHead>
-                        <TableHead>Week Starting</TableHead>
-                        <TableHead>Hours</TableHead>
+                        <TableHead>Name</TableHead>
+                        <TableHead>Role</TableHead>
                         <TableHead>Status</TableHead>
-                        <TableHead>Submitted</TableHead>
-                        <TableHead className="text-right">Actions</TableHead>
+                        <TableHead>Last Inspection</TableHead>
+                        <TableHead></TableHead>
                       </TableRow>
                     </TableHeader>
                     <TableBody>
-                      {filteredTimesheets.length === 0 ? (
-                        <TableRow>
-                          <TableCell colSpan={6} className="text-center py-6">
-                            No timesheets found matching the selected filter.
+                      {filteredTeamMembers.map((member) => (
+                        <TableRow key={member.id}>
+                          <TableCell className="font-medium">{member.name}</TableCell>
+                          <TableCell>{member.role}</TableCell>
+                          <TableCell>
+                            <div className="flex items-center gap-2">
+                              {member.status === 'complete' ? (
+                                <CheckCircle2 className="h-5 w-5 text-ds-success-500" />
+                              ) : (
+                                <XCircle className="h-5 w-5 text-ds-danger-500" />
+                              )}
+                              <span className="text-sm capitalize">
+                                {member.status === 'complete' ? 'Complete' : 'Incomplete'}
+                              </span>
+                            </div>
+                          </TableCell>
+                          <TableCell className="text-ds-neutral-600">
+                            {member.lastInspection 
+                              ? format(member.lastInspection, 'MMM d, yyyy h:mm a')
+                              : 'Not completed'}
+                          </TableCell>
+                          <TableCell>
+                            <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+                              <ChevronRight className="h-4 w-4" />
+                            </Button>
                           </TableCell>
                         </TableRow>
-                      ) : (
-                        filteredTimesheets.map((timesheet) => (
-                          <TableRow key={timesheet.id}>
-                            <TableCell>
-                              <div>
-                                <p className="font-medium">{timesheet.employee}</p>
-                                <p className="text-sm text-muted-foreground">{timesheet.role}</p>
-                              </div>
-                            </TableCell>
-                            <TableCell>
-                              {new Date(timesheet.weekStarting).toLocaleDateString()}
-                            </TableCell>
-                            <TableCell>{timesheet.hoursWorked}</TableCell>
-                            <TableCell>
-                              <Badge className={`${
-                                timesheet.status === 'approved' 
-                                  ? 'bg-green-100 text-green-800 border-green-200' 
-                                  : timesheet.status === 'rejected'
-                                  ? 'bg-red-100 text-red-800 border-red-200'
-                                  : 'bg-yellow-100 text-yellow-800 border-yellow-200'
-                              }`}>
-                                {timesheet.status.charAt(0).toUpperCase() + timesheet.status.slice(1)}
-                              </Badge>
-                            </TableCell>
-                            <TableCell>
-                              {new Date(timesheet.lastSubmitted).toLocaleDateString()}
-                            </TableCell>
-                            <TableCell className="text-right">
-                              <Button
-                                variant="outline"
-                                size="sm"
-                                onClick={() => handleViewTimesheet(timesheet)}
-                              >
-                                View Details
-                              </Button>
-                            </TableCell>
-                          </TableRow>
-                        ))
-                      )}
+                      ))}
                     </TableBody>
                   </Table>
-                </div>
-              </CardContent>
-              <CardFooter className="flex justify-between">
-                <div className="text-sm text-muted-foreground">
-                  Showing {filteredTimesheets.length} of {mockTimeSheets.length} timesheets
-                </div>
-                <Button variant="outline" size="sm">
-                  <FileText className="h-4 w-4 mr-2" />
-                  Export Timesheet Data
-                </Button>
-              </CardFooter>
-            </Card>
-          </TabsContent>
+                </CardContent>
+              </Card>
+            </motion.div>
+            
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.4 }}
+            >
+              <Card className="border-ds-neutral-200 mb-6">
+                <CardHeader>
+                  <CardTitle>Quick Actions</CardTitle>
+                </CardHeader>
+                <CardContent className="pb-2">
+                  <div className="space-y-2">
+                    {[
+                      { icon: <ClipboardCheck className="h-4 w-4" />, label: 'New Inspection', path: '/inspection' },
+                      { icon: <Shield className="h-4 w-4" />, label: 'Safety Meeting', path: '#' },
+                      { icon: <Users className="h-4 w-4" />, label: 'Add Team Member', path: '#' },
+                      { icon: <AlertTriangle className="h-4 w-4" />, label: 'Report Incident', path: '#' },
+                    ].map((action, index) => (
+                      <Button 
+                        key={index} 
+                        variant="outline" 
+                        className="w-full justify-start gap-3 border-ds-neutral-200"
+                        asChild
+                      >
+                        <Link to={action.path}>
+                          <div className="h-8 w-8 rounded-full bg-ds-blue-50 flex items-center justify-center flex-shrink-0">
+                            {action.icon}
+                          </div>
+                          <span>{action.label}</span>
+                        </Link>
+                      </Button>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+              
+              <Card className="border-ds-neutral-200">
+                <CardHeader>
+                  <div className="flex items-center justify-between">
+                    <CardTitle>Notifications</CardTitle>
+                    <Button variant="ghost" size="sm" className="gap-1 text-ds-blue-600">
+                      <span>View All</span>
+                      <ChevronRight className="h-4 w-4" />
+                    </Button>
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    {[
+                      { 
+                        icon: <Clock className="h-4 w-4 text-ds-warning-500" />, 
+                        title: 'Inspection Due', 
+                        description: 'Mike Johnson - 3 days since last inspection',
+                        time: '2 hours ago'
+                      },
+                      { 
+                        icon: <Calendar className="h-4 w-4 text-ds-blue-500" />, 
+                        title: 'Upcoming Training', 
+                        description: 'Fall Protection Awareness on Dec 10',
+                        time: '5 hours ago'
+                      },
+                      { 
+                        icon: <CheckCircle className="h-4 w-4 text-ds-success-500" />, 
+                        title: 'Equipment Inspected', 
+                        description: 'David Brown completed 3 equipment inspections',
+                        time: 'Yesterday'
+                      },
+                    ].map((notification, index) => (
+                      <div key={index} className="flex gap-3">
+                        <div className="h-8 w-8 rounded-full bg-ds-neutral-100 flex items-center justify-center flex-shrink-0">
+                          {notification.icon}
+                        </div>
+                        <div className="flex-1">
+                          <div className="flex items-center justify-between">
+                            <h4 className="text-sm font-medium">{notification.title}</h4>
+                            <span className="text-xs text-ds-neutral-500">{notification.time}</span>
+                          </div>
+                          <p className="text-xs text-ds-neutral-600 mt-1">{notification.description}</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+            </motion.div>
+          </div>
           
-          <TabsContent value="compliance">
-            <Card>
-              <CardHeader>
-                <CardTitle>Compliance Reports</CardTitle>
-                <CardDescription>
-                  Track team safety compliance and identify areas for improvement
-                </CardDescription>
+          <motion.div
+            className="mt-8"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.5 }}
+          >
+            <Card className="border-ds-neutral-200">
+              <CardHeader className="pb-0">
+                <CardTitle>Management Tools</CardTitle>
               </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  <div className="border rounded-lg p-4">
-                    <h3 className="font-medium mb-2">Training Compliance</h3>
-                    <div className="space-y-2">
-                      <div>
-                        <div className="flex justify-between mb-1 text-sm">
-                          <span>Fall Protection</span>
-                          <span>90%</span>
-                        </div>
-                        <Progress value={90} className="h-2" />
-                      </div>
-                      <div>
-                        <div className="flex justify-between mb-1 text-sm">
-                          <span>Confined Space</span>
-                          <span>85%</span>
-                        </div>
-                        <Progress value={85} className="h-2" />
-                      </div>
-                      <div>
-                        <div className="flex justify-between mb-1 text-sm">
-                          <span>PPE Usage</span>
-                          <span>95%</span>
-                        </div>
-                        <Progress value={95} className="h-2" />
-                      </div>
-                    </div>
-                  </div>
+              <CardContent className="pt-4">
+                <Tabs defaultValue="timesheets" className="space-y-4">
+                  <TabsList className="grid grid-cols-4">
+                    <TabsTrigger value="equipment">Equipment</TabsTrigger>
+                    <TabsTrigger value="training">Training</TabsTrigger>
+                    <TabsTrigger value="timesheets">Timesheets</TabsTrigger>
+                    <TabsTrigger value="reports">Reports</TabsTrigger>
+                  </TabsList>
                   
-                  <div className="border rounded-lg p-4">
-                    <h3 className="font-medium mb-2">Inspection Compliance</h3>
-                    <div className="space-y-2">
-                      <div>
-                        <div className="flex justify-between mb-1 text-sm">
-                          <span>Harnesses</span>
-                          <span>88%</span>
-                        </div>
-                        <Progress value={88} className="h-2" />
-                      </div>
-                      <div>
-                        <div className="flex justify-between mb-1 text-sm">
-                          <span>Lanyards</span>
-                          <span>92%</span>
-                        </div>
-                        <Progress value={92} className="h-2" />
-                      </div>
-                      <div>
-                        <div className="flex justify-between mb-1 text-sm">
-                          <span>Anchor Points</span>
-                          <span>78%</span>
-                        </div>
-                        <Progress value={78} className="h-2" />
-                      </div>
+                  <TabsContent value="equipment">
+                    <Table>
+                      <TableHeader>
+                        <TableRow>
+                          <TableHead>ID</TableHead>
+                          <TableHead>Item</TableHead>
+                          <TableHead>Type</TableHead>
+                          <TableHead>Last Inspection</TableHead>
+                          <TableHead>Next Inspection</TableHead>
+                          <TableHead>Status</TableHead>
+                        </TableRow>
+                      </TableHeader>
+                      <TableBody>
+                        {equipmentItems.map((item) => (
+                          <TableRow key={item.id}>
+                            <TableCell className="font-medium">{item.id}</TableCell>
+                            <TableCell>{item.name}</TableCell>
+                            <TableCell>{item.type}</TableCell>
+                            <TableCell>{item.lastInspection}</TableCell>
+                            <TableCell>{item.nextInspection}</TableCell>
+                            <TableCell>
+                              <SafetyStatus status={item.status as any} showLabel />
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                    <div className="mt-4 flex justify-end">
+                      <Button variant="outline" className="gap-1 border-ds-neutral-200">
+                        <span>View All Equipment</span>
+                        <ArrowUpRight className="h-4 w-4" />
+                      </Button>
                     </div>
-                  </div>
+                  </TabsContent>
                   
-                  <div className="border rounded-lg p-4">
-                    <h3 className="font-medium mb-2">Documentation Compliance</h3>
-                    <div className="space-y-2">
-                      <div>
-                        <div className="flex justify-between mb-1 text-sm">
-                          <span>Job Hazard Analysis</span>
-                          <span>82%</span>
-                        </div>
-                        <Progress value={82} className="h-2" />
+                  <TabsContent value="training">
+                    <div className="space-y-6">
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                        <Card className="border-ds-neutral-200">
+                          <CardHeader className="pb-2">
+                            <CardTitle className="text-lg">Authorized Person Training</CardTitle>
+                          </CardHeader>
+                          <CardContent>
+                            <div className="flex justify-between items-center mb-4">
+                              <div className="flex items-center gap-2">
+                                <div className="h-10 w-10 rounded-full bg-ds-blue-50 flex items-center justify-center">
+                                  <Award className="h-5 w-5 text-ds-blue-600" />
+                                </div>
+                                <div>
+                                  <p className="text-sm text-ds-neutral-600">Total Team Members</p>
+                                  <p className="text-2xl font-bold">{trainingMetrics.authorized.total}</p>
+                                </div>
+                              </div>
+                            </div>
+                            <div className="space-y-3">
+                              <div className="flex justify-between items-center">
+                                <div className="flex items-center gap-2">
+                                  <CheckCircle className="h-4 w-4 text-ds-success-500" />
+                                  <span className="text-sm">Up to Date</span>
+                                </div>
+                                <div className="flex items-center gap-1">
+                                  <span className="font-medium">{trainingMetrics.authorized.valid}</span>
+                                  <span className="text-xs text-ds-neutral-500">({Math.round(trainingMetrics.authorized.valid / trainingMetrics.authorized.total * 100)}%)</span>
+                                </div>
+                              </div>
+                              <div className="flex justify-between items-center">
+                                <div className="flex items-center gap-2">
+                                  <Clock className="h-4 w-4 text-ds-warning-500" />
+                                  <span className="text-sm">Expiring Soon</span>
+                                </div>
+                                <div className="flex items-center gap-1">
+                                  <span className="font-medium">{trainingMetrics.authorized.expiringSoon}</span>
+                                  <span className="text-xs text-ds-neutral-500">({Math.round(trainingMetrics.authorized.expiringSoon / trainingMetrics.authorized.total * 100)}%)</span>
+                                </div>
+                              </div>
+                              <div className="flex justify-between items-center">
+                                <div className="flex items-center gap-2">
+                                  <AlertTriangle className="h-4 w-4 text-ds-danger-500" />
+                                  <span className="text-sm">Expired</span>
+                                </div>
+                                <div className="flex items-center gap-1">
+                                  <span className="font-medium">{trainingMetrics.authorized.expired}</span>
+                                  <span className="text-xs text-ds-neutral-500">({Math.round(trainingMetrics.authorized.expired / trainingMetrics.authorized.total * 100)}%)</span>
+                                </div>
+                              </div>
+                            </div>
+                          </CardContent>
+                        </Card>
+
+                        <Card className="border-ds-neutral-200">
+                          <CardHeader className="pb-2">
+                            <CardTitle className="text-lg">Competent Person Training</CardTitle>
+                          </CardHeader>
+                          <CardContent>
+                            <div className="flex justify-between items-center mb-4">
+                              <div className="flex items-center gap-2">
+                                <div className="h-10 w-10 rounded-full bg-ds-blue-50 flex items-center justify-center">
+                                  <BookOpen className="h-5 w-5 text-ds-blue-600" />
+                                </div>
+                                <div>
+                                  <p className="text-sm text-ds-neutral-600">Total Team Members</p>
+                                  <p className="text-2xl font-bold">{trainingMetrics.competent.total}</p>
+                                </div>
+                              </div>
+                            </div>
+                            <div className="space-y-3">
+                              <div className="flex justify-between items-center">
+                                <div className="flex items-center gap-2">
+                                  <CheckCircle className="h-4 w-4 text-ds-success-500" />
+                                  <span className="text-sm">Up to Date</span>
+                                </div>
+                                <div className="flex items-center gap-1">
+                                  <span className="font-medium">{trainingMetrics.competent.valid}</span>
+                                  <span className="text-xs text-ds-neutral-500">({Math.round(trainingMetrics.competent.valid / trainingMetrics.competent.total * 100)}%)</span>
+                                </div>
+                              </div>
+                              <div className="flex justify-between items-center">
+                                <div className="flex items-center gap-2">
+                                  <Clock className="h-4 w-4 text-ds-warning-500" />
+                                  <span className="text-sm">Expiring Soon</span>
+                                </div>
+                                <div className="flex items-center gap-1">
+                                  <span className="font-medium">{trainingMetrics.competent.expiringSoon}</span>
+                                  <span className="text-xs text-ds-neutral-500">({Math.round(trainingMetrics.competent.expiringSoon / trainingMetrics.competent.total * 100)}%)</span>
+                                </div>
+                              </div>
+                              <div className="flex justify-between items-center">
+                                <div className="flex items-center gap-2">
+                                  <AlertTriangle className="h-4 w-4 text-ds-danger-500" />
+                                  <span className="text-sm">Expired</span>
+                                </div>
+                                <div className="flex items-center gap-1">
+                                  <span className="font-medium">{trainingMetrics.competent.expired}</span>
+                                  <span className="text-xs text-ds-neutral-500">({Math.round(trainingMetrics.competent.expired / trainingMetrics.competent.total * 100)}%)</span>
+                                </div>
+                              </div>
+                            </div>
+                          </CardContent>
+                        </Card>
                       </div>
+
                       <div>
-                        <div className="flex justify-between mb-1 text-sm">
-                          <span>Safety Data Sheets</span>
-                          <span>95%</span>
+                        <h4 className="text-sm font-medium mb-4">Team Training Status</h4>
+                        <Table>
+                          <TableHeader>
+                            <TableRow>
+                              <TableHead>Name</TableHead>
+                              <TableHead>Role</TableHead>
+                              <TableHead>Authorized Person</TableHead>
+                              <TableHead>Competent Person</TableHead>
+                              <TableHead></TableHead>
+                            </TableRow>
+                          </TableHeader>
+                          <TableBody>
+                            {teamTrainingStatus.slice(0, 5).map((member) => (
+                              <TableRow key={member.id}>
+                                <TableCell className="font-medium">{member.name}</TableCell>
+                                <TableCell>{member.role}</TableCell>
+                                <TableCell>
+                                  {member.authorizedTraining ? (
+                                    <div className="space-y-1">
+                                      <div className="flex items-center gap-2">
+                                        {getStatusIcon(member.authorizedTraining.status)}
+                                        <span className={`text-sm ${getStatusColor(member.authorizedTraining.status)}`}>
+                                          {member.authorizedTraining.status === 'valid' ? 'Valid' : 
+                                           member.authorizedTraining.status === 'expiring-soon' ? 'Expiring Soon' : 'Expired'}
+                                        </span>
+                                      </div>
+                                      <div className="flex items-center gap-1 text-xs text-ds-neutral-500">
+                                        <CalendarIcon className="h-3 w-3" />
+                                        <span>Expires: {formatDate(member.authorizedTraining.expires)}</span>
+                                      </div>
+                                    </div>
+                                  ) : (
+                                    <span className="text-sm text-ds-neutral-500">Not Certified</span>
+                                  )}
+                                </TableCell>
+                                <TableCell>
+                                  {member.competentTraining ? (
+                                    <div className="space-y-1">
+                                      <div className="flex items-center gap-2">
+                                        {getStatusIcon(member.competentTraining.status)}
+                                        <span className={`text-sm ${getStatusColor(member.competentTraining.status)}`}>
+                                          {member.competentTraining.status === 'valid' ? 'Valid' : 
+                                           member.competentTraining.status === 'expiring-soon' ? 'Expiring Soon' : 'Expired'}
+                                        </span>
+                                      </div>
+                                      <div className="flex items-center gap-1 text-xs text-ds-neutral-500">
+                                        <CalendarIcon className="h-3 w-3" />
+                                        <span>Expires: {formatDate(member.competentTraining.expires)}</span>
+                                      </div>
+                                    </div>
+                                  ) : (
+                                    <span className="text-sm text-ds-neutral-500">Not Certified</span>
+                                  )}
+                                </TableCell>
+                                <TableCell>
+                                  <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+                                    <ChevronRight className="h-4 w-4" />
+                                  </Button>
+                                </TableCell>
+                              </TableRow>
+                            ))}
+                          </TableBody>
+                        </Table>
+                        <div className="mt-4 flex justify-end">
+                          <Button variant="outline" className="gap-1 border-ds-neutral-200">
+                            <span>View All Team Members</span>
+                            <ArrowUpRight className="h-4 w-4" />
+                          </Button>
                         </div>
-                        <Progress value={95} className="h-2" />
                       </div>
+
                       <div>
-                        <div className="flex justify-between mb-1 text-sm">
-                          <span>Incident Reports</span>
-                          <span>100%</span>
+                        <h4 className="text-sm font-medium mb-3">Upcoming Training Sessions</h4>
+                        <div className="space-y-3">
+                          {upcomingTraining.map((training) => (
+                            <div 
+                              key={training.id} 
+                              className="flex items-center justify-between bg-white border border-ds-neutral-200 rounded-lg p-4"
+                            >
+                              <div className="flex items-center gap-3">
+                                <div className="h-10 w-10 rounded-lg bg-ds-blue-100 flex items-center justify-center">
+                                  <Shield className="h-5 w-5 text-ds-blue-600" />
+                                </div>
+                                <div>
+                                  <h5 className="font-medium">{training.name}</h5>
+                                  <p className="text-sm text-ds-neutral-600">
+                                    {new Date(training.date).toLocaleDateString('en-US', { month: 'long', day: 'numeric' })} 
+                                    • {training.attendees} attendees
+                                  </p>
+                                </div>
+                              </div>
+                              <Button variant="outline" size="sm" className="border-ds-neutral-200">Manage</Button>
+                            </div>
+                          ))}
                         </div>
-                        <Progress value={100} className="h-2" />
+                      </div>
+                      
+                      <div>
+                        <h4 className="text-sm font-medium mb-3">Team Certification Status</h4>
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                          {[
+                            { label: 'Up to Date', value: '18', percentage: '75%', color: 'bg-ds-success-500' },
+                            { label: 'Expiring Soon', value: '4', percentage: '17%', color: 'bg-ds-warning-500' },
+                            { label: 'Expired', value: '2', percentage: '8%', color: 'bg-ds-danger-500' },
+                          ].map((stat, index) => (
+                            <div 
+                              key={index}
+                              className="bg-white border border-ds-neutral-200 rounded-lg p-4"
+                            >
+                              <div className="flex items-center justify-between mb-2">
+                                <h5 className="text-sm font-medium">{stat.label}</h5>
+                                <span className="text-2xl font-bold">{stat.value}</span>
+                              </div>
+                              <div className="h-2 rounded-full bg-ds-neutral-100 overflow-hidden">
+                                <div className={`h-full ${stat.color}`} style={{ width: stat.percentage }}></div>
+                              </div>
+                              <p className="text-xs text-ds-neutral-500 mt-1">{stat.percentage} of team</p>
+                            </div>
+                          ))}
+                        </div>
                       </div>
                     </div>
-                  </div>
-                </div>
+                  </TabsContent>
+                  
+                  <TabsContent value="timesheets">
+                    <div className="space-y-6">
+                      <div className="flex justify-between items-center">
+                        <h3 className="text-lg font-medium">Employee Timesheets</h3>
+                        <Button variant="outline" className="gap-2">
+                          <Download className="h-4 w-4" />
+                          Export Timesheets
+                        </Button>
+                      </div>
+                      
+                      <div className="flex flex-col sm:flex-row gap-4">
+                        <div className="grow space-y-2">
+                          <p className="text-sm font-medium">Time Period</p>
+                          <div className="flex gap-2">
+                            <Button 
+                              variant={selectedTimeTab === 'thisWeek' ? 'default' : 'outline'} 
+                              size="sm"
+                              onClick={() => setSelectedTimeTab('thisWeek')}
+                            >
+                              This Week
+                            </Button>
+                            <Button 
+                              variant={selectedTimeTab === 'lastWeek' ? 'default' : 'outline'} 
+                              size="sm"
+                              onClick={() => setSelectedTimeTab('lastWeek')}
+                            >
+                              Last Week
+                            </Button>
+                            <Button 
+                              variant={selectedTimeTab === 'custom' ? 'default' : 'outline'} 
+                              size="sm"
+                              onClick={() => setSelectedTimeTab('custom')}
+                            >
+                              Custom
+                            </Button>
+                          </div>
+                        </div>
+                        
+                        <div className="space-y-2">
+                          <p className="text-sm font-medium">Filter By Employee</p>
+                          <select 
+                            className="border border-gray-300 rounded-md h-9 px-3 py-1"
+                            value={selectedEmployee}
+                            onChange={(e) => setSelectedEmployee(e.target.value)}
+                          >
+                            <option value="all">All Employees</option>
+                            <option value="john">John Doe</option>
+                            <option value="jane">Jane Smith</option>
+                            <option value="mike">Mike Johnson</option>
+                            <option value="sarah">Sarah Williams</option>
+                            <option value="david">David Brown</option>
+                          </select>
+                        </div>
+                      </div>
+                      
+                      {selectedTimeTab === 'custom' && (
+                        <div className="flex gap-4 items-end">
+                          <div className="space-y-2">
+                            <p className="text-sm font-medium">Start Date</p>
+                            <Input type="date" />
+                          </div>
+                          <div className="space-y-2">
+                            <p className="text-sm font-medium">End Date</p>
+                            <Input type="date" />
+                          </div>
+                          <Button>Apply</Button>
+                        </div>
+                      )}
+                      
+                      <div className="border rounded-lg overflow-hidden">
+                        <Table>
+                          <TableHeader>
+                            <TableRow>
+                              <TableHead>Employee</TableHead>
+                              <TableHead>Role</TableHead>
+                              <TableHead>Week Starting</TableHead>
+                              <TableHead>Hours</TableHead>
+                              <TableHead>Status</TableHead>
+                              <TableHead>Submitted</TableHead>
+                              <TableHead></TableHead>
+                            </TableRow>
+                          </TableHeader>
+                          <TableBody>
+                            {filteredTimesheets.length === 0 ? (
+                              <TableRow>
+                                <TableCell colSpan={7} className="text-center py-4 text-muted-foreground">
+                                  No timesheets found matching your filters.
+                                </TableCell>
+                              </TableRow>
+                            ) : (
+                              filteredTimesheets.map((timesheet) => (
+                                <TableRow key={timesheet.id}>
+                                  <TableCell className="font-medium">{timesheet.employee}</TableCell>
+                                  <TableCell>{timesheet.role}</TableCell>
+                                  <TableCell>
+                                    {format(parseISO(timesheet.weekStarting), 'MMM d, yyyy')}
+                                  </TableCell>
+                                  <TableCell>{timesheet.hoursWorked}</TableCell>
+                                  <TableCell>
+                                    {getStatusBadge(timesheet.status)}
+                                  </TableCell>
+                                  <TableCell>
+                                    {format(new Date(timesheet.lastSubmitted), 'MMM d, h:mm a')}
+                                  </TableCell>
+                                  <TableCell>
+                                    <div className="flex gap-2 justify-end">
+                                      <Button 
+                                        variant="ghost" 
+                                        size="sm" 
+                                        className="h-8 w-8 p-0"
+                                        onClick={() => {
+                                          toast({
+                                            title: "Viewing Timesheet",
+                                            description: `Viewing ${timesheet.employee}'s timesheet for week of ${format(parseISO(timesheet.weekStarting), 'MMM d, yyyy')}`
+                                          });
+                                        }}
+                                      >
+                                        <FileText className="h-4 w-4" />
+                                      </Button>
+                                      {timesheet.status === 'pending' && (
+                                        <>
+                                          <Button 
+                                            variant="ghost" 
+                                            size="sm" 
+                                            className="h-8 w-8 p-0 text-green-600"
+                                            onClick={() => {
+                                              toast({
+                                                title: "Timesheet Approved",
+                                                description: `You approved ${timesheet.employee}'s timesheet`
+                                              });
+                                            }}
+                                          >
+                                            <CheckCircle2 className="h-4 w-4" />
+                                          </Button>
+                                          <Button 
+                                            variant="ghost" 
+                                            size="sm" 
+                                            className="h-8 w-8 p-0 text-red-600"
+                                            onClick={() => {
+                                              toast({
+                                                title: "Timesheet Rejected",
+                                                description: `You rejected ${timesheet.employee}'s timesheet`
+                                              });
+                                            }}
+                                          >
+                                            <XCircle className="h-4 w-4" />
+                                          </Button>
+                                        </>
+                                      )}
+                                    </div>
+                                  </TableCell>
+                                </TableRow>
+                              ))
+                            )}
+                          </TableBody>
+                        </Table>
+                      </div>
+                      
+                      <div className="space-y-3 pt-4">
+                        <h3 className="font-medium">Timesheet Overview</h3>
+                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                          {[
+                            { label: 'Approved', value: '3', color: 'bg-green-500' },
+                            { label: 'Pending', value: '1', color: 'bg-yellow-500' },
+                            { label: 'Rejected', value: '1', color: 'bg-red-500' },
+                          ].map((stat, index) => (
+                            <div 
+                              key={index}
+                              className="bg-white border border-ds-neutral-200 rounded-lg p-4"
+                            >
+                              <div className="flex items-center justify-between mb-2">
+                                <h5 className="text-sm font-medium">{stat.label}</h5>
+                                <span className="text-2xl font-bold">{stat.value}</span>
+                              </div>
+                              <div className="h-2 rounded-full bg-ds-neutral-100 overflow-hidden">
+                                <div className={`h-full ${stat.color}`} style={{ width: `${parseInt(stat.value) / 5 * 100}%` }}></div>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  </TabsContent>
+                  
+                  <TabsContent value="reports">
+                    <div className="space-y-6">
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        {[
+                          { 
+                            title: 'Compliance Report', 
+                            description: 'Track team compliance with safety regulations',
+                            icon: <BarChart4 className="h-5 w-5 text-ds-blue-600" />,
+                            updatedAt: 'Last updated 2 hours ago'
+                          },
+                          { 
+                            title: 'Incident Analysis', 
+                            description: 'Review and analyze safety incidents',
+                            icon: <AlertTriangle className="h-5 w-5 text-ds-warning-500" />,
+                            updatedAt: 'Last updated yesterday'
+                          },
+                          { 
+                            title: 'Equipment Inventory', 
+                            description: 'Complete inventory of safety equipment',
+                            icon: <HardHat className="h-5 w-5 text-ds-blue-600" />,
+                            updatedAt: 'Last updated 3 days ago'
+                          },
+                          { 
+                            title: 'Training Report', 
+                            description: 'Track team training and certification',
+                            icon: <Shield className="h-5 w-5 text-ds-success-500" />,
+                            updatedAt: 'Last updated 1 week ago'
+                          },
+                        ].map((report, index) => (
+                          <div 
+                            key={index}
+                            className="bg-white border border-ds-neutral-200 rounded-lg p-4 flex gap-4"
+                          >
+                            <div className="h-12 w-12 rounded-lg bg-ds-neutral-100 flex items-center justify-center flex-shrink-0">
+                              {report.icon}
+                            </div>
+                            <div className="flex-1">
+                              <h5 className="font-medium">{report.title}</h5>
+                              <p className="text-sm text-ds-neutral-600 mb-2">{report.description}</p>
+                              <div className="flex items-center justify-between">
+                                <span className="text-xs text-ds-neutral-500">{report.updatedAt}</span>
+                                <Button variant="ghost" size="sm" className="h-7 text-ds-blue-600 p-0">View Report</Button>
+                              </div>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </TabsContent>
+                </Tabs>
               </CardContent>
-              <CardFooter>
-                <Button variant="outline" className="w-full">Download Full Reports</Button>
-              </CardFooter>
             </Card>
-          </TabsContent>
-        </Tabs>
-      </div>
+          </motion.div>
+        </div>
+      </main>
       
-      {selectedTimesheet && (
-        <TimesheetDetails
-          isOpen={timesheetModalOpen}
-          onClose={() => setTimesheetModalOpen(false)}
-          timesheet={selectedTimesheet}
-          onApprove={handleApproveTimesheet}
-          onReject={handleRejectTimesheet}
-        />
-      )}
-    </motion.div>
+      <Footer />
+    </div>
   );
 };
 

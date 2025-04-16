@@ -1,4 +1,3 @@
-
 // English language pack (US)
 const enUS = {
   // General
@@ -137,15 +136,6 @@ const enUS = {
   dateRange: 'Date Range',
   filterByEmployee: 'Filter by Employee',
   searchTimesheets: 'Search Timesheets',
-  timesheetManagement: 'Timesheet Management',
-  reviewApproveTimesheets: 'Review and approve employee timesheets',
-  pendingApproval: 'Pending Approval',
-  viewAllTimesheets: 'View All Timesheets',
-  weekStarting: 'Week Starting',
-  submitted: 'Submitted',
-  actions: 'Actions',
-  viewDetails: 'View Details',
-  timesheetDetails: 'Timesheet Details',
 };
 
 export default enUS;
