@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -18,6 +17,7 @@ import Footer from '@/components/layout/Footer';
 import { useAuth } from '@/contexts/AuthContext';
 import HarnessIcon from '@/components/icons/HarnessIcon';
 import CalendlyButton from '@/components/shared/CalendlyButton';
+import TimekeepingInfographic from '@/components/infographics/TimekeepingInfographic';
 import {
   Carousel,
   CarouselContent,
@@ -405,6 +405,13 @@ const Index: React.FC = () => {
               </div>
             </div>
           </motion.div>
+        </div>
+      </section>
+
+      {/* Timekeeping Infographic Section */}
+      <section className="py-12 md:py-20 px-4">
+        <div className="container mx-auto max-w-6xl">
+          <TimekeepingInfographic />
         </div>
       </section>
 

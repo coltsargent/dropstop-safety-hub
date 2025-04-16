@@ -1,4 +1,3 @@
-
 // English language pack (US)
 const enUS = {
   // General
@@ -99,6 +98,25 @@ const enUS = {
   pleaseEnterProductName: 'Please enter a product name before submitting',
   incompleteInspection: 'Incomplete Inspection',
   pleaseCompleteAllItems: 'Please complete all checklist items before submitting',
+  
+  // Timekeeping
+  timekeeping: 'Timekeeping',
+  clockIn: 'Clock In',
+  clockOut: 'Clock Out',
+  timeTracking: 'Time Tracking',
+  hoursWorked: 'Hours Worked',
+  breaks: 'Breaks',
+  overtime: 'Overtime',
+  totalHours: 'Total Hours',
+  timeRemaining: 'Time Remaining',
+  timeRecords: 'Time Records',
+  addTimeRecord: 'Add Time Record',
+  editTimeRecord: 'Edit Time Record',
+  deleteTimeRecord: 'Delete Time Record',
+  timeIntegration: 'Time Integration',
+  safetyChecks: 'Safety Checks',
+  complianceTracking: 'Compliance Tracking',
+  recordKeeping: 'Record Keeping',
 };
 
 export default enUS;
