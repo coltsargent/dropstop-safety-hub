@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { 
-  Alert, 
+  AlertTriangle, 
   Calendar,
   Check, 
   Clipboard, 
@@ -244,7 +244,7 @@ const Dashboard: React.FC = () => {
                     </div>
                     <div className="bg-yellow-50 p-4 rounded-md flex items-center gap-3">
                       <div className="bg-yellow-100 p-2 rounded-full">
-                        <Alert className="h-5 w-5 text-yellow-600" />
+                        <AlertTriangle className="h-5 w-5 text-yellow-600" />
                       </div>
                       <div>
                         <p className="text-sm text-muted-foreground">Reported Issues</p>
@@ -385,7 +385,7 @@ const Dashboard: React.FC = () => {
                   </div>
                   <div className="flex items-start gap-4">
                     <div className="bg-yellow-100 p-2 rounded-full">
-                      <Alert className="h-4 w-4 text-yellow-600" />
+                      <AlertTriangle className="h-4 w-4 text-yellow-600" />
                     </div>
                     <div>
                       <p className="font-medium">Equipment issue reported by Jane Smith</p>
