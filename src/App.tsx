@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
@@ -9,6 +10,26 @@ import { AuthProvider, useAuth } from "@/contexts/AuthContext";
 import { LanguageProvider } from "@/contexts/LanguageContext";
 import { toggleMobileView } from "@/hooks/use-mobile";
 import ProtectedRoute from "@/components/auth/ProtectedRoute";
+
+// Import all page components
+import Index from '@/pages/Index';
+import Auth from '@/pages/Auth';
+import IntakeForm from '@/pages/IntakeForm';
+import Careers from '@/pages/Careers';
+import PrivacyPolicy from '@/pages/PrivacyPolicy';
+import AboutUs from '@/pages/AboutUs';
+import Regulations from '@/pages/Regulations';
+import SafetyArticles from '@/pages/SafetyArticles';
+import ArticleContent from '@/components/safety/ArticleContent';
+import AISafetyMonitor from '@/pages/AISafetyMonitor';
+import Training from '@/pages/Training';
+import Dashboard from '@/pages/Dashboard';
+import FieldWorkerDashboard from '@/pages/FieldWorkerDashboard';
+import InspectorDashboard from '@/pages/InspectorDashboard';
+import Inspection from '@/pages/Inspection';
+import Equipment from '@/pages/Equipment';
+import NotFound from '@/pages/NotFound';
+import MobileNavigation from '@/components/layout/MobileNavigation';
 
 const queryClient = new QueryClient();
 
