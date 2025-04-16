@@ -75,7 +75,7 @@ const enUS = {
   trainingType: 'Training Type',
   completedDate: 'Completed Date',
   expiryDate: 'Expiry Date',
-  timeRemaining: 'Time Remaining',
+  expiryTimeRemaining: 'Time Remaining',
   days: 'days',
   trainingExpiringSoon: 'Training expires in {days} days',
   
@@ -117,6 +117,25 @@ const enUS = {
   safetyChecks: 'Safety Checks',
   complianceTracking: 'Compliance Tracking',
   recordKeeping: 'Record Keeping',
+  
+  // Timesheet Management
+  timesheets: 'Timesheets',
+  employeeTimesheets: 'Employee Timesheets',
+  weeklyTimesheets: 'Weekly Timesheets',
+  monthlyTimesheets: 'Monthly Timesheets',
+  approveTimesheet: 'Approve Timesheet',
+  rejectTimesheet: 'Reject Timesheet',
+  requestChanges: 'Request Changes',
+  timesheetStatus: 'Status',
+  timesheetApproved: 'Approved',
+  timesheetRejected: 'Rejected',
+  timesheetPending: 'Pending',
+  viewTimesheet: 'View Timesheet',
+  downloadTimesheet: 'Download Timesheet',
+  exportTimesheets: 'Export Timesheets',
+  dateRange: 'Date Range',
+  filterByEmployee: 'Filter by Employee',
+  searchTimesheets: 'Search Timesheets',
 };
 
 export default enUS;

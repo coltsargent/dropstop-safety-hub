@@ -22,6 +22,8 @@ import {
   CheckCircle2,
   XCircle,
   Filter,
+  Download,
+  FileText,
 } from 'lucide-react';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
@@ -49,10 +51,17 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { format } from 'date-fns';
+import { format, addDays, parseISO } from 'date-fns';
+import { Input } from '@/components/ui/input';
+import { Badge } from '@/components/ui/badge';
+import { Select } from '@/components/ui/select';
+import { useToast } from '@/hooks/use-toast';
 
 const Dashboard: React.FC = () => {
   const [showOnlyIncomplete, setShowOnlyIncomplete] = useState(false);
+  const [selectedTimeTab, setSelectedTimeTab] = useState('thisWeek');
+  const [selectedEmployee, setSelectedEmployee] = useState('all');
+  const { toast } = useToast();
   
   const stats = [
     { 
@@ -251,6 +260,79 @@ const Dashboard: React.FC = () => {
     });
   };
 
+  const timesheetData = [
+    {
+      id: '1',
+      employee: 'John Doe',
+      role: 'Roofer',
+      weekStarting: '2024-04-08',
+      hoursWorked: 37.5,
+      status: 'pending',
+      lastSubmitted: '2024-04-12T18:30:00'
+    },
+    {
+      id: '2',
+      employee: 'Jane Smith',
+      role: 'Utilities Worker',
+      weekStarting: '2024-04-08',
+      hoursWorked: 40.0,
+      status: 'approved',
+      lastSubmitted: '2024-04-12T17:15:00'
+    },
+    {
+      id: '3',
+      employee: 'Mike Johnson',
+      role: 'Window Cleaner',
+      weekStarting: '2024-04-08',
+      hoursWorked: 32.5,
+      status: 'rejected',
+      lastSubmitted: '2024-04-12T16:45:00'
+    },
+    {
+      id: '4',
+      employee: 'Sarah Williams',
+      role: 'Roofer',
+      weekStarting: '2024-04-01',
+      hoursWorked: 39.0,
+      status: 'approved',
+      lastSubmitted: '2024-04-05T17:30:00'
+    },
+    {
+      id: '5',
+      employee: 'David Brown',
+      role: 'Utilities Worker',
+      weekStarting: '2024-04-01',
+      hoursWorked: 40.0,
+      status: 'approved',
+      lastSubmitted: '2024-04-05T16:15:00'
+    }
+  ];
+  
+  const filteredTimesheets = timesheetData.filter(timesheet => {
+    if (selectedTimeTab === 'thisWeek') {
+      return timesheet.weekStarting === '2024-04-08';
+    } else if (selectedTimeTab === 'lastWeek') {
+      return timesheet.weekStarting === '2024-04-01';
+    }
+    return true;
+  }).filter(timesheet => {
+    if (selectedEmployee === 'all') {
+      return true;
+    }
+    return timesheet.employee.toLowerCase().includes(selectedEmployee.toLowerCase());
+  });
+  
+  const getStatusBadge = (status: string) => {
+    switch(status) {
+      case 'approved':
+        return <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200">Approved</Badge>;
+      case 'rejected':
+        return <Badge variant="outline" className="bg-red-50 text-red-700 border-red-200">Rejected</Badge>;
+      default:
+        return <Badge variant="outline" className="bg-yellow-50 text-yellow-700 border-yellow-200">Pending</Badge>;
+    }
+  };
+
   return (
     <div className="min-h-screen flex flex-col bg-ds-neutral-50">
       <Header />
@@ -263,9 +345,9 @@ const Dashboard: React.FC = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
             >
-              <h1 className="text-3xl font-bold text-ds-neutral-900">Safety Dashboard</h1>
+              <h1 className="text-3xl font-bold text-ds-neutral-900">Supervisor Dashboard</h1>
               <p className="text-ds-neutral-600">
-                <span className="font-medium">Good morning, Safety Manager</span> • {new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
+                <span className="font-medium">Good morning, Supervisor</span> • {new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
               </p>
             </motion.div>
             
@@ -490,10 +572,11 @@ const Dashboard: React.FC = () => {
                 <CardTitle>Management Tools</CardTitle>
               </CardHeader>
               <CardContent className="pt-4">
-                <Tabs defaultValue="equipment" className="space-y-4">
-                  <TabsList className="grid grid-cols-3">
+                <Tabs defaultValue="timesheets" className="space-y-4">
+                  <TabsList className="grid grid-cols-4">
                     <TabsTrigger value="equipment">Equipment</TabsTrigger>
                     <TabsTrigger value="training">Training</TabsTrigger>
+                    <TabsTrigger value="timesheets">Timesheets</TabsTrigger>
                     <TabsTrigger value="reports">Reports</TabsTrigger>
                   </TabsList>
                   
@@ -756,6 +839,190 @@ const Dashboard: React.FC = () => {
                                 <div className={`h-full ${stat.color}`} style={{ width: stat.percentage }}></div>
                               </div>
                               <p className="text-xs text-ds-neutral-500 mt-1">{stat.percentage} of team</p>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  </TabsContent>
+                  
+                  <TabsContent value="timesheets">
+                    <div className="space-y-6">
+                      <div className="flex justify-between items-center">
+                        <h3 className="text-lg font-medium">Employee Timesheets</h3>
+                        <Button variant="outline" className="gap-2">
+                          <Download className="h-4 w-4" />
+                          Export Timesheets
+                        </Button>
+                      </div>
+                      
+                      <div className="flex flex-col sm:flex-row gap-4">
+                        <div className="grow space-y-2">
+                          <p className="text-sm font-medium">Time Period</p>
+                          <div className="flex gap-2">
+                            <Button 
+                              variant={selectedTimeTab === 'thisWeek' ? 'default' : 'outline'} 
+                              size="sm"
+                              onClick={() => setSelectedTimeTab('thisWeek')}
+                            >
+                              This Week
+                            </Button>
+                            <Button 
+                              variant={selectedTimeTab === 'lastWeek' ? 'default' : 'outline'} 
+                              size="sm"
+                              onClick={() => setSelectedTimeTab('lastWeek')}
+                            >
+                              Last Week
+                            </Button>
+                            <Button 
+                              variant={selectedTimeTab === 'custom' ? 'default' : 'outline'} 
+                              size="sm"
+                              onClick={() => setSelectedTimeTab('custom')}
+                            >
+                              Custom
+                            </Button>
+                          </div>
+                        </div>
+                        
+                        <div className="space-y-2">
+                          <p className="text-sm font-medium">Filter By Employee</p>
+                          <select 
+                            className="border border-gray-300 rounded-md h-9 px-3 py-1"
+                            value={selectedEmployee}
+                            onChange={(e) => setSelectedEmployee(e.target.value)}
+                          >
+                            <option value="all">All Employees</option>
+                            <option value="john">John Doe</option>
+                            <option value="jane">Jane Smith</option>
+                            <option value="mike">Mike Johnson</option>
+                            <option value="sarah">Sarah Williams</option>
+                            <option value="david">David Brown</option>
+                          </select>
+                        </div>
+                      </div>
+                      
+                      {selectedTimeTab === 'custom' && (
+                        <div className="flex gap-4 items-end">
+                          <div className="space-y-2">
+                            <p className="text-sm font-medium">Start Date</p>
+                            <Input type="date" />
+                          </div>
+                          <div className="space-y-2">
+                            <p className="text-sm font-medium">End Date</p>
+                            <Input type="date" />
+                          </div>
+                          <Button>Apply</Button>
+                        </div>
+                      )}
+                      
+                      <div className="border rounded-lg overflow-hidden">
+                        <Table>
+                          <TableHeader>
+                            <TableRow>
+                              <TableHead>Employee</TableHead>
+                              <TableHead>Role</TableHead>
+                              <TableHead>Week Starting</TableHead>
+                              <TableHead>Hours</TableHead>
+                              <TableHead>Status</TableHead>
+                              <TableHead>Submitted</TableHead>
+                              <TableHead></TableHead>
+                            </TableRow>
+                          </TableHeader>
+                          <TableBody>
+                            {filteredTimesheets.length === 0 ? (
+                              <TableRow>
+                                <TableCell colSpan={7} className="text-center py-4 text-muted-foreground">
+                                  No timesheets found matching your filters.
+                                </TableCell>
+                              </TableRow>
+                            ) : (
+                              filteredTimesheets.map((timesheet) => (
+                                <TableRow key={timesheet.id}>
+                                  <TableCell className="font-medium">{timesheet.employee}</TableCell>
+                                  <TableCell>{timesheet.role}</TableCell>
+                                  <TableCell>
+                                    {format(parseISO(timesheet.weekStarting), 'MMM d, yyyy')}
+                                  </TableCell>
+                                  <TableCell>{timesheet.hoursWorked}</TableCell>
+                                  <TableCell>
+                                    {getStatusBadge(timesheet.status)}
+                                  </TableCell>
+                                  <TableCell>
+                                    {format(new Date(timesheet.lastSubmitted), 'MMM d, h:mm a')}
+                                  </TableCell>
+                                  <TableCell>
+                                    <div className="flex gap-2 justify-end">
+                                      <Button 
+                                        variant="ghost" 
+                                        size="sm" 
+                                        className="h-8 w-8 p-0"
+                                        onClick={() => {
+                                          toast({
+                                            title: "Viewing Timesheet",
+                                            description: `Viewing ${timesheet.employee}'s timesheet for week of ${format(parseISO(timesheet.weekStarting), 'MMM d, yyyy')}`
+                                          });
+                                        }}
+                                      >
+                                        <FileText className="h-4 w-4" />
+                                      </Button>
+                                      {timesheet.status === 'pending' && (
+                                        <>
+                                          <Button 
+                                            variant="ghost" 
+                                            size="sm" 
+                                            className="h-8 w-8 p-0 text-green-600"
+                                            onClick={() => {
+                                              toast({
+                                                title: "Timesheet Approved",
+                                                description: `You approved ${timesheet.employee}'s timesheet`
+                                              });
+                                            }}
+                                          >
+                                            <CheckCircle2 className="h-4 w-4" />
+                                          </Button>
+                                          <Button 
+                                            variant="ghost" 
+                                            size="sm" 
+                                            className="h-8 w-8 p-0 text-red-600"
+                                            onClick={() => {
+                                              toast({
+                                                title: "Timesheet Rejected",
+                                                description: `You rejected ${timesheet.employee}'s timesheet`
+                                              });
+                                            }}
+                                          >
+                                            <XCircle className="h-4 w-4" />
+                                          </Button>
+                                        </>
+                                      )}
+                                    </div>
+                                  </TableCell>
+                                </TableRow>
+                              ))
+                            )}
+                          </TableBody>
+                        </Table>
+                      </div>
+                      
+                      <div className="space-y-3 pt-4">
+                        <h3 className="font-medium">Timesheet Overview</h3>
+                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                          {[
+                            { label: 'Approved', value: '3', color: 'bg-green-500' },
+                            { label: 'Pending', value: '1', color: 'bg-yellow-500' },
+                            { label: 'Rejected', value: '1', color: 'bg-red-500' },
+                          ].map((stat, index) => (
+                            <div 
+                              key={index}
+                              className="bg-white border border-ds-neutral-200 rounded-lg p-4"
+                            >
+                              <div className="flex items-center justify-between mb-2">
+                                <h5 className="text-sm font-medium">{stat.label}</h5>
+                                <span className="text-2xl font-bold">{stat.value}</span>
+                              </div>
+                              <div className="h-2 rounded-full bg-ds-neutral-100 overflow-hidden">
+                                <div className={`h-full ${stat.color}`} style={{ width: `${parseInt(stat.value) / 5 * 100}%` }}></div>
+                              </div>
                             </div>
                           ))}
                         </div>
