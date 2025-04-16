@@ -1,350 +1,235 @@
 
 import React, { useState } from 'react';
-import { format, startOfMonth, endOfMonth, eachDayOfInterval, isSameMonth, isSameDay, subWeeks, addWeeks, isWithinInterval, addDays } from 'date-fns';
-import { Calendar } from '@/components/ui/calendar';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { cn } from '@/lib/utils';
+import { format, startOfMonth, endOfMonth, eachDayOfInterval, isSameMonth, isSameDay, isToday, addMonths, subMonths } from 'date-fns';
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Clock, CheckCircle2 } from 'lucide-react';
-import { useToast } from '@/hooks/use-toast';
-
-// Define types for calendar events
-type CalendarEvent = {
-  id: string;
-  title: string;
-  date: Date;
-  type: 'inspection' | 'training' | 'meeting' | 'other';
-  completed?: boolean;
-};
-
-// Define a separate type for clock records events
-type ClockEventType = {
-  id: string;
-  title: string;
-  date: Date;
-  type: 'clock-in' | 'clock-out';
-};
-
-// Union type for all event types
-type AllEventTypes = CalendarEvent | ClockEventType;
+import { Calendar as CalendarIcon, ChevronLeft, ChevronRight, Clock, Clock3 } from 'lucide-react';
+import { cn } from '@/lib/utils';
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 
 interface MonthlyCalendarProps {
-  events?: CalendarEvent[];
+  children?: React.ReactNode;
 }
 
-type ClockRecord = {
-  type: 'in' | 'out';
-  timestamp: Date;
-  location?: { latitude: number; longitude: number };
-};
-
-const MonthlyCalendar: React.FC<MonthlyCalendarProps> = ({ events = [] }) => {
-  const today = new Date();
-  const [currentMonth, setCurrentMonth] = useState<Date>(today);
-  const [clockRecords, setClockRecords] = useState<ClockRecord[]>([]);
+const MonthlyCalendar: React.FC<MonthlyCalendarProps> = ({ children }) => {
+  const [currentMonth, setCurrentMonth] = useState(new Date());
+  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [clockedIn, setClockedIn] = useState<boolean>(false);
-  const { toast } = useToast();
   
-  // Calculate the dates to show (last two weeks + current week + next week)
-  const twoWeeksAgo = subWeeks(today, 2);
-  const nextWeek = addWeeks(today, 1);
-  
-  // Generate some sample events if none provided
-  const sampleEvents = [
-    {
-      id: '1',
-      title: 'Equipment Inspection',
-      date: subWeeks(today, 1),
-      type: 'inspection' as const,
-      completed: true,
-    },
-    {
-      id: '2',
-      title: 'Fall Protection Training',
-      date: addDays(today, 2),
-      type: 'training' as const,
-    },
-    {
-      id: '3',
-      title: 'Safety Meeting',
-      date: addDays(today, 5),
-      type: 'meeting' as const,
-    },
-    {
-      id: '4',
-      title: 'Harness Inspection',
-      date: subWeeks(today, 2),
-      type: 'inspection' as const,
-      completed: true,
-    },
-    {
-      id: '5',
-      title: 'Site Safety Review',
-      date: addDays(today, -2),
-      type: 'meeting' as const,
-      completed: true,
-    },
-    {
-      id: '6',
-      title: 'Lanyard Inspection',
-      date: addDays(today, 1),
-      type: 'inspection' as const,
-    }
-  ];
-  
-  // Combine sample events with clock records events
-  const calendarEvents: AllEventTypes[] = [
-    ...events.length > 0 ? events : sampleEvents,
-    ...clockRecords.map((record, index) => ({
-      id: `clock-${index}-${record.timestamp.getTime()}`,
-      title: record.type === 'in' ? 'Clock In' : 'Clock Out',
-      date: record.timestamp,
-      type: record.type === 'in' ? 'clock-in' as const : 'clock-out' as const,
-    }))
-  ];
-
-  // Function to handle clock in/out
-  const handleClock = (type: 'in' | 'out') => {
-    const newRecord: ClockRecord = {
-      type,
-      timestamp: new Date(),
-      location: { latitude: 40.7128, longitude: -74.0060 } // Example location
-    };
-    
-    setClockRecords([...clockRecords, newRecord]);
-    
-    if (type === 'in') {
-      setClockedIn(true);
-      toast({
-        title: "Clocked In",
-        description: `You have clocked in at ${format(new Date(), 'h:mm a')}`,
-      });
-    } else {
-      setClockedIn(false);
-      toast({
-        title: "Clocked Out",
-        description: `You have clocked out at ${format(new Date(), 'h:mm a')}`,
-      });
-    }
+  // Example clock-in data for visualization
+  const clockInData = {
+    '2023-04-15': { in: '08:30', out: '17:00', total: '8.5' },
+    '2023-04-12': { in: '09:15', out: '18:30', total: '9.25' },
+    '2023-04-10': { in: '08:00', out: '16:30', total: '8.5' },
+    '2023-04-05': { in: '08:45', out: '17:15', total: '8.5' },
   };
-
-  // Function to get events for a specific day
-  const getEventsForDay = (day: Date) => {
-    return calendarEvents.filter(event => isSameDay(day, event.date));
-  };
-
-  // Custom day rendering function for the calendar
-  const renderDay = (day: Date) => {
-    const dayEvents = getEventsForDay(day);
-    const isInRange = isWithinInterval(day, { start: twoWeeksAgo, end: nextWeek });
-    
-    // Only highlight days with events in our range (last 2 weeks to next week)
-    if (dayEvents.length === 0 || !isInRange) return undefined;
-    
-    const eventTypes = [...new Set(dayEvents.map(e => e.type))];
-    
+  
+  const renderHeader = () => {
     return (
-      <div className="relative w-full h-full">
-        <div className="absolute -bottom-1 left-0 right-0 flex justify-center space-x-0.5">
-          {eventTypes.map((type, i) => (
-            <div 
-              key={`${day.toString()}-${type}-${i}`}
-              className={cn(
-                "h-1 w-1 rounded-full",
-                type === 'inspection' && "bg-amber-500",
-                type === 'training' && "bg-ds-blue-600",
-                type === 'meeting' && "bg-purple-500",
-                type === 'clock-in' && "bg-green-500",
-                type === 'clock-out' && "bg-red-500",
-                type === 'other' && "bg-gray-500"
-              )}
-            />
-          ))}
-        </div>
+      <div className="flex items-center justify-between">
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={() => setCurrentMonth(subMonths(currentMonth, 1))}
+        >
+          <ChevronLeft className="h-5 w-5" />
+        </Button>
+        <h2 className="font-semibold text-lg">
+          {format(currentMonth, 'MMMM yyyy')}
+        </h2>
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={() => setCurrentMonth(addMonths(currentMonth, 1))}
+        >
+          <ChevronRight className="h-5 w-5" />
+        </Button>
       </div>
     );
   };
-
-  // Function to get badge color based on event type
-  const getEventBadgeColor = (type: string) => {
-    switch(type) {
-      case 'inspection': return 'bg-amber-100 text-amber-700 hover:bg-amber-100';
-      case 'training': return 'bg-ds-blue-100 text-ds-blue-700 hover:bg-ds-blue-100';
-      case 'meeting': return 'bg-purple-100 text-purple-700 hover:bg-purple-100';
-      case 'clock-in': return 'bg-green-100 text-green-700 hover:bg-green-100';
-      case 'clock-out': return 'bg-red-100 text-red-700 hover:bg-red-100';
-      default: return 'bg-gray-100 text-gray-700 hover:bg-gray-100';
-    }
+  
+  const renderDays = () => {
+    const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+    return (
+      <div className="grid grid-cols-7 gap-1 mt-4 mb-2">
+        {days.map((day) => (
+          <div
+            key={day}
+            className="text-center text-xs text-ds-neutral-500 font-medium"
+          >
+            {day}
+          </div>
+        ))}
+      </div>
+    );
   };
-
-  return (
-    <Card className="border-none shadow-sm">
-      <CardHeader>
-        <CardTitle className="text-lg flex justify-between items-center">
-          <span>Monthly Schedule</span>
-          <div className="flex items-center gap-3 text-xs">
-            <div className="flex items-center gap-1">
-              <div className="w-2 h-2 rounded-full bg-amber-500"></div>
-              <span>Inspection</span>
-            </div>
-            <div className="flex items-center gap-1">
-              <div className="w-2 h-2 rounded-full bg-ds-blue-600"></div>
-              <span>Training</span>
-            </div>
-            <div className="flex items-center gap-1">
-              <div className="w-2 h-2 rounded-full bg-purple-500"></div>
-              <span>Meeting</span>
-            </div>
-            <div className="flex items-center gap-1">
-              <div className="w-2 h-2 rounded-full bg-green-500"></div>
-              <span>Clock In</span>
-            </div>
-            <div className="flex items-center gap-1">
-              <div className="w-2 h-2 rounded-full bg-red-500"></div>
-              <span>Clock Out</span>
-            </div>
-          </div>
-        </CardTitle>
-      </CardHeader>
-      <CardContent className="space-y-4">
-        {/* Clock In/Out Buttons */}
-        <div className="flex flex-col sm:flex-row items-center gap-3 p-4 bg-ds-blue-50 rounded-lg">
-          <div className="flex items-center gap-2 text-center sm:text-left">
-            <Clock className="h-6 w-6 text-ds-blue-600" />
-            <div>
-              <h3 className="font-medium">{format(new Date(), 'h:mm a')}</h3>
-              <p className="text-xs text-slate-500">{format(new Date(), 'EEEE, MMMM d, yyyy')}</p>
-            </div>
-          </div>
-          <div className="flex flex-row gap-3 mt-2 sm:mt-0 sm:ml-auto">
-            <Button 
-              className="bg-green-600 hover:bg-green-700"
-              size="sm"
-              onClick={() => handleClock('in')}
-              disabled={clockedIn}
-            >
-              <Clock className="h-4 w-4 mr-2" />
-              Clock In
-            </Button>
-            <Button 
-              className="bg-red-600 hover:bg-red-700"
-              size="sm"
-              onClick={() => handleClock('out')}
-              disabled={!clockedIn}
-            >
-              <Clock className="h-4 w-4 mr-2" />
-              Clock Out
-            </Button>
-          </div>
-        </div>
-
-        <div className="border rounded-lg overflow-hidden">
-          <Calendar
-            mode="default"
-            selected={today}
-            onMonthChange={setCurrentMonth}
-            month={currentMonth}
-            className="rounded-md border"
-            components={{
-              Day: ({ date, ...props }) => (
-                <div {...props}>
-                  {props.children}
-                  {date && renderDay(date)}
-                </div>
-              )
-            }}
-            disabled={date => {
-              // Only enable dates within our range (2 weeks ago to next week)
-              return !isWithinInterval(date, { start: twoWeeksAgo, end: nextWeek });
-            }}
-          />
-        </div>
-
-        <div className="space-y-2">
-          <h3 className="text-sm font-medium">Today's Clock Activity</h3>
-          {clockRecords.length > 0 ? (
-            <div className="space-y-2 max-h-40 overflow-y-auto border rounded-lg divide-y">
-              {clockRecords.map((record, index) => (
-                <div key={index} className="p-3 flex justify-between items-center">
-                  <div className="flex items-center">
-                    <div className={`h-8 w-8 rounded-full ${record.type === 'in' ? 'bg-green-100' : 'bg-red-100'} flex items-center justify-center mr-3`}>
-                      <Clock className={`h-4 w-4 ${record.type === 'in' ? 'text-green-600' : 'text-red-600'}`} />
-                    </div>
-                    <div>
-                      <p className="font-medium">
-                        {record.type === 'in' ? 'Clock In' : 'Clock Out'}
-                      </p>
-                      {record.location && (
-                        <p className="text-xs text-slate-500">
-                          Location: {record.location.latitude.toFixed(4)}, {record.location.longitude.toFixed(4)}
-                        </p>
-                      )}
-                    </div>
-                  </div>
-                  <p className="text-sm">
-                    {format(record.timestamp, 'h:mm a')}
-                  </p>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <div className="text-center p-4 border rounded-lg">
-              <p className="text-slate-500">No clock activity recorded today</p>
-            </div>
+  
+  const renderCells = () => {
+    const monthStart = startOfMonth(currentMonth);
+    const monthEnd = endOfMonth(monthStart);
+    const startDate = monthStart;
+    const endDate = monthEnd;
+    
+    const dateFormat = 'd';
+    const rows = [];
+    
+    let days = eachDayOfInterval({
+      start: startDate,
+      end: endDate,
+    });
+    
+    let formattedDates = days.map(day => {
+      const cloneDay = day;
+      const formattedDate = format(cloneDay, 'yyyy-MM-dd');
+      const isCurrentMonth = isSameMonth(day, monthStart);
+      const isSelectedDay = selectedDate && isSameDay(day, selectedDate);
+      const isTodayValue = isToday(day);
+      const hasClockData = clockInData[formattedDate];
+      
+      return (
+        <div 
+          key={day.toString()}
+          className={cn(
+            'h-12 flex flex-col items-center justify-center rounded-md border cursor-pointer transition-colors',
+            isCurrentMonth ? 'bg-white' : 'bg-ds-neutral-50 text-ds-neutral-400',
+            isSelectedDay && 'bg-ds-blue-50 border-ds-blue-200',
+            isTodayValue && 'border-ds-blue-400 ring-1 ring-ds-blue-200',
+            hasClockData && 'border-ds-blue-300'
+          )}
+          onClick={() => setSelectedDate(cloneDay)}
+        >
+          <span className="text-sm">{format(cloneDay, dateFormat)}</span>
+          {hasClockData && (
+            <div className="h-1.5 w-1.5 rounded-full bg-ds-blue-500 mt-0.5" />
           )}
         </div>
-
-        <div className="space-y-2">
-          <h3 className="text-sm font-medium">Upcoming Activities</h3>
-          <div className="space-y-2 max-h-60 overflow-y-auto">
-            {calendarEvents
-              .filter(event => {
-                // Filter out clock events and only show upcoming activities
-                if (event.type === 'clock-in' || event.type === 'clock-out') return false;
-                return isWithinInterval(event.date, { start: twoWeeksAgo, end: nextWeek });
-              })
-              .sort((a, b) => a.date.getTime() - b.date.getTime())
-              .map((event) => {
-                // Type guard to check if the event is a CalendarEvent (which might have completed property)
-                const isCalendarEvent = (e: AllEventTypes): e is CalendarEvent => 
-                  ['inspection', 'training', 'meeting', 'other'].includes(e.type);
-                
-                const completed = isCalendarEvent(event) ? event.completed : false;
-                
-                return (
-                  <div 
-                    key={event.id} 
-                    className={cn(
-                      "p-2 rounded-md border flex justify-between items-center",
-                      completed ? "bg-gray-50" : "bg-white"
-                    )}
-                  >
-                    <div className="flex flex-col">
-                      <div className="flex items-center gap-2">
-                        <Badge className={cn("text-xs", getEventBadgeColor(event.type))}>
-                          {event.type.charAt(0).toUpperCase() + event.type.slice(1)}
-                        </Badge>
-                        <span className={cn(
-                          "text-sm font-medium",
-                          completed && "text-gray-500 line-through"
-                        )}>
-                          {event.title}
-                        </span>
-                      </div>
-                      <span className="text-xs text-gray-500">
-                        {format(event.date, 'MMM d, yyyy')}
-                      </span>
-                    </div>
-                    {completed && (
-                      <Badge className="bg-green-100 text-green-700 text-xs">Completed</Badge>
-                    )}
-                  </div>
-                );
-              })}
-          </div>
+      );
+    });
+    
+    // Calculate total days in month and padding days needed
+    const totalDaysInMonth = formattedDates.length;
+    const startDayOfWeek = new Date(monthStart).getDay();
+    
+    // Add padding for start of month
+    const paddingStart = Array.from({ length: startDayOfWeek }).map((_, index) => (
+      <div key={`padding-start-${index}`} className="h-12" />
+    ));
+    
+    // Add padding for end of month if needed
+    const remainingCells = 42 - (paddingStart.length + totalDaysInMonth);
+    const paddingEnd = Array.from({ length: remainingCells > 0 ? remainingCells : 0 }).map((_, index) => (
+      <div key={`padding-end-${index}`} className="h-12" />
+    ));
+    
+    // Combine all cells
+    const allCells = [...paddingStart, ...formattedDates, ...paddingEnd];
+    
+    // Create rows of 7 days
+    for (let i = 0; i < allCells.length; i += 7) {
+      rows.push(
+        <div key={i} className="grid grid-cols-7 gap-1 mb-1">
+          {allCells.slice(i, i + 7)}
         </div>
+      );
+    }
+    
+    return (
+      <div>
+        {rows}
+      </div>
+    );
+  };
+  
+  const handleClockAction = () => {
+    setClockedIn(!clockedIn);
+  };
+  
+  return (
+    <Card className="w-full">
+      <CardHeader className="pb-2">
+        <CardTitle className="flex items-center justify-between">
+          <div className="flex items-center">
+            <Clock className="h-5 w-5 text-ds-blue-600 mr-2" />
+            <span>Time-Keeping</span>
+          </div>
+          <Button 
+            variant={clockedIn ? "destructive" : "default"} 
+            className="ml-auto flex gap-2"
+            onClick={handleClockAction}
+          >
+            <Clock3 className="h-4 w-4" />
+            {clockedIn ? "Clock Out" : "Clock In"}
+          </Button>
+        </CardTitle>
+      </CardHeader>
+      
+      <CardContent className="space-y-4">
+        {renderHeader()}
+        {renderDays()}
+        {renderCells()}
+        
+        {selectedDate && (
+          <div className="mt-4 p-3 border rounded-md bg-ds-neutral-50">
+            <div className="flex justify-between items-center">
+              <h3 className="font-medium">{format(selectedDate, 'EEEE, MMMM d, yyyy')}</h3>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button variant="outline" size="sm" className="h-8 gap-1">
+                    <CalendarIcon className="h-3.5 w-3.5" />
+                    <span>Record</span>
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-80" align="end">
+                  <div className="space-y-4">
+                    <h4 className="font-medium">Add Time Record</h4>
+                    <div className="grid grid-cols-2 gap-2">
+                      <div className="space-y-1">
+                        <label className="text-sm">Clock In</label>
+                        <input type="time" className="w-full rounded-md border p-2" />
+                      </div>
+                      <div className="space-y-1">
+                        <label className="text-sm">Clock Out</label>
+                        <input type="time" className="w-full rounded-md border p-2" />
+                      </div>
+                    </div>
+                    <Button size="sm" className="w-full">Save Time Record</Button>
+                  </div>
+                </PopoverContent>
+              </Popover>
+            </div>
+            
+            {clockInData[format(selectedDate, 'yyyy-MM-dd')] ? (
+              <div className="mt-2 grid grid-cols-3 gap-2 text-sm">
+                <div>
+                  <span className="text-ds-neutral-500 block">Clock In</span>
+                  <span className="font-medium">{clockInData[format(selectedDate, 'yyyy-MM-dd')].in}</span>
+                </div>
+                <div>
+                  <span className="text-ds-neutral-500 block">Clock Out</span>
+                  <span className="font-medium">{clockInData[format(selectedDate, 'yyyy-MM-dd')].out}</span>
+                </div>
+                <div>
+                  <span className="text-ds-neutral-500 block">Total Hours</span>
+                  <span className="font-medium">{clockInData[format(selectedDate, 'yyyy-MM-dd')].total}</span>
+                </div>
+              </div>
+            ) : (
+              <p className="mt-2 text-sm text-ds-neutral-500">No time records for this date.</p>
+            )}
+          </div>
+        )}
       </CardContent>
+      
+      <CardFooter className="pt-0">
+        <div className="flex justify-between items-center w-full text-xs text-ds-neutral-500">
+          <div>Total hours this month: 160.5</div>
+          <div>Remaining: 7.5</div>
+        </div>
+      </CardFooter>
     </Card>
   );
 };

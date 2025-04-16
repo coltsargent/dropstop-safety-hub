@@ -116,6 +116,13 @@ const DesktopHeader: React.FC<DesktopHeaderProps> = ({ scrolled, navLinks }) => 
                         </li>
                         <li>
                           <NavigationMenuLink asChild>
+                            <a href="#" onClick={(e) => handleSolutionClick('Time-Keeping', e)} className="block select-none rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-ds-blue-50 hover:text-ds-blue-600">
+                              <div className="text-sm font-medium">Time-Keeping</div>
+                            </a>
+                          </NavigationMenuLink>
+                        </li>
+                        <li>
+                          <NavigationMenuLink asChild>
                             <a href="#" onClick={(e) => handleSolutionClick('Compliance Tracking', e)} className="block select-none rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-ds-blue-50 hover:text-ds-blue-600">
                               <div className="text-sm font-medium">Compliance Tracking</div>
                             </a>

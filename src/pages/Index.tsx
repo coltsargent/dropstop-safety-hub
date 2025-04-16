@@ -2,7 +2,16 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { CheckCircle, Shield, LineChart, ArrowRight, LogIn, FileText, Award } from 'lucide-react';
+import { 
+  CheckCircle, 
+  Shield, 
+  LineChart, 
+  ArrowRight, 
+  LogIn, 
+  FileText, 
+  Award,
+  Clock 
+} from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
@@ -265,7 +274,7 @@ const Index: React.FC = () => {
               Comprehensive Safety Management
             </h2>
             <p className="text-base md:text-lg text-ds-neutral-700 max-w-2xl mx-auto">
-              Our platform provides all the tools you need to manage high-risk workplace safety and meet regulatory requirements.
+              Our modular platform provides all the tools you need to manage high-risk workplace safety and meet regulatory requirements.
             </p>
           </motion.div>
           
@@ -290,10 +299,10 @@ const Index: React.FC = () => {
                 gradient: 'from-ds-blue-400 to-ds-blue-500'
               },
               {
-                icon: <LineChart className="h-8 w-8 text-white" />,
-                title: 'Compliance Tracking',
-                description: 'Automate record-keeping for regulatory audits and insurance requirements.',
-                gradient: 'from-ds-blue-300 to-ds-blue-400'
+                icon: <Clock className="h-8 w-8 text-white" />,
+                title: 'Time-Keeping Solution',
+                description: 'Customizable time-tracking that integrates with your existing systems and adapts to your workflow.',
+                gradient: 'from-ds-blue-600 to-ds-blue-700'
               }
             ].map((feature, index) => (
               <motion.div
@@ -320,15 +329,15 @@ const Index: React.FC = () => {
           >
             {[
               {
+                icon: <LineChart className="h-8 w-8 text-white" />,
+                title: 'Compliance Tracking',
+                description: 'Automate record-keeping for regulatory audits and insurance requirements.',
+                gradient: 'from-ds-blue-300 to-ds-blue-400'
+              },
+              {
                 icon: <FileText className="h-8 w-8 text-white" />,
                 title: 'Incident & Near Miss Documentation',
                 description: 'Document and analyze incidents to identify root causes and prevent future occurrences.',
-                gradient: 'from-ds-blue-600 to-ds-blue-700'
-              },
-              {
-                icon: <HarnessIcon className="h-8 w-8 text-white" size={32} />,
-                title: 'PPE Library',
-                description: 'Centralized repository for equipment specifications, manuals, and maintenance history.',
                 gradient: 'from-ds-blue-500 to-ds-blue-600'
               },
               {
@@ -351,6 +360,50 @@ const Index: React.FC = () => {
                 <p className="text-sm md:text-base text-ds-neutral-600">{feature.description}</p>
               </motion.div>
             ))}
+          </motion.div>
+          
+          {/* Modularity highlight section */}
+          <motion.div
+            className="mt-12 md:mt-16 p-6 bg-ds-blue-50 rounded-xl border border-ds-blue-100"
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            viewport={{ once: true, margin: "-50px" }}
+          >
+            <h3 className="text-xl md:text-2xl font-bold text-ds-blue-700 mb-2 text-center">Modular Solutions for Any Organization</h3>
+            <p className="text-base text-ds-neutral-700 max-w-3xl mx-auto text-center mb-6">
+              Our platform is designed to be fully customizable, allowing safety managers to select and configure exactly what they need. Each module can be tailored to fit your organization's unique requirements and workflow.
+            </p>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="flex items-start gap-3 p-4 bg-white rounded-lg shadow-sm">
+                <CheckCircle className="h-6 w-6 text-ds-blue-500 flex-shrink-0 mt-1" />
+                <div>
+                  <h4 className="font-medium text-ds-neutral-900 mb-1">Safety Management Connection</h4>
+                  <p className="text-sm text-ds-neutral-600">Empowers safety managers with direct oversight and communication with field workers, enhancing compliance and response time.</p>
+                </div>
+              </div>
+              <div className="flex items-start gap-3 p-4 bg-white rounded-lg shadow-sm">
+                <CheckCircle className="h-6 w-6 text-ds-blue-500 flex-shrink-0 mt-1" />
+                <div>
+                  <h4 className="font-medium text-ds-neutral-900 mb-1">Seamless Integration</h4>
+                  <p className="text-sm text-ds-neutral-600">All modules work together, providing a unified system that delivers comprehensive safety management with minimum friction.</p>
+                </div>
+              </div>
+              <div className="flex items-start gap-3 p-4 bg-white rounded-lg shadow-sm">
+                <CheckCircle className="h-6 w-6 text-ds-blue-500 flex-shrink-0 mt-1" />
+                <div>
+                  <h4 className="font-medium text-ds-neutral-900 mb-1">Scalable Implementation</h4>
+                  <p className="text-sm text-ds-neutral-600">Start with the modules you need most and expand as your organization grows, ensuring cost-effective adoption.</p>
+                </div>
+              </div>
+              <div className="flex items-start gap-3 p-4 bg-white rounded-lg shadow-sm">
+                <CheckCircle className="h-6 w-6 text-ds-blue-500 flex-shrink-0 mt-1" />
+                <div>
+                  <h4 className="font-medium text-ds-neutral-900 mb-1">Customized Reporting</h4>
+                  <p className="text-sm text-ds-neutral-600">Generate reports that make sense for your organization's needs, helping safety managers make data-driven decisions.</p>
+                </div>
+              </div>
+            </div>
           </motion.div>
         </div>
       </section>
@@ -402,6 +455,7 @@ const Index: React.FC = () => {
                 features: [
                   'Simple mobile interface',
                   'Quick PPE inspection checklist',
+                  'Time-keeping & attendance',
                   'Fall detection integration',
                   'Multilingual support'
                 ]
@@ -412,6 +466,7 @@ const Index: React.FC = () => {
                 features: [
                   'Comprehensive dashboard',
                   'Team inspection monitoring',
+                  'Time & attendance oversight',
                   'Training certification tracking',
                   'Incident reporting system'
                 ]
@@ -421,6 +476,7 @@ const Index: React.FC = () => {
                 gradient: 'from-ds-blue-400 via-ds-blue-300 to-ds-blue-400',
                 features: [
                   'Batch inspection tools',
+                  'Time verification features',
                   'RFID/barcode scanning',
                   'Media documentation',
                   'Digital signature verification'
